@@ -1,0 +1,13 @@
+{
+  "function": "AudioPolicyManager::GetAudioPolicyManagerProxy(bool)",
+  "va": "0x3b604",
+  "file_offset": 239108,
+  "old": "80020012",
+  "new": "00008052",
+  "branch": "0x3b800 tbz w20,#0 -> 0x3b85c, vtable+40 check SA3009",
+  "semantics": "reuse nonblocking query; existing service stays usable, absent service returns original null/error paths",
+  "input_sha256": "38e59767cb5d9c2d1e7cf895efb68ecaeedc1fc1f12284d9e63f6f3544f3da1d",
+  "output_sha256": "0b8b895c9bd3ee14632f73a443da982a6a4d59c0c94b29db77e5ce914affb6ee",
+  "restored_v65_loopback_function": true,
+  "vendor_modified": false
+}

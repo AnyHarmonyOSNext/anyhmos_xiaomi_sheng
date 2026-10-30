@@ -1,0 +1,52 @@
+{
+  "version": "v135",
+  "status": "cold_and_ordinary_reboot_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v135.img",
+    "bytes": 100663296,
+    "sha256": "27327b099280e12a0540a4b8e0e179c228d74b2ba80b91869b4a132eae861749"
+  },
+  "cpio_verified": true,
+  "preserved_v134_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/bootcontrol-v135",
+    "sheng-compat-v118/bootcontrol-v135/SHA256SUMS",
+    "sheng-compat-v118/bootcontrol-v135/bootctrl.xiaomi_sm8550.so",
+    "sheng-compat-v118/bootcontrol-v135/libsheng_bootcontrol_guarded_v135.so",
+    "sheng-compat-v118/bootcontrol-v135/libsheng_bootcontrol_readonly_v135.so",
+    "sheng-compat-v118/bootcontrol-v135/libz.so",
+    "sheng-compat-v118/graphics/apply-hardware-v116.sh",
+    "sheng-compat-v118/graphics/mark-boot-success-v135.sh",
+    "sheng-compat-v118/graphics/start-native-desktop-v116.sh"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "wifi_v134_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "original_device_hal": true,
+  "guarded_original_hal_hot_verified": true,
+  "manual_raw_misc_or_gpt_writes": false,
+  "post_mark_gpt_crc_and_diff_verified": true,
+  "hot_mark_evidence": "output/logs/command-shell-20261030-115759-bf569e305bba.log",
+  "gpt_diff_evidence": "analysis/gpt-v135-original-hal-diff.json",
+  "cold_boot_automatic_mark_verified": true,
+  "ordinary_reboot_successful_slot_verified": true,
+  "early_success_still_false_verified": true,
+  "partition_readback_verified": true,
+  "boot_id": "2541d423-1660-4681-8a43-d488516decc6",
+  "cold_boot_evidence": "output/logs/command-shell-20261030-120622-2ce65659418b.log",
+  "ordinary_reboot_no_repeat_write_verified": true,
+  "ordinary_boot_id": "8bc9b918-dd52-430a-a082-5dae7ce6f8f0",
+  "ordinary_reboot_evidence": "output/logs/command-shell-20261030-121149-82532178cd84.log",
+  "native_desktop_screenshot": {
+    "file": "output/screenshots/v135-normal-desktop-1212.jpeg",
+    "bytes": 242604,
+    "sha256": "58305589137ee5c9d044b52b50a7d595b4edd0381e55ed9fd75bb43bc49b9cac",
+    "viewed": true,
+    "wifi6_icon_visible": true
+  }
+}

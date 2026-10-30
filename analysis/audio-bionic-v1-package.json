@@ -1,0 +1,27 @@
+{
+  "archive": "output/audio-bionic-v1.tar.gz",
+  "bytes": 3452438,
+  "sha256": "a22d693b394234833ca56519476b91ec367442e02ab9eb8e73ff53ad34138b35",
+  "parts": [
+    {
+      "path": "output/audio-bionic-v1.tar.gz.part00",
+      "bytes": 900000,
+      "sha256": "0e8bf825ed89ebfec2fb1d3284d8044e1926703c9ef83b2f6b8abdc6f6d1a321"
+    },
+    {
+      "path": "output/audio-bionic-v1.tar.gz.part01",
+      "bytes": 900000,
+      "sha256": "96a3453ba1b280f00a5db9ffc255f9d5d604ee6a49d7026a1d4e5aba72957958"
+    },
+    {
+      "path": "output/audio-bionic-v1.tar.gz.part02",
+      "bytes": 900000,
+      "sha256": "2d23f2deb516517fe37485299c85218f57041a7b54ae74e42b86f79d25da0237"
+    },
+    {
+      "path": "output/audio-bionic-v1.tar.gz.part03",
+      "bytes": 752438,
+      "sha256": "5b073beeb7957e2d8c73f23dbd45d0b193fd9bf1472a56d11481cc321311e02f"
+    }
+  ]
+}

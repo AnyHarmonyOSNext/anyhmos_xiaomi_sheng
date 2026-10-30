@@ -1,0 +1,72 @@
+{
+  "version": "v122",
+  "status": "flashed_readback_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v122.img",
+    "bytes": 100663296,
+    "sha256": "7a7721d3110880d8df6898248f9d8dbbaa86d7ef10391b5a8f60d33a16efb9bd"
+  },
+  "cpio_verified": true,
+  "preserved_v121_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/init-desktop-services.cfg"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "original_nwebspawn_service": {
+    "name": "nwebspawn",
+    "path": [
+      "/system/bin/nwebspawn",
+      "-mode nwebspawn",
+      "--process-name com.ohos.nwebspawn.startup --start-flags daemon --type standard ",
+      "--sandbox-switch on --bundle-name com.ohos.nwebspawn.startup --app-operate-type operate ",
+      "--render-command command --app-launch-type singleton --app-visible true"
+    ],
+    "uid": "nwebspawn",
+    "gid": [
+      "nwebspawn",
+      "system"
+    ],
+    "setuid": true,
+    "caps": [
+      "CAP_SYS_ADMIN",
+      "CAP_SETGID",
+      "CAP_SETUID",
+      "CAP_KILL"
+    ],
+    "socket": [
+      {
+        "name": "NWebSpawn",
+        "family": "AF_LOCAL",
+        "type": "SOCK_STREAM",
+        "protocol": "default",
+        "permissions": "0666",
+        "uid": "nwebspawn",
+        "gid": "nwebspawn",
+        "option": []
+      }
+    ],
+    "start-mode": "condition",
+    "sandbox": 0,
+    "secon": "u:r:nwebspawn:s0",
+    "disabled": 1,
+    "once": 1
+  },
+  "original_jobs_preserved": true,
+  "cold_boot_verified": true,
+  "webcore_main_installed_original_bms": true,
+  "webview_content_verified": false,
+  "boot_id": "4bae238f-0cd2-4441-9acc-aa7288136e42",
+  "autostart_exit": 0,
+  "autostart_seconds": 179.73,
+  "nwebspawn_pid": 6482,
+  "nwebspawn_uid": 3081,
+  "nwebspawn_socket_verified": true,
+  "webcore_main_persisted": true,
+  "aweme_library_load_verified": true,
+  "aweme_pid_first": 7144
+}

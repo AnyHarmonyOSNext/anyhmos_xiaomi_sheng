@@ -1,0 +1,28 @@
+{
+  "input_sha256": "483742fb4249e79319565814dab375b3db0ddd71de9995f99b5e254b3b2dfd69",
+  "output_sha256": "d02d06d53651f409268ae6e4320de0d85349a875bd91d94950f5c4cbda3b15d3",
+  "bytes": 638952,
+  "changes": [
+    {
+      "va": 524000,
+      "offset": 519904,
+      "before": "74010094",
+      "after": "1f2003d5",
+      "callee_va": 525488,
+      "callee": "EnableDSoftbus",
+      "context": "610240f93f0016eb010f0054e00313aa74010094610240f93f0016eb210f0054e00313aa"
+    },
+    {
+      "va": 524020,
+      "offset": 519924,
+      "before": "d8010094",
+      "after": "1f2003d5",
+      "callee_va": 525908,
+      "callee": "EnableDDM",
+      "context": "610240f93f0016eb210f0054e00313aad8010094980000f0880000f006fcffd0c6d43f91"
+    }
+  ],
+  "scope": "OnStart omits optional distributed-device/SoftBus startup. Real local drag, input IPC, permissions and replies remain.",
+  "evidence": "output/logs/latency-v116-binder-stall-2245.txt.gz: SceneBoard -> MSDP code 0x2f waits >1s; MSDP DDM startup retries block its worker.",
+  "reference": "openharmony/msdp_device_status OpenHarmony-6.0-Release services/native/src/devicestatus_service.cpp"
+}

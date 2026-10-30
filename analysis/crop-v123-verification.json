@@ -1,0 +1,26 @@
+{
+  "version": "v123",
+  "status": "flashed_readback_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v123.img",
+    "bytes": 100663296,
+    "sha256": "dfeee83056f70d9577dfeb48deec774dd54d9ed6dd8c7cded408eb209fdf7576"
+  },
+  "cpio_verified": true,
+  "preserved_v122_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/libdisplay_buffer_vdi_impl.z.so"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "metadata_cross_process_test_passed": true,
+  "cold_boot_verified": true,
+  "surface_decode_verified": false,
+  "boot_id": "bd557cd5-aa93-4534-9344-38080ba2ba9f",
+  "crop_stage_passed": true,
+  "surface_failure": "ATTRKEY_COLORSPACE_INFO unsupported; zero output frames"
+}

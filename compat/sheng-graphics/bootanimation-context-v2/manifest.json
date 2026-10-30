@@ -1,0 +1,10 @@
+{
+  "input_sha256": "1947fcb520bc5794103c2ef4777a3e0ab225640485d4d7a2c7a8934eb9f3bbd0",
+  "output_sha256": "769fe9ce99f8b3178be949c9ed9eb0f1224ff582e1dc924f9ea9ec2eb03c6a9e",
+  "patch_site_va": "0x170b0",
+  "cave_va": "0xdcac",
+  "code": "1f05007149a60454200080520f250014",
+  "intent": "Keep original OpenGL setup; also run the same API-selected generic RenderContext setup for Vulkan=1. No GPU-mode globals changed; null and CFI checks preserved.",
+  "status": "candidate; not device-tested",
+  "depends": "bootanimation-eof-v1"
+}

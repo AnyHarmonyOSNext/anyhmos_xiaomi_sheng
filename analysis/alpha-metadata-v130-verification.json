@@ -1,0 +1,50 @@
+{
+  "version": "v130",
+  "status": "flashed_readback_coldboot_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v130.img",
+    "bytes": 100663296,
+    "sha256": "dce4b1c8ac5bec1b0f6b7a9161f5b9b0a6fde50d6822bde79588a236b8a7b1b0"
+  },
+  "cpio_verified": true,
+  "preserved_v129_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/libdisplay_buffer_vdi_impl.z.so"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "egl_v126_unchanged": true,
+  "planar_gpu_v128_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "blob_allocation_unchanged": true,
+  "metadata_cross_process_test_passed": true,
+  "metadata_page_version": 3,
+  "observed_key": 12,
+  "observed_value": -1,
+  "range_checked": [
+    -1,
+    255
+  ],
+  "contract_proof": "output/logs/command-shell-20261030-094945-48586afdf38d.log",
+  "production_probe_proof": "output/logs/v129-metadata-values.trace.gz",
+  "cold_boot_verified": true,
+  "boot_id": "21ff18ed-b4a8-4fc1-bbc6-b7f5062e27db",
+  "partition_readback_proof": "output/logs/command-shell-20261030-095303-678bb192858b.log",
+  "autostart_exit": 0,
+  "autostart_seconds": 181.15,
+  "usb_reply_verified": true,
+  "desktop_screenshot": "output/screenshots/v130-desktop-0957.jpeg",
+  "desktop_screenshot_sha256": "289fc0328d583fc5119b36614ceb81a03769af4cb8ded58879d564deb6e13d70",
+  "render_metadata_failures_observed": 0,
+  "render_colorspace_failures_observed": 0,
+  "render_log_proof": [
+    "output/logs/command-shell-20261030-095706-318be42fd507.log",
+    "output/logs/command-shell-20261030-095835-91a174f01276.log"
+  ],
+  "display_client_target_property_error_unresolved": true,
+  "hardware_force_alpha_effect_verified": false
+}

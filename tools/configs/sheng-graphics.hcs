@@ -1,0 +1,40 @@
+/* SPDX-License-Identifier: MIT
+ * Two-host sheng trial, no donor board hardware enumeration.
+ * IDs follow hdf_attribute.c enumeration order: allocator=0, composer=1.
+ */
+root {
+    module = "hdf";
+    device_info {
+        match_attr = "hdf_manager";
+        allocator {
+            hostName = "allocator_host";
+            priority = 50;
+            allocator_device {
+                device0 {
+                    policy = 2;
+                    priority = 100;
+                    moduleName = "liballocator_driver_1.0.z.so";
+                    serviceName = "allocator_service";
+                    preload = 0;
+                    permission = 0664;
+                    deviceMatchAttr = "";
+                }
+            }
+        }
+        display_composer {
+            hostName = "composer_host";
+            priority = 50;
+            composer_device {
+                device0 {
+                    policy = 2;
+                    priority = 100;
+                    moduleName = "libdisplay_composer_driver_1.0.z.so";
+                    serviceName = "display_composer_service";
+                    preload = 0;
+                    permission = 0664;
+                    deviceMatchAttr = "";
+                }
+            }
+        }
+    }
+}

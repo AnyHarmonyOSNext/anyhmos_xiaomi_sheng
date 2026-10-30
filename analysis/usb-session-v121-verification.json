@@ -1,0 +1,35 @@
+{
+  "version": "v121",
+  "status": "flashed_readback_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v121.img",
+    "bytes": 100663296,
+    "sha256": "f6ca4bc55aaee10a8cd4cfb6c5e0f18e7859311187aaa1cf064dcb256c9e4982"
+  },
+  "probe": {
+    "bytes": 687160,
+    "sha256": "6dea951146f28cf741cd725ab8159e412f28980427ad98f64be303e7accff5e1"
+  },
+  "cpio_verified": true,
+  "init_boot_unchanged": true,
+  "preserved_v120_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/hmos-probe"
+  ],
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "pty_disconnect_reopen_verified": true,
+  "cold_boot_verified": true,
+  "usb_cold_boot_reconnect_verified": true,
+  "purpose": "recover tty EOF/EIO/POLLHUP, raw -HUPCL, discard partial stale input, bound kmsg drain",
+  "device_disconnect_cause": "not proven; no tty error telemetry in old binary",
+  "boot_id": "1fbd3e25-acc2-4702-89e4-9dc0af906ad6",
+  "autostart_exit": 0,
+  "autostart_seconds": 181.01,
+  "host_open_close_tests_passed": 6,
+  "observed_eof_recovery_seconds": 0.251,
+  "controlled_reenumeration_recovery_verified": true,
+  "proof": "output/logs/command-shell-20261030-065644-3030d6370b66.log"
+}

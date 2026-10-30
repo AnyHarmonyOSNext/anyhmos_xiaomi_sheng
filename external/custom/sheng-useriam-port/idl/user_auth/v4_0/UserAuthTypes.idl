@@ -1,0 +1,612 @@
+/*
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ /**
+ * @addtogroup HdfUserAuth
+ * @{
+ *
+ * @brief Provides APIs for the user_auth driver.
+ *
+ * The user_auth driver provides a unified interface for the user_auth service to access the user_auth driver.
+
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+
+ /**
+ * @file UserAuthTypes.idl
+ *
+ * @brief Defines the enumeration values and data structures of the user_auth driver.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+
+package ohos.hdi.user_auth.v4_0;
+
+ /**
+ * @brief Enumerates the credential types for authentication.
+ *
+ * @since 3.2
+ * @version 3.0
+ */
+enum AuthType : int {
+    /**< All types. */
+    ALL = 0,
+    /**< PIN authentication. */
+    PIN = 1,
+    /**< Facial authentication. */
+    FACE = 2,
+    /**< Fingerprint authentication. */
+    FINGERPRINT = 4,
+    /**< Recovery key. */
+    RECOVERY_KEY = 8,
+    /** Private pin authentication. */
+    PRIVATE_PIN = 16,
+};
+
+/**
+ * @brief Enumerates executor roles.
+ *
+ * @since 3.2
+ * @version 1.0
+ */
+enum ExecutorRole : int {
+    /**< The executor acts as a collector. */
+    COLLECTOR = 1,
+    /**< The executor acts as a verifier. */
+    VERIFIER = 2,
+    /**< The executor acts as a collector and verifier. */
+    ALL_IN_ONE = 3,
+};
+
+/**
+ * @brief Enumerates executor security levels.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+enum ExecutorSecureLevel : int {
+    /**< ESL0. */
+    ESL0 = 0,
+    /**< ESL1. */
+    ESL1 = 1,
+    /**< ESL2. */
+    ESL2 = 2,
+    /**< ESL3. */
+    ESL3 = 3,
+};
+
+/**
+ * @brief Defines pin auth's subtype.
+ *
+ * @since 3.2
+ * @version 3.0
+ */
+enum PinSubType : int {
+    /**< Six digit pin. */
+    PIN_SIX = 10000,
+    /**< Digit pin. */
+    PIN_NUMBER = 10001,
+    /**< Mixing pin. */
+    PIN_MIX = 10002,
+    /**< Four digit pin. */
+    PIN_FOUR = 10003,
+    /**< Pattern. */
+    PATTERN = 10004,
+    /** Password protection question */
+    PIN_QUESTION = 10005,
+};
+
+/**
+ * Schedule mode.
+ *
+ * @since 3.2
+ * @version 1.1
+ */
+enum ScheduleMode : int {
+    /**< The schedule mode is enrollment. */
+    ENROLL = 0,
+    /**< The schedule mode is authentication. */
+    AUTH = 1,
+    /**< The schedule mode is identification. */
+    IDENTIFY = 2,
+    /**< The schedule mode is abandon. */
+    ABANDON = 4,
+};
+
+/**
+ * Auth intent.
+ *
+ * @since 5.0
+ * @version 2.1
+ */
+enum AuthIntent : int {
+    /**< The auth intent is default. */
+    DEFUALT = 0,
+    /**< The auth intent is unlock. */
+    UNLOCK = 1,
+    /**< The auth intent silent auth. */
+    SILENT_AUTH = 2,
+    /**< The auth intention is question auth. */
+    QUESTION_AUTH = 3,
+    /**< The auth intention is abandoned pin auth. */
+    ABANDONED_PIN_AUTH = 4,
+};
+
+/**
+ * @brief User type.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+enum UserType : int {
+    /**< main user. */
+    MAIN = 0,
+    /**< sub user. */
+    SUB = 1,
+    /**< private user. */
+    PRIVATE = 2,
+};
+
+/**
+ * @brief Reuse mode.
+ *
+ * @since 5.0
+ * @version 2.0
+ */
+enum ReuseMode : int {
+    /**< auth type relevant. */
+    AUTH_TYPE_RELEVANT = 1,
+    /**< auth type irrelevant. */
+    AUTH_TYPE_IRRELEVANT = 2,
+    /**< caller irrelevant and auth type relevant */
+    CALLER_IRRELEVANT_AUTH_TYPE_RELEVANT = 3,
+    /**< caller irrelevant and auth type irrelevant */
+    CALLER_IRRELEVANT_AUTH_TYPE_IRRELEVANT = 4,
+};
+
+/**
+ * @brief Defines executor registration information.
+ *
+ * @since 4.0
+ * @version 2.0
+ */
+struct ExecutorRegisterInfo {
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Executor role. See @{ExecutorRole}. */
+    int executorRole;
+    /**< Executor sensor hint under the same authentication type, 0 is not allowed. */
+    unsigned int executorSensorHint;
+    /**< Executor matcher. */
+    unsigned int executorMatcher;
+    /**< Executor secure level. See @{ExecutorSecureLevel}. */
+    int esl;
+    /**< Indicates the max acl of template.*/
+    unsigned int maxTemplateAcl;
+    /**< Public key of the executor. */
+    unsigned char[] publicKey;
+    /**< Device udid. */
+    String deviceUdid;
+    /**< signed remote executor info. */
+    unsigned char[] signedRemoteExecutorInfo;
+};
+
+/**
+ * @brief Defines executor information.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+struct ExecutorInfo {
+    /**< Executor index under the authentication framework. */
+    unsigned long executorIndex;
+    /**< Executor registration information. See @{ExecutorRegisterInfo}. */
+    struct ExecutorRegisterInfo info;
+};
+
+/**
+ * @brief Defines executor messages.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+struct ExecutorSendMsg {
+    /**< Executor index under the authentication framework. */
+    unsigned long executorIndex;
+    /**< Indicates command ID. */
+    int commandId;
+    /**< Executor message to send. */
+    unsigned char[] msg;
+};
+
+/**
+ * @brief Defines authentication result information.
+ *
+ * @since 4.0
+ * @version 2.0
+ */
+struct AuthResultInfo {
+    /**< Authentication result. */
+    int result;
+    /**< Lockout duration, in millisecond. */
+    int lockoutDuration;
+    /**< Remaining authentication attempts before a lockout. */
+    int remainAttempts;
+    /**< Executor messages. See @{ExecutorSendMsg}. */
+    struct ExecutorSendMsg[] msgs;
+    /**< Authentication token. */
+    unsigned char[] token;
+    /**< Protection key for the user file key. */
+    unsigned char[] rootSecret;
+    /**< User ID. */
+    int userId;
+    /**< Credential ID. */
+    unsigned long credentialId;
+    /**< Pin expired info. */
+    long pinExpiredInfo;
+    /**< Remote auth result message. */
+    unsigned char[] remoteAuthResultMsg;
+    /**< Re-enroll flag. */
+    boolean reEnrollFlag;
+};
+
+/**
+ * @brief Defines identification result information.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+struct IdentifyResultInfo {
+    /**< iIdentification result. */
+    int result;
+    /**< User ID. */
+    int userId;
+    /**< Identification token. */
+    unsigned char[] token;
+};
+
+/**
+ * @brief Defines credential information.
+ *
+ * @since 4.0
+ * @version 2.1
+ */
+struct CredentialInfo {
+    /**< Credential ID. */
+    unsigned long credentialId;
+    /**< Executor index under the authentication framework. */
+    unsigned long executorIndex;
+    /**< Template ID. */
+    unsigned long templateId;
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Executor matcher. */
+    unsigned int executorMatcher;
+    /**< Executor sensor hint under the same authentication type. 0 is not allowed. */
+    unsigned int executorSensorHint;
+    /**< Auth sub type. */
+    int authSubType;
+    /**< Credential abandon flag. */
+    boolean isAbandoned;
+    /**< Credential remained valid period. */
+    long validityPeriod;
+};
+
+/**
+ * @brief Defines credential enrollment information.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+struct EnrolledInfo {
+    /**< Enrollment ID. */
+    unsigned long enrolledId;
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+};
+
+/**
+ * @brief Defines enrollment result information.
+ *
+ * @since 4.0
+ * @version 1.0
+ */
+struct EnrollResultInfo {
+    /**< Credential ID. */
+    unsigned long credentialId;
+    /**< Old credential information. See {@link CredentialInfo}. */
+    struct CredentialInfo oldInfo;
+    /**< Protection key for the user file key. */
+    unsigned char[] rootSecret;
+    /**< Old protection key for the user file key. */
+    unsigned char[] oldRootSecret;
+    /**< Indicates the authentication token of the user password. */
+    unsigned char[] authToken;
+};
+
+/**
+ * @brief Defines scheduling information.
+ *
+ * @since 3.2
+ * @version 2.0
+ */
+struct ScheduleInfo {
+    /**< Schedule index of authentication. */
+    unsigned long scheduleId;
+    /**< Templates to authenticate. */
+    unsigned long[] templateIds;
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Executor matcher. */
+    unsigned int executorMatcher;
+    /**< Operation to perform. See @{scheduleMode}*/
+    int scheduleMode;
+    /**< Executor indexes. */
+    unsigned long [] executorIndexes;
+    /**< Executor messages. */
+    unsigned char[][] executorMessages;
+};
+
+/**
+ * @brief Defines enrolled users information.
+ *
+ * @since 4.0
+ * @version 1.1
+ */
+struct UserInfo {
+    /**< SecureUid of this user. */
+    unsigned long secureUid;
+    /**< PinSubType of this user. See @{@PinSubType}. */
+    int pinSubType;
+    /**< Related enrolled information list. See @{EnrolledInfo}. */
+    struct EnrolledInfo[] enrolledInfos;
+};
+
+/**
+ * @brief Defines enrolled users information.
+ *
+ * @since 4.1
+ * @version 1.2
+ */
+struct ExtUserInfo {
+    /**< User ID. */
+    int userId;
+    /**< info of this user. */
+    struct UserInfo userInfo;
+};
+
+/**
+ * @brief Defines the authentication param.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+struct AuthParamBase {
+    /**< User ID. */
+    int userId;
+    /**< Authentication trust level. */
+    unsigned int authTrustLevel;
+    /**< Executor sensor hint under the same authentication type, 0 is not allowed. */
+    unsigned int executorSensorHint;
+    /**< Challenge of the authentication. */
+    unsigned char[] challenge;
+    /**< Caller name. */
+    String callerName;
+    /**< Caller Type. */
+    int callerType;
+    /**< Calling napi or innerkit api version. */
+    int apiVersion;
+};
+
+/**
+ * @brief Defines the authentication parameter.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+struct AuthParam {
+    /**< Authentication parameter. See @{AuthParamBase}. */
+    AuthParamBase baseParam;
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Authentication intent. See @{AuthIntent}. */
+    int authIntent;
+    /**< Is os account verified. */
+    boolean isOsAccountVerified;
+    /**< Collector udid. */
+    String collectorUdid;
+};
+
+/**
+ * @brief Request information of reused unlock result.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+struct ReuseUnlockParam {
+    /**< Authentication parameter. See @{AuthParam}. */
+    AuthParamBase baseParam;
+    /** Authentication type. See @{AuthType}. */
+    int[] authTypes;
+    /** The allowable reuse duration. */
+    unsigned long reuseUnlockResultDuration;
+    /** Reuse unlock result mode. See @{ReuseMode}. */
+    int reuseUnlockResultMode;
+};
+
+/**
+ * @brief Defines credential enrollment parameters.
+ *
+ * @since 3.2
+ * @version 3.0
+ */
+struct EnrollParam {
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Executor sensor hint under the same authentication type. 0 is not allowed. */
+    unsigned int executorSensorHint;
+    /**< Caller name. */
+    String callerName;
+    /** Caller Type. */
+    int callerType;
+    /**< Calling napi or innerkit api version. */
+    int apiVersion;
+    /**< User ID. */
+    int userId;
+    /**< User Type. */
+    int userType;
+    /**< Auth sub type. */
+    int authSubType;
+};
+
+/**
+* @brief Define credential enrollment ID information.
+*
+ * @since 5.0
+ * @version 1.0
+*/
+struct EnrolledState {
+    /** Desensitization Enrolled ID. */
+    unsigned long credentialDigest;
+    /** Number of Credential. */
+    unsigned short credentialCount;
+};
+
+/**
+ * @brief The reuse result of unlock device.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+struct ReuseUnlockInfo {
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Authentication token. */
+    unsigned char[] token;
+    /**< Enrolled state. See @{EnrolledState}. */
+    EnrolledState enrolledState;
+};
+
+/**
+ * @brief Global config type.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+enum GlobalConfigType : int {
+    /** Pin expired period */
+    PIN_EXPIRED_PERIOD = 1,
+    /** Enable specified authType capability. */
+    ENABLE_STATUS = 2,
+};
+
+/**
+ * @brief Global config value.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+union GlobalConfigValue {
+    /** Pin expired period value. When pinExpiredPeriod equals to 0, userAuth won't check pin expired period. */
+    long pinExpiredPeriod;
+    /** Enable specified authType capability.*/
+    boolean enableStatus;
+};
+
+/**
+ * @brief Global config param.
+ *
+ * @since 5.0
+ * @version 1.0
+ */
+struct GlobalConfigParam {
+    /** Global config type. See @{GlobalConfigType}*/
+    int type;
+    /** Global config value. See @{GlobalConfigValue}*/
+    GlobalConfigValue value;
+    /** Specified userIds. GlobalConfigParam will be effect for all userspaces when the array is empty. */
+    int[] userIds;
+    /** Specified authTypes, shouldn't empty. See @{AuthType}.*/
+    int[] authTypes;
+};
+
+/**
+ * @brief User auth token plain.
+ *
+ * @since 5.1
+ * @version 1.0
+ */
+struct UserAuthTokenPlain {
+    /** Token version. */
+    unsigned int version;
+    /** User ID. */
+    int userId;
+    /** Challenge of the token. */
+    unsigned char[] challenge;
+    /** Time interval between token signed and verified. */
+    unsigned long timeInterval;
+    /** Authentication trust level. */
+    unsigned int authTrustLevel;
+    /** Authentication type. See @{AuthType}. */
+    int authType;
+    /** Auth mode. */
+    int authMode;
+    /** Security level. */
+    unsigned int securityLevel;
+    /** Token type. */
+    int tokenType;
+    /** SecureUid of the user. */
+    unsigned long secureUid;
+    /** Enrollment ID. */
+    unsigned long enrolledId;
+    /** Credential ID. */
+    unsigned long credentialId;
+    /** Collector udid. */
+    String collectorUdid;
+    /** Verifier udid. */
+    String verifierUdid;
+};
+
+/**
+ * @brief Credential operate type.
+ *
+ * @since 6.0
+ * @version 1.0
+ */
+enum CredentialOperateType : int {
+    /** credential delete */
+    CREDENTIAL_DELETE = 1,
+    /** credential abandon */
+    CREDENTIAL_ABANDON = 2,
+};
+
+/**
+ * @brief Credential operate result.
+ *
+ * @since 6.0
+ * @version 1.0
+ */
+struct CredentialOperateResult {
+    /** credential operate type. */
+    CredentialOperateType operateType;
+    /** schedule information. */
+    ScheduleInfo scheduleInfo;
+    /** credential information. */
+    CredentialInfo[] credentialInfos;
+};
+/** @} */

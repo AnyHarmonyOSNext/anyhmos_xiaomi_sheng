@@ -1,0 +1,14 @@
+{
+  "probe": {
+    "bytes": 8388608,
+    "sha256": "82ec549caac35b6343a3637050eaad29d9f1b13fefa1abc6c18095b5a90a9b77",
+    "cpio_verified": true,
+    "original_init_preserved": true
+  },
+  "trace": {
+    "bytes": 8388608,
+    "sha256": "161c5b555553f3f156e96692212b7fb33b835c1285fa24b0acf4f74338996bc5",
+    "cpio_verified": true,
+    "original_init_preserved": true
+  }
+}

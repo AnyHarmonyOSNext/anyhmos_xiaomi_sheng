@@ -1,0 +1,28 @@
+{
+  "version": "v124",
+  "status": "flashed_readback_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v124.img",
+    "bytes": 100663296,
+    "sha256": "7763f5d4ff3d8388659052e7ca99843601461d559e44a65bf064530e7e837507"
+  },
+  "cpio_verified": true,
+  "preserved_v123_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/libdisplay_buffer_vdi_impl.z.so"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "metadata_cross_process_test_passed": true,
+  "cold_boot_verified": true,
+  "surface_decode_verified": true,
+  "boot_id": "c2c5099b-9e8b-4c1a-95e9-e391437ed49d",
+  "autostart_seconds": 180.93,
+  "autostart_exit": 0,
+  "hardware_decode_verified": false,
+  "real_app_playback_verified": false
+}

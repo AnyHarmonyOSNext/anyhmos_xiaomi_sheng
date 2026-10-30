@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ /**
+ * @addtogroup HdfUserAuth
+ * @{
+ *
+ * @brief Provides APIs for the user_auth driver.
+ *
+ * The user_auth driver provides a unified interface for the user_auth service to access the user_auth driver.
+
+ *
+ * @since 6.1
+ * @version 1.0
+ */
+
+ /**
+ * @file UserAuthTypes.idl
+ *
+ * @brief Defines the enumeration values and data structures of the user_auth driver.
+ *
+ * @since 6.1
+ * @version 1.0
+ */
+
+package ohos.hdi.user_auth.v4_1;
+
+import ohos.hdi.user_auth.v4_0.UserAuthTypes;
+
+/**
+ * @brief Defines the authentication parameter.
+ *
+ * @since 6.1
+ * @version 1.0
+ */
+struct AuthParamExt {
+    /**< Authentication parameter. See @{AuthParamBase}. */
+    AuthParamBase baseParam;
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Authentication intent. See @{AuthIntent}. */
+    int authIntent;
+    /**< Is os account verified. */
+    boolean isOsAccountVerified;
+    /**< Collector udid. */
+    String collectorUdid;
+    /**< Used to specify the credential Ids for authentication */
+    unsigned long[] credentialIdList;
+};
+
+/**
+ * @brief Defines credential enrollment parameters.
+ *
+ * @since 6.1
+ * @version 1.0
+ */
+struct EnrollParamExt {
+    /**< Authentication type. See @{AuthType}. */
+    int authType;
+    /**< Executor sensor hint under the same authentication type. 0 is not allowed. */
+    unsigned int executorSensorHint;
+    /**< Caller name. */
+    String callerName;
+    /** Caller Type. */
+    int callerType;
+    /**< Calling napi or innerkit api version. */
+    int apiVersion;
+    /**< User ID. */
+    int userId;
+    /**< User Type. */
+    int userType;
+    /**< Auth sub type. */
+    int authSubType;
+    /**< Additional info about the credential. */
+    String additionalInfo;
+};
+/** @} */

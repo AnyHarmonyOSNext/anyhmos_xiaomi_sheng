@@ -1,0 +1,12 @@
+{
+  "sha256": "7fc882bec76f9c10383d159b5828e666a06d8829eb8ad565757933196d08374e",
+  "bytes": 552112,
+  "imports_checked_against_rebuilt_gki": 145,
+  "also_observed_in_stock_modules": 132,
+  "cfi_check_present": true,
+  "module_btf_removed": true,
+  "runtime_tested": false,
+  "runtime_test_attempted": true,
+  "runtime_accepted": false,
+  "runtime_observation": "v14 ipc load began at 40.148s; no result persisted; device rebooted; exact kernel cause remains unknown; returned to TWRP"
+}

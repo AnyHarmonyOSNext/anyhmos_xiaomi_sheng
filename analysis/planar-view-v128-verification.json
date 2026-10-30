@@ -1,0 +1,34 @@
+{
+  "version": "v128",
+  "status": "flashed_yuv_pixels_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v128.img",
+    "bytes": 100663296,
+    "sha256": "471a9463ae5fca7f71415e6c2bdb9f929852d2d162a400421415ecf6d8eb481d"
+  },
+  "cpio_verified": true,
+  "preserved_v127_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/apply-compat-paths.sh",
+    "sheng-compat-v118/graphics/libvulkan_freedreno.so.gz"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "egl_v126_unchanged": true,
+  "planar_allocator_v127_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "cold_boot_verified": true,
+  "planar_gpu_pixels_verified": true,
+  "partition_readback_verified": true,
+  "boot_id": "06734658-5575-4612-bc7c-2e8f95a39919",
+  "yuv_verified_pixels_per_format": 11520,
+  "yuv_verified_formats": [
+    24,
+    28,
+    29
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "version": "v133",
+  "status": "built_not_flashed",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v133.img",
+    "bytes": 100663296,
+    "sha256": "2b4ea0c5007ed8610edeff5a25f44d552335fdd6dd48864a8de3df5d67ea3c61"
+  },
+  "cpio_verified": true,
+  "preserved_v132_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/apply-hardware-v116.sh",
+    "sheng-compat-v118/graphics/init-hardware-v116.cfg",
+    "sheng-compat-v118/graphics/native_wifi_link_v133"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "graphics_v130_unchanged": true,
+  "battery_v131_unchanged": true,
+  "startup_video_v132_unchanged": true,
+  "wifi_connection_state_unchanged": true,
+  "permissions_not_bypassed": true,
+  "service_opt_in_only": true,
+  "cold_boot_verified": false,
+  "native_api_query_verified": false
+}

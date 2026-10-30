@@ -1,0 +1,12 @@
+[
+  {
+    "file": "output/libbt_vendor_sheng_v136.so",
+    "bytes": 6104,
+    "sha256": "214104716484e6664217c85818c4ab9dd818ed31fba07a0223928c37a601656d"
+  },
+  {
+    "file": "output/native_bt_vendor_check_v136",
+    "bytes": 7200,
+    "sha256": "e078add02e1a87bff64d5b6455865517b2872b600538ad6bd4e22d17e4c4daf9"
+  }
+]

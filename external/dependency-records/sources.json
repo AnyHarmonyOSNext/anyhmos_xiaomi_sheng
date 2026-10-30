@@ -1,0 +1,37 @@
+[
+  {
+    "name": "bounds_checking_function",
+    "commit": "61baa7a3eb9347efca58397d1d0504faa96d79f0",
+    "origin": "https://github.com/openharmony/third_party_bounds_checking_function.git"
+  },
+  {
+    "name": "commonlibrary_c_utils",
+    "commit": "ca8f23ab4f417ee96113cf8f8d9361c8023dbe99",
+    "origin": "https://github.com/openharmony/commonlibrary_c_utils.git"
+  },
+  {
+    "name": "communication_ipc",
+    "commit": "aa4cde3ae634c4ddb030fcfd39a9e964e33a684c",
+    "origin": "https://github.com/openharmony/communication_ipc.git"
+  },
+  {
+    "name": "drivers_hdf_core",
+    "commit": "9bb86f79c7e5b9939679cb0164e97a517800360b",
+    "reused": true
+  },
+  {
+    "name": "drivers_interface",
+    "commit": "9eaf9abff9c390f6a4bf95271cf482e72c3b8c29",
+    "reused": true
+  },
+  {
+    "name": "drivers_peripheral",
+    "commit": "8cd47d4bb09a4d160e8b713b2fbccf8d41e2025f",
+    "reused": true
+  },
+  {
+    "name": "hiviewdfx_hilog",
+    "commit": "e9464123fe3ac541aaf44df825f08cdfa365182e",
+    "reused": true
+  }
+]

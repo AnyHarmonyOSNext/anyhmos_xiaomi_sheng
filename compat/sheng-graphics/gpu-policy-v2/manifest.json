@@ -1,0 +1,10 @@
+{
+  "sheng_gpu_policy": {
+    "bytes": 8976,
+    "sha256": "c948fd5cb1a8e6693cad3c07ed214699c849184a2d04554ec930f2ceb8c71680"
+  },
+  "sheng_gpu_policy.c": {
+    "bytes": 4513,
+    "sha256": "2bc92bc256179c2c7ae07691a4081af3522090b452833fbbebe6999c8a1d7468"
+  }
+}

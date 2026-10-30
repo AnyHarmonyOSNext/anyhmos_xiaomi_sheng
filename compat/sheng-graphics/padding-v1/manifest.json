@@ -1,0 +1,10 @@
+{
+  "libdisplay_buffer_vdi_impl.z.so": {
+    "bytes": 13456,
+    "sha256": "075c735f2c55193cf8314add321ec7dab22eefb6d5364080629c0fbf3e069807"
+  },
+  "allocator_native_import": {
+    "bytes": 9264,
+    "sha256": "8aa48d37495767fdfca928ee78ee795b312b94a28da3f2a08b3ad53396a74b1f"
+  }
+}

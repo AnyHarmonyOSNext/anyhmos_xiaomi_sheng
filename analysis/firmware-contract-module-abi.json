@@ -1,0 +1,21 @@
+{
+  "artifact": "compat/firmware-contract/bin/sheng_fw_contract.ko",
+  "sha256": "bf5eafde71ee6f9166f4b7dcb1d698300be1c7b1da03af16e1600ea288e92b3a",
+  "bytes": 12912,
+  "imports": {
+    "module_layout": "0x222dd63",
+    "__stack_chk_fail": "0xc2c193d2",
+    "param_ops_ulong": "0xefc8860a",
+    "param_ops_int": "0x65cafe5c",
+    "param_ops_charp": "0x3fa768fd",
+    "__ubsan_handle_cfi_check_fail_abort": "0xdf7a4c69",
+    "_printk": "0x92997ed8",
+    "release_firmware": "0xc6d09aa9",
+    "request_firmware_direct": "0x12a49c27",
+    "strcmp": "0xe2d5255a"
+  },
+  "all_import_crcs_match_running_kernel": true,
+  "legacy_cfi_present": true,
+  "btf_removed": true,
+  "runtime_tested": false
+}

@@ -1,0 +1,16 @@
+{
+  "name": "sheng-render-callback-sync-v1",
+  "input_sha256": "0a699e2317dab4699117a90e7e21d5727bd823e3474a70ebaed4d32667e519ff",
+  "output_sha256": "14ebe64529fe31bba13b65e59d5af27588466b80147a977ae8a28d079c4c9351",
+  "function": "RSClientToServiceConnectionProxy::SetScreenChangeCallback",
+  "virtual_address": "0x89d798",
+  "file_offset": 9029528,
+  "before": "21008052",
+  "after": "01008052",
+  "guard_offset": 9029524,
+  "guard": "e0830091210080529deb0094800240f9",
+  "intent": "TF_ASYNC to TF_SYNC for code 20480; no server/caller/token checks changed",
+  "reference": "AnyHarmonyOS cb1ce16 render-caller-pid concept; reference input hash/offset deliberately not reused",
+  "official_source": "graphic_graphic_2d c19cedf62fefde6bf184aa815feeaf0346aa4d49 proxy line 1000",
+  "status": "built, not device-tested"
+}

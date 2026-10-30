@@ -1,0 +1,33 @@
+{
+  "process": "powermgr",
+  "systemability": [
+    {
+      "name": 3308,
+      "libpath": "libdisplaymgrservice.z.so",
+      "run-on-create": true,
+      "distributed": false,
+      "dump_level": 1,
+      "min_hdi_proxy_version": []
+    },
+    {
+      "name": 3301,
+      "libpath": "libpowermgrservice.z.so",
+      "run-on-create": true,
+      "distributed": false,
+      "dump_level": 1,
+      "min_hdi_proxy_version": [
+        "libpower_proxy_1.3.z.so"
+      ]
+    },
+    {
+      "name": 3302,
+      "libpath": "libbatteryservice.z.so",
+      "run-on-create": true,
+      "distributed": false,
+      "dump_level": 1,
+      "min_hdi_proxy_version": [
+        "libbattery_proxy_2.0.z.so"
+      ]
+    }
+  ]
+}

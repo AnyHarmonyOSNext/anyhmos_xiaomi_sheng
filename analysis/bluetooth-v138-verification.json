@@ -1,0 +1,36 @@
+{
+  "version": "v138",
+  "status": "built_not_flashed",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v138.img",
+    "bytes": 100663296,
+    "sha256": "9de286aaa780073861950b96b9027c05f7b06202e4efd768e264edabd6bded1d"
+  },
+  "cpio_verified": true,
+  "preserved_v135_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/bluetooth-v136/SHA256SUMS",
+    "sheng-compat-v118/bluetooth-v136/init-bluetooth-v136.cfg",
+    "sheng-compat-v118/bluetooth-v136/native_bt_host_check_v138",
+    "sheng-compat-v118/graphics/apply-hardware-v116.sh"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "wifi_v134_unchanged": true,
+  "bootcontrol_v135_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "original_hci_library_and_binder_proxy_verified": true,
+  "hci_evidence": "output/logs/command-shell-20261030-130357-151f47102711.log",
+  "peripheral_security_development_option_process_local": true,
+  "cold_boot_verified": false,
+  "original_service_identity_verified": false,
+  "system_scan_and_pair_verified": false,
+  "preserved_v136_entries": true,
+  "same_inode_copy_removed": true,
+  "preserved_v137_entries": true,
+  "explicit_diagnostic_permission": true
+}

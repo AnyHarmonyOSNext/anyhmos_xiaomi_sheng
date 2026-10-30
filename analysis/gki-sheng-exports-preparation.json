@@ -1,0 +1,32 @@
+{
+  "source": "6f2f96be86b93de6ed58a2c46b456fb49734c382",
+  "added_gpl_exports": [
+    "sheng_hmos_ipc_api_v1"
+  ],
+  "config_change": "local whitelist path and appended export names only",
+  "cfi": "CONFIG_CFI_CLANG=y; CONFIG_CFI_PERMISSIVE remains unset",
+  "shim_sha256": "5e3867b5e9562616d8a12f641ab79d364b12e1b7f9096644139b7bab1e06c959",
+  "typed_private_apis": [
+    "__list_lru_init",
+    "__wake_up_pollfree",
+    "close_fd_get_file",
+    "has_capability_noaudit",
+    "list_lru_add",
+    "list_lru_count_node",
+    "list_lru_del",
+    "list_lru_destroy",
+    "list_lru_isolate",
+    "list_lru_walk_node",
+    "mmput_async",
+    "security_binder_set_context_mgr",
+    "security_binder_transaction",
+    "security_binder_transfer_binder",
+    "security_binder_transfer_file",
+    "security_cred_getsecid",
+    "security_release_secctx",
+    "security_secid_to_secctx",
+    "task_work_add",
+    "zap_page_range"
+  ],
+  "flashed": false
+}

@@ -1,0 +1,515 @@
+// Ace5 client-composition backend. Real DRM enumeration and atomic scanout.
+// No device composition, protected buffers, private compression or fake fences.
+#include "composer_exports.h"
+#include "log.h"
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
+#include <fcntl.h>
+#include <map>
+#include <mutex>
+#include <poll.h>
+#include <pthread.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <linux/dma-buf.h>
+#include <linux/dma-heap.h>
+#include <time.h>
+#include <unistd.h>
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <drm_fourcc.h>
+
+namespace OHOS::HDI::Display::Composer {
+namespace {
+constexpr int OK = 0, FAIL = -1, INVALID = -3, UNSUPPORTED = -5;
+namespace V = V1_0;
+// The donor's non-community command responser calls fdParcel.Move() before
+// returning from both buffer setters. The VDI owns this incoming fence.
+struct OwnedFence {
+    int fd;
+    explicit OwnedFence(int value) : fd(value) {}
+    ~OwnedFence() { if (fd >= 0) close(fd); }
+    int Take() { int value = fd; fd = -1; return value; }
+};
+struct Buffer {
+    BufferHandle value{};
+    int fence = -1;
+    Buffer() { value.fd = -1; }
+    void Clear() {
+        if (value.fd >= 0) close(value.fd);
+        if (fence >= 0) close(fence);
+        value.fd = -1; fence = -1;
+    }
+    ~Buffer() { Clear(); }
+    int Set(const BufferHandle &b, OwnedFence &acquire) {
+        int fd = fcntl(b.fd, F_DUPFD_CLOEXEC, 0);
+        if (fd < 0) return FAIL;
+        Clear(); value = b; value.fd = fd; value.virAddr = nullptr; fence = acquire.Take();
+        return OK;
+    }
+};
+struct Layer {
+    LayerInfo info{};
+    LayerAlpha alpha{};
+    IRect region{}, crop{};
+    uint32_t zorder = 0;
+    bool premulti = false;
+    TransformType transform = V::ROTATE_NONE;
+    V::CompositionType composition = V::COMPOSITION_CLIENT;
+    BlendType blend = V::BLEND_NONE;
+    MaskInfo mask{};
+    LayerColor color{};
+    std::vector<IRect> dirty, visible;
+    Buffer buffer;
+};
+std::mutex mutex;
+int drm = -1;
+// SHENG_SPLIT_SCANOUT_V1: each DSI half needs its own SSPP plane.
+uint32_t connector = 0, crtc = 0, plane = 0, secondPlane = 0, modeBlob = 0, currentFb = 0;
+uint32_t mmWidth = 0, mmHeight = 0, nextLayer = 1;
+drmModeModeInfo mode{};
+std::map<uint32_t, Layer> layers;
+Buffer client;
+IRect clientCrop{};
+std::vector<IRect> clientDamage;
+std::mutex vsyncMutex;
+bool vsyncEnabled = false, quit = false, threadStarted = false;
+uint64_t vsyncPeriod = 16666667ULL;
+pthread_t vsyncThread;
+VBlankCallback vsyncCallback = nullptr;
+void *vsyncData = nullptr;
+uint64_t Period() { return mode.vrefresh ? 1000000000ULL / mode.vrefresh : 16666667ULL; }
+bool Device(uint32_t id) { return id == 0 && drm >= 0 && connector; }
+void Log(const char *message) { Ace5Log("%s errno=%d", message, errno); }
+int Active(bool &active)
+{
+    auto *props = drmModeObjectGetProperties(drm, crtc, DRM_MODE_OBJECT_CRTC);
+    if (!props) return FAIL;
+    bool found = false;
+    for (uint32_t i = 0; i < props->count_props; ++i) {
+        auto *p = drmModeGetProperty(drm, props->props[i]);
+        if (p) {
+            if (!strcmp(p->name, "ACTIVE")) { active = props->prop_values[i] != 0; found = true; }
+            drmModeFreeProperty(p);
+        }
+    }
+    drmModeFreeObjectProperties(props); return found ? OK : FAIL;
+}
+int Property(drmModeAtomicReqPtr request, uint32_t id, uint32_t type,
+    const char *name, uint64_t value)
+{
+    auto *props = drmModeObjectGetProperties(drm, id, type);
+    if (!props) return FAIL;
+    int result = FAIL;
+    for (uint32_t i = 0; i < props->count_props; ++i) {
+        auto *p = drmModeGetProperty(drm, props->props[i]);
+        if (!p) continue;
+        if (!strcmp(name, p->name)) result = drmModeAtomicAddProperty(request, id, p->prop_id, value);
+        drmModeFreeProperty(p);
+        if (result >= 0) break;
+    }
+    drmModeFreeObjectProperties(props);
+    return result;
+}
+void CleanupDrm()
+{
+    if (drm >= 0) {
+        if (currentFb) drmModeRmFB(drm, currentFb);
+        if (modeBlob) drmModeDestroyPropertyBlob(drm, modeBlob);
+        close(drm);
+    }
+    drm = -1; connector = crtc = plane = secondPlane = modeBlob = currentFb = 0;
+}
+int Initialize()
+{
+    if (Device(0)) return OK;
+    drm = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
+    if (drm < 0) { Log("open card0 failed"); return FAIL; }
+    if (drmSetClientCap(drm, DRM_CLIENT_CAP_UNIVERSAL_PLANES, 1) ||
+        drmSetClientCap(drm, DRM_CLIENT_CAP_ATOMIC, 1) || drmSetMaster(drm)) {
+        Log("atomic/master failed"); CleanupDrm(); return FAIL;
+    }
+    auto *resources = drmModeGetResources(drm);
+    if (!resources) { Log("resources failed"); CleanupDrm(); return FAIL; }
+    uint32_t crtcIndex = 0;
+    for (int i = 0; i < resources->count_connectors && !connector; ++i) {
+        auto *c = drmModeGetConnector(drm, resources->connectors[i]);
+        if (!c) continue;
+        if (c->connection == DRM_MODE_CONNECTED && c->connector_type == DRM_MODE_CONNECTOR_DSI && c->count_modes) {
+            mode = c->modes[0];
+            for (int m = 0; m < c->count_modes; ++m)
+                if (c->modes[m].type & DRM_MODE_TYPE_PREFERRED) { mode = c->modes[m]; break; }
+            connector = c->connector_id; mmWidth = c->mmWidth; mmHeight = c->mmHeight;
+            for (int e = 0; e < c->count_encoders && !crtc; ++e) {
+                auto *encoder = drmModeGetEncoder(drm, c->encoders[e]);
+                if (!encoder) continue;
+                for (int k = 0; k < resources->count_crtcs; ++k)
+                    if (encoder->possible_crtcs & (1U << k)) { crtc = resources->crtcs[k]; crtcIndex = k; break; }
+                drmModeFreeEncoder(encoder);
+            }
+        }
+        drmModeFreeConnector(c);
+    }
+    drmModeFreeResources(resources);
+    auto *planes = drmModeGetPlaneResources(drm);
+    if (planes) {
+        for (uint32_t i = 0; i < planes->count_planes; ++i) {
+            auto *p = drmModeGetPlane(drm, planes->planes[i]);
+            if (!p) continue;
+            bool primary = false, overlay = false, rgba = false;
+            for (uint32_t j = 0; j < p->count_formats; ++j)
+                if (p->formats[j] == DRM_FORMAT_ABGR8888) rgba = true;
+            auto *props = drmModeObjectGetProperties(drm, p->plane_id, DRM_MODE_OBJECT_PLANE);
+            if (props) {
+                for (uint32_t j = 0; j < props->count_props; ++j) {
+                    auto *prop = drmModeGetProperty(drm, props->props[j]);
+                    if (prop) {
+                        if (!strcmp(prop->name, "type")) {
+                            primary = props->prop_values[j] == DRM_PLANE_TYPE_PRIMARY;
+                            overlay = props->prop_values[j] == DRM_PLANE_TYPE_OVERLAY;
+                        }
+                        drmModeFreeProperty(prop);
+                    }
+                }
+                drmModeFreeObjectProperties(props);
+            }
+            if (rgba && (p->possible_crtcs & (1U << crtcIndex))) {
+                if (primary && !plane) plane = p->plane_id;
+                if (overlay && !secondPlane) secondPlane = p->plane_id;
+            }
+            drmModeFreePlane(p);
+        }
+        drmModeFreePlaneResources(planes);
+    }
+    if (!connector || !crtc || !plane || !secondPlane || mode.hdisplay != 3048 || mode.vdisplay != 2032 || drmModeCreatePropertyBlob(drm, &mode, sizeof(mode), &modeBlob)) {
+        Log("no usable display"); CleanupDrm(); return FAIL;
+    }
+    for (auto item : {std::make_pair(crtc,uint32_t(DRM_MODE_OBJECT_CRTC)), std::make_pair(connector,uint32_t(DRM_MODE_OBJECT_CONNECTOR))}) {
+        auto *props=drmModeObjectGetProperties(drm,item.first,item.second);
+        if (!props) continue;
+        for (uint32_t i=0;i<props->count_props;i++) {
+            auto*p=drmModeGetProperty(drm,props->props[i]);
+            if (!p) continue;
+            if (strstr(p->name,"core_") || strstr(p->name,"fence") || strstr(p->name,"sync") || strstr(p->name,"trigger") || strstr(p->name,"idle") || !strcmp(p->name,"LP"))
+                Ace5Log("initial_property object=%u name=%s value=%llu", item.first,p->name,(unsigned long long)props->prop_values[i]);
+            drmModeFreeProperty(p);
+        }
+        drmModeFreeObjectProperties(props);
+    }
+    clientCrop = {0, 0, mode.hdisplay, mode.vdisplay};
+    Ace5Log("discovered Sheng dual DSI=%u CRTC=%u planes=%u,%u %ux%u@%u mm=%ux%u",
+        connector, crtc, plane, secondPlane, mode.hdisplay, mode.vdisplay, mode.vrefresh, mmWidth, mmHeight);
+    return OK;
+}
+uint64_t MonotonicNs()
+{
+    timespec now{}; clock_gettime(CLOCK_MONOTONIC, &now);
+    return uint64_t(now.tv_sec) * 1000000000ULL + now.tv_nsec;
+}
+void *VsyncLoop(void *)
+{
+    unsigned sequence = 0;
+    uint64_t deadline = MonotonicNs();
+    for (;;) {
+        uint64_t period;
+        {
+            std::lock_guard<std::mutex> lock(vsyncMutex);
+            if (quit) break;
+            period = vsyncPeriod;
+        }
+        // This remains software vsync. Never wait for the DRM/fence mutex:
+        // blocking Commit plus a relative sleep otherwise adds a second frame.
+        deadline += period;
+        uint64_t now = MonotonicNs();
+        if (deadline <= now) deadline += ((now - deadline) / period + 1) * period;
+        timespec target{time_t(deadline / 1000000000ULL), long(deadline % 1000000000ULL)};
+        int rc;
+        do { rc = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &target, nullptr); }
+        while (rc == EINTR);
+        if (rc) { Ace5Log("vsync clock wait failed rc=%d", rc); break; }
+        VBlankCallback callback; void *data;
+        {
+            std::lock_guard<std::mutex> lock(vsyncMutex);
+            if (quit) break;
+            callback = vsyncEnabled ? vsyncCallback : nullptr; data = vsyncData;
+        }
+        if (callback) callback(++sequence, MonotonicNs(), data);
+    }
+    return nullptr;
+}
+uint32_t Format(int format)
+{
+    switch (format) {
+        case V::PIXEL_FMT_RGBA_8888: return DRM_FORMAT_ABGR8888;
+        case V::PIXEL_FMT_RGBX_8888: return DRM_FORMAT_XBGR8888;
+        case V::PIXEL_FMT_BGRA_8888: return DRM_FORMAT_ARGB8888;
+        case V::PIXEL_FMT_BGRX_8888: return DRM_FORMAT_XRGB8888;
+        case V::PIXEL_FMT_RGB_565: return DRM_FORMAT_RGB565;
+        default: return 0;
+    }
+}
+bool Linear(const BufferHandle &b)
+{
+    int bpp = b.format == V::PIXEL_FMT_RGB_565 ? 2 : 4;
+    return Format(b.format) && b.fd >= 0 && !b.reserveFds && !b.reserveInts &&
+        !(b.usage & (1ULL << 11)) && b.width > 0 && b.height > 0 &&
+        b.width <= 16384 && b.height <= 16384 && int64_t(b.stride) >= int64_t(b.width) * bpp &&
+        b.size > 0 && int64_t(b.stride) * b.height <= b.size;
+}
+// Aggregate only: avoid per-frame logging changing the pacing being measured.
+struct SubmitMetrics {
+    uint64_t begin = 0, frames = 0, sum[5]{}, maximum = 0, slow = 0;
+    void Record(const uint64_t (&t)[6]) {
+        if (!begin) begin = t[0];
+        ++frames;
+        for (int i=0;i<5;++i) sum[i] += t[i+1]-t[i];
+        uint64_t total=t[5]-t[0];
+        if (total>maximum) maximum=total;
+        if (total>25000000ULL) ++slow;
+        if (t[5]-begin < 2000000000ULL) return;
+        Ace5Log("submit frames=%llu span_ms=%llu avg_us fence=%llu import=%llu props=%llu commit=%llu cleanup=%llu max_us=%llu over25ms=%llu",
+            (unsigned long long)frames, (unsigned long long)((t[5]-begin)/1000000),
+            (unsigned long long)(sum[0]/frames/1000), (unsigned long long)(sum[1]/frames/1000),
+            (unsigned long long)(sum[2]/frames/1000), (unsigned long long)(sum[3]/frames/1000),
+            (unsigned long long)(sum[4]/frames/1000), (unsigned long long)(maximum/1000),
+            (unsigned long long)slow);
+        *this = {};
+    }
+} submitMetrics;
+int Submit(bool testOnly)
+{
+    uint64_t timing[6]{MonotonicNs()};
+    const auto &b = client.value;
+    if (!Linear(b)) return INVALID;
+    if (clientCrop.w < 2 || int64_t(clientCrop.x) + clientCrop.w > b.width ||
+        int64_t(clientCrop.y) + clientCrop.h > b.height) return INVALID;
+    if (client.fence >= 0) {
+        pollfd p{client.fence, POLLIN, 0}; int rc;
+        do { rc = poll(&p, 1, 1000); } while (rc < 0 && errno == EINTR);
+        if (rc <= 0 || !(p.revents & POLLIN)) return FAIL;
+    }
+    timing[1] = MonotonicNs();
+    uint32_t handle = 0, fb = 0;
+    if (drmPrimeFDToHandle(drm, b.fd, &handle)) { Log("prime import failed"); return FAIL; }
+    uint32_t handles[4]{handle}, pitches[4]{uint32_t(b.stride)}, offsets[4]{};
+    int rc = drmModeAddFB2(drm, b.width, b.height, Format(b.format), handles, pitches, offsets, &fb, 0);
+    drm_gem_close closeHandle{handle, 0}; ioctl(drm, DRM_IOCTL_GEM_CLOSE, &closeHandle);
+    if (rc) { Log("AddFB2 failed"); return FAIL; }
+    auto *request = drmModeAtomicAlloc();
+    if (!request) { drmModeRmFB(drm, fb); return FAIL; }
+    timing[2] = MonotonicNs();
+    bool valid = true;
+#define PROP(object, type, name, value) valid &= Property(request, object, type, name, value) >= 0
+    PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "CRTC_ID", crtc);
+    PROP(crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", modeBlob);
+    PROP(crtc, DRM_MODE_OBJECT_CRTC, "ACTIVE", 1);
+    // Partition the source exactly; no gap or duplicated column at the seam.
+    const int leftSourceWidth = clientCrop.w / 2;
+    for (unsigned half = 0; half < 2; ++half) {
+        const uint32_t target = half ? secondPlane : plane;
+        const int sourceX = clientCrop.x + (half ? leftSourceWidth : 0);
+        const int sourceWidth = half ? clientCrop.w - leftSourceWidth : leftSourceWidth;
+        const uint32_t outputWidth = mode.hdisplay / 2;
+        PROP(target, DRM_MODE_OBJECT_PLANE, "FB_ID", fb);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_ID", crtc);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_X", uint64_t(sourceX) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_Y", uint64_t(clientCrop.y) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_W", uint64_t(sourceWidth) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_H", uint64_t(clientCrop.h) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_X", half * outputWidth);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_Y", 0);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_W", outputWidth);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_H", mode.vdisplay);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "color_fill", 0);
+    }
+#undef PROP
+    timing[3] = MonotonicNs();
+    rc = valid ? drmModeAtomicCommit(drm, request,
+        DRM_MODE_ATOMIC_ALLOW_MODESET | (testOnly ? DRM_MODE_ATOMIC_TEST_ONLY : 0), nullptr) : -1;
+    timing[4] = MonotonicNs();
+    drmModeAtomicFree(request);
+    if (rc || testOnly) drmModeRmFB(drm, fb);
+    else { if (currentFb) drmModeRmFB(drm, currentFb); currentFb = fb; }
+    timing[5] = MonotonicNs();
+    if (!rc && !testOnly) submitMetrics.Record(timing);
+    if (rc) Log("atomic commit failed");
+    return rc == 0 ? OK : FAIL;
+}
+int BlackPowerOn()
+{
+    int heap = open("/dev/dma_heap/system", O_RDONLY | O_CLOEXEC);
+    if (heap < 0) return FAIL;
+    uint32_t pitch = (uint32_t(mode.hdisplay) * 4 + 255) & ~255U;
+    dma_heap_allocation_data alloc{};
+    alloc.len = (uint64_t(pitch) * mode.vdisplay + 4095) & ~4095ULL;
+    alloc.fd_flags = O_RDWR | O_CLOEXEC;
+    int result = ioctl(heap, DMA_HEAP_IOCTL_ALLOC, &alloc); close(heap);
+    if (result) return FAIL;
+    void *map = mmap(nullptr, alloc.len, PROT_WRITE, MAP_SHARED, alloc.fd, 0);
+    if (map == MAP_FAILED) { close(alloc.fd); return FAIL; }
+    dma_buf_sync sync{DMA_BUF_SYNC_START | DMA_BUF_SYNC_WRITE};
+    result = ioctl(alloc.fd, DMA_BUF_IOCTL_SYNC, &sync);
+    if (!result) {
+        memset(map, 0, alloc.len);
+        sync.flags = DMA_BUF_SYNC_END | DMA_BUF_SYNC_WRITE;
+        result = ioctl(alloc.fd, DMA_BUF_IOCTL_SYNC, &sync);
+    }
+    munmap(map, alloc.len);
+    BufferHandle b{};
+    b.fd = alloc.fd; b.width = mode.hdisplay; b.height = mode.vdisplay;
+    b.stride = pitch; b.size = alloc.len; b.format = V::PIXEL_FMT_RGBX_8888;
+    OwnedFence noFence(-1);
+    if (!result) result = client.Set(b, noFence);
+    close(alloc.fd);
+    if (result) return FAIL;
+    clientCrop = {0, 0, mode.hdisplay, mode.vdisplay};
+    return Submit(false);
+}
+}
+
+#define DEVICE_LOCK(id) std::lock_guard<std::mutex> lock(mutex); if (!Device(id)) return INVALID
+#define LAYER_LOCK(id, lid) DEVICE_LOCK(id); auto it = layers.find(lid); if (it == layers.end()) return INVALID; auto &layer = it->second
+extern "C" int32_t LoadVdiImpl() { std::lock_guard<std::mutex> lock(mutex); return Initialize(); }
+extern "C" int32_t DestroyVdiImpl()
+{
+    { std::lock_guard<std::mutex> lock(vsyncMutex); quit = true; }
+    if (threadStarted) pthread_join(vsyncThread, nullptr);
+    std::lock_guard<std::mutex> lock(mutex);
+    threadStarted = false;
+    { std::lock_guard<std::mutex> state(vsyncMutex); vsyncEnabled = false; vsyncCallback = nullptr; }
+    layers.clear(); client.Clear(); CleanupDrm(); return OK;
+}
+extern "C" int32_t RegHotPlugCallback(HotPlugCallback cb, void *data)
+{
+    if (!cb) return INVALID;
+    { std::lock_guard<std::mutex> lock(mutex); if (Initialize()) return FAIL; }
+    cb(0, true, data); return OK;
+}
+extern "C" int32_t GetDisplayCapability(uint32_t id, DisplayCapability &info)
+{
+    DEVICE_LOCK(id); info = {}; info.name = "Sheng DSI"; info.type = V::DISP_INTF_MIPI;
+    info.phyWidth = mmWidth; info.phyHeight = mmHeight; info.supportLayers = 64;
+    return OK;
+}
+extern "C" int32_t GetDisplaySupportedModes(uint32_t id, std::vector<DisplayModeInfo> &modes)
+{ DEVICE_LOCK(id); modes = {{mode.hdisplay, mode.vdisplay, mode.vrefresh, 0}}; return OK; }
+extern "C" int32_t GetDisplaySupportedModesExt(uint32_t id, std::vector<DisplayModeInfoExt> &modes)
+{ DEVICE_LOCK(id); modes = {{{mode.hdisplay, mode.vdisplay, mode.vrefresh, 0}, 0}}; return OK; }
+extern "C" int32_t GetDisplayMode(uint32_t id, uint32_t &modeId)
+{ DEVICE_LOCK(id); modeId = 0; return OK; }
+extern "C" int32_t SetDisplayMode(uint32_t id, uint32_t modeId)
+{ DEVICE_LOCK(id); return modeId == 0 ? OK : UNSUPPORTED; }
+extern "C" int32_t GetDisplayPowerStatus(uint32_t id, V::DispPowerStatus &status)
+{
+    DEVICE_LOCK(id); bool active;
+    if (Active(active)) return FAIL;
+    status = active ? V::POWER_STATUS_ON : V::POWER_STATUS_OFF;
+    return OK;
+}
+extern "C" int32_t SetDisplayPowerStatus(uint32_t id, V::DispPowerStatus status)
+{
+    DEVICE_LOCK(id);
+    if (status != V::POWER_STATUS_ON && status != V::POWER_STATUS_OFF) return UNSUPPORTED;
+    bool active;
+    if (Active(active)) return FAIL;
+    bool wanted = status == V::POWER_STATUS_ON;
+    if (active == wanted) return OK;
+    int result;
+    if (wanted) result = client.value.fd >= 0 ? Submit(false) : BlackPowerOn();
+    else {
+        auto *request = drmModeAtomicAlloc();
+        if (!request) return FAIL;
+        // SHENG_FULL_POWER_OFF_V1: detach all objects, so reactivation
+        // rebuilds the complete routing state instead of retaining a mode.
+        bool valid = true;
+        for (uint32_t target : {plane, secondPlane}) {
+            valid &= Property(request, target, DRM_MODE_OBJECT_PLANE, "FB_ID", 0) >= 0;
+            valid &= Property(request, target, DRM_MODE_OBJECT_PLANE, "CRTC_ID", 0) >= 0;
+        }
+        valid &= Property(request, connector, DRM_MODE_OBJECT_CONNECTOR, "CRTC_ID", 0) >= 0;
+        valid &= Property(request, crtc, DRM_MODE_OBJECT_CRTC, "ACTIVE", 0) >= 0;
+        valid &= Property(request, crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", 0) >= 0;
+        result = valid ? drmModeAtomicCommit(drm, request, DRM_MODE_ATOMIC_ALLOW_MODESET, nullptr) : FAIL;
+        drmModeAtomicFree(request);
+        if (!result && currentFb) { drmModeRmFB(drm, currentFb); currentFb = 0; }
+    }
+    Ace5Log("power requested=%d result=%d", int(status), result);
+    return result == 0 ? OK : FAIL;
+}
+extern "C" int32_t GetDisplayVBlankPeriod(uint32_t id, uint64_t &period)
+{ DEVICE_LOCK(id); period = Period(); return OK; }
+extern "C" int32_t RegDisplayVBlankCallback(uint32_t id, VBlankCallback cb, void *data)
+{
+    DEVICE_LOCK(id); std::lock_guard<std::mutex> state(vsyncMutex);
+    vsyncCallback = cb; vsyncData = data; vsyncPeriod = Period();
+    if (!threadStarted) { quit = false; if (pthread_create(&vsyncThread, nullptr, VsyncLoop, nullptr)) return FAIL; threadStarted = true; }
+    return OK;
+}
+extern "C" int32_t SetDisplayVsyncEnabled(uint32_t id, bool enabled)
+{ DEVICE_LOCK(id); std::lock_guard<std::mutex> state(vsyncMutex); vsyncEnabled = enabled; return OK; }
+extern "C" int32_t SetDisplayClientBuffer(uint32_t id, const BufferHandle &buffer, int32_t fence)
+{ OwnedFence acquire(fence); DEVICE_LOCK(id); return Linear(buffer) ? client.Set(buffer, acquire) : UNSUPPORTED; }
+extern "C" int32_t SetDisplayClientCrop(uint32_t id, const IRect &rect)
+{
+    DEVICE_LOCK(id);
+    if (rect.x < 0 || rect.y < 0 || rect.w <= 0 || rect.h <= 0 ||
+        int64_t(rect.x) + rect.w > 16384 || int64_t(rect.y) + rect.h > 16384) return INVALID;
+    clientCrop = rect; return OK;
+}
+extern "C" int32_t SetDisplayClientDamage(uint32_t id, std::vector<IRect> &rects)
+{ DEVICE_LOCK(id); clientDamage = rects; return OK; }
+extern "C" int32_t Commit(uint32_t id, int32_t &fence)
+{ DEVICE_LOCK(id); fence = -1; return Submit(false); }
+// Explicit test-only entry point for the independent recovery contract test.
+extern "C" int32_t Ace5TestClientBuffer(uint32_t id)
+{ DEVICE_LOCK(id); return Submit(true); }
+extern "C" int32_t CreateLayer(uint32_t id, const LayerInfo &info, uint32_t &layerId)
+{
+    DEVICE_LOCK(id); if (layers.size() >= 64 || !nextLayer || info.width <= 0 || info.height <= 0) return INVALID;
+    layerId = nextLayer++; layers[layerId].info = info; return OK;
+}
+extern "C" int32_t DestroyLayer(uint32_t id, uint32_t layerId)
+{ DEVICE_LOCK(id); return layers.erase(layerId) ? OK : INVALID; }
+extern "C" int32_t PrepareDisplayLayers(uint32_t id, bool &needFlushFb)
+{ DEVICE_LOCK(id); needFlushFb = true; return OK; }
+extern "C" int32_t GetDisplayCompChange(uint32_t id, std::vector<uint32_t> &ids, std::vector<int32_t> &types)
+{
+    DEVICE_LOCK(id); ids.clear(); types.clear();
+    for (const auto &entry : layers) if (entry.second.composition != V::COMPOSITION_CLIENT) {
+        ids.push_back(entry.first); types.push_back(V::COMPOSITION_CLIENT);
+    }
+    return OK;
+}
+extern "C" int32_t GetDisplayReleaseFence(uint32_t id, std::vector<uint32_t> &ids, std::vector<int32_t> &fences)
+{ DEVICE_LOCK(id); ids.clear(); fences.clear(); return OK; } // Only client-composed layers; no layer DMA consumption.
+extern "C" int32_t SetLayerBuffer(uint32_t id, uint32_t layerId, const BufferHandle &buffer, int32_t fence)
+{ OwnedFence acquire(fence); LAYER_LOCK(id, layerId); return buffer.fd >= 0 ? layer.buffer.Set(buffer, acquire) : INVALID; }
+extern "C" int32_t ClearLayerBuffer(uint32_t id, uint32_t layerId)
+{ LAYER_LOCK(id, layerId); layer.buffer.Clear(); return OK; }
+extern "C" int32_t ClearDisplayClientBuffer(uint32_t id)
+{ DEVICE_LOCK(id); client.Clear(); return OK; }
+#define SETTER(name, type, member) extern "C" int32_t name(uint32_t id, uint32_t layerId, type value) { LAYER_LOCK(id, layerId); layer.member = value; return OK; }
+SETTER(SetLayerAlpha, const LayerAlpha &, alpha)
+SETTER(SetLayerRegion, const IRect &, region)
+SETTER(SetLayerCrop, const IRect &, crop)
+SETTER(SetLayerZorder, uint32_t, zorder)
+SETTER(SetLayerPreMulti, bool, premulti)
+SETTER(SetLayerTransformMode, TransformType, transform)
+SETTER(SetLayerDirtyRegion, const std::vector<IRect> &, dirty)
+SETTER(SetLayerVisibleRegion, std::vector<IRect> &, visible)
+SETTER(SetLayerCompositionType, V::CompositionType, composition)
+SETTER(SetLayerBlendType, BlendType, blend)
+SETTER(SetLayerMaskInfo, const MaskInfo, mask)
+SETTER(SetLayerColor, const LayerColor &, color)
+#undef SETTER
+}
+
+#ifdef ACE5_VSYNC_TEST
+namespace OHOS::HDI::Display::Composer {
+extern "C" void Ace5InitializeVsyncForTest() { std::lock_guard<std::mutex> lock(mutex); drm=open("/dev/null",O_RDWR); connector=1; mode.vrefresh=60; }
+
+extern "C" void Ace5HoldComposerLockForTest(unsigned microseconds)
+{ std::lock_guard<std::mutex> lock(mutex); usleep(microseconds); }
+}
+#endif

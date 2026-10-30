@@ -1,0 +1,348 @@
+[
+  {
+    "name": "hmos-reference--AnyHarmonyOS",
+    "origin": "https://github.com/YiKongk/AnyHarmonyOS.git",
+    "commit": "cb1ce16e71392404ecb56f812380ac18c7085520",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--agm",
+    "origin": "https://github.com/LineageOS/android_vendor_qcom_opensource_agm.git",
+    "commit": "35c3491ff5566de4f60a64ad47e74fb39cd192e0",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--data-service-upstream",
+    "origin": "https://github.com/openharmony/distributeddatamgr_datamgr_service.git",
+    "commit": "d298338e927108fe56920504eac918625aa4382e",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--kv-upstream",
+    "origin": "https://github.com/openharmony/distributeddatamgr_kv_store.git",
+    "commit": "19a9b9ecf9110b2316aad4d423aa328536661ec4",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--memmgr-upstream",
+    "origin": "https://github.com/openharmony/resourceschedule_memmgr.git",
+    "commit": "ae0095521ed66344c08ebf8a588b9a254ede9704",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--pal",
+    "origin": "https://github.com/LineageOS/android_vendor_qcom_opensource_arpal-lx.git",
+    "commit": "2b80768e69510139ecd3cbb69b61c7414e3cc0ff",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--pal-sm8550-a13",
+    "origin": "https://github.com/LineageOS/android_vendor_qcom_opensource_arpal-lx.git",
+    "commit": "be0aabdcf87bbf2cf7192440e7e4c1094db42c8e",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--pd-mapper",
+    "origin": "https://github.com/andersson/pd-mapper.git",
+    "commit": "5ecd2fe926aca7abfe40724177f63b942cff3947",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--qcom-bluetooth-hci-v136",
+    "origin": "https://github.com/LineageOS/android_vendor_qcom_opensource_bluetooth-commonsys-intf.git",
+    "commit": "f585b71f02fd468643b70fda99ec40906ddb9487",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--qcom-bt-v136",
+    "origin": "https://github.com/LineageOS/android_hardware_qcom_bt.git",
+    "commit": "e558553b2e446ee13ebff3b78346363f3b004b17",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--qcom-hci-v136",
+    "origin": "https://github.com/LineageOS/android_hardware_qcom_bt.git",
+    "commit": "253a606c588628ed243e339bbbed46e6f9920e35",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--qrtr",
+    "origin": "https://github.com/andersson/qrtr.git",
+    "commit": "29e36ae164389580a0f8ea7a7fdb728140ae978d",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--rdb-upstream",
+    "origin": "https://github.com/openharmony/distributeddatamgr_relational_store.git",
+    "commit": "5dc1cfce560349e405e39442e97f3e3b0c9f509e",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--sheng-audio-kernel",
+    "origin": "https://github.com/MiCode/vendor_qcom_opensource_audio-kernel.git",
+    "commit": "ecb48c9495fc9aff0c340f9de53cb944a58b448a",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--sheng-display-drivers",
+    "origin": "https://github.com/MiCode/vendor_opensource_display-drivers.git",
+    "commit": "6461221b68908b990e1fa2b60feaa812cb944ef5",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--xiaomi-sheng-thp",
+    "origin": "https://github.com/ianchb/xiaomi-sheng-thp.git",
+    "commit": "34046210932d654a4c0df0121ecc31c008f8148c",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-reference--xiaomi-sheng-wlan",
+    "origin": "https://github.com/MiCode/vendor_qcom_opensource_wlan.git",
+    "commit": "fb3ed419a7447dae9bdfb05913e34b0b75dd7e68",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--account_os_account",
+    "origin": "https://github.com/openharmony/account_os_account.git",
+    "commit": "c093fc450e5015230859f702fbd12238f5bdf8e2",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--bounds_checking_function",
+    "origin": "https://github.com/openharmony/third_party_bounds_checking_function.git",
+    "commit": "61baa7a3eb9347efca58397d1d0504faa96d79f0",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--bundlemanager_bundle_framework",
+    "origin": "https://github.com/openharmony/bundlemanager_bundle_framework.git",
+    "commit": "7865b761797896f384e9465298014cdb541cb73e",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--commonlibrary_c_utils",
+    "origin": "https://github.com/openharmony/commonlibrary_c_utils.git",
+    "commit": "ca8f23ab4f417ee96113cf8f8d9361c8023dbe99",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--communication_ipc",
+    "origin": "https://github.com/openharmony/communication_ipc.git",
+    "commit": "aa4cde3ae634c4ddb030fcfd39a9e964e33a684c",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--communication_wifi",
+    "origin": "https://github.com/openharmony/communication_wifi.git",
+    "commit": "abbb443cdd943a393b3d0b95d21df67262b7610e",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--distributedhardware_device_manager",
+    "origin": "https://github.com/openharmony/distributedhardware_device_manager.git",
+    "commit": "2adef0db2499308206951284bfa49bee675ea0d6",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--drivers_hdf_core",
+    "origin": "https://github.com/openharmony/drivers_hdf_core.git",
+    "commit": "9bb86f79c7e5b9939679cb0164e97a517800360b",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--drivers_interface",
+    "origin": "https://github.com/openharmony/drivers_interface.git",
+    "commit": "9eaf9abff9c390f6a4bf95271cf482e72c3b8c29",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--drivers_peripheral",
+    "origin": "https://github.com/openharmony/drivers_peripheral.git",
+    "commit": "8cd47d4bb09a4d160e8b713b2fbccf8d41e2025f",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--filemanagement_storage_service",
+    "origin": "https://github.com/openharmony/filemanagement_storage_service.git",
+    "commit": "dc76e0a9392832e6b182aa29b298285be9d78ae7",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--graphic_graphic_2d",
+    "origin": "https://github.com/openharmony/graphic_graphic_2d.git",
+    "commit": "c19cedf62fefde6bf184aa815feeaf0346aa4d49",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--hiviewdfx_hilog",
+    "origin": "https://github.com/openharmony/hiviewdfx_hilog.git",
+    "commit": "e9464123fe3ac541aaf44df825f08cdfa365182e",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--mesa3d",
+    "origin": "https://github.com/openharmony/third_party_mesa3d.git",
+    "commit": "ea74a6339917390657db153cb9792f9ccac9f5ae",
+    "worktree_dirty": true,
+    "patch_bytes": 39926,
+    "patch": "patches/source--mesa3d.patch",
+    "untracked_source_files": 2
+  },
+  {
+    "name": "source--powermgr_battery_manager",
+    "origin": "https://github.com/openharmony/powermgr_battery_manager.git",
+    "commit": "7cbd39ddb00965b51fd635ce2a22ee00a63f0535",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--security_huks",
+    "origin": "https://github.com/openharmony/security_huks.git",
+    "commit": "334b31453086b90ebe8ab70cc8d9e90cd6694149",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--startup_appspawn",
+    "origin": "https://github.com/openharmony/startup_appspawn.git",
+    "commit": "751538e417925348ef212077030f464355da71a4",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--startup_init",
+    "origin": "https://github.com/openharmony/startup_init.git",
+    "commit": "970d25f5bda91afa7e02fce69d134b716d0b141d",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "source--window_window_manager",
+    "origin": "https://github.com/openharmony/window_window_manager.git",
+    "commit": "8b0d8fe1b973d865904c942c286b3d2a3b9b08e7",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "desktop-debug--ability_runtime_6",
+    "origin": "https://github.com/openharmony/ability_ability_runtime.git",
+    "commit": "cd6063a90b273f4364a97ade0e306596e7d2042b",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "desktop-debug--arkui_ace_engine",
+    "origin": "https://github.com/openharmony/arkui_ace_engine.git",
+    "commit": "21b150e7bb1d5308846f8e5be8ef0482fb433315",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "desktop-debug--msdp_device_status_6",
+    "origin": "https://github.com/openharmony/msdp_device_status.git",
+    "commit": "da9d1ee538f79f1b3b8458859864dd76a6a8b032",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "desktop-debug--theme_screenlock_mgr",
+    "origin": "https://github.com/openharmony/theme_screenlock_mgr.git",
+    "commit": "ac21a51ed26539df12eec46ee1e914df6c2ff650",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "brightness-reference--powermgr_display_manager",
+    "origin": "https://github.com/openharmony/powermgr_display_manager.git",
+    "commit": "4a38b549a346c03bdd4aeabafbf782f6a7a33408",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-work--gki-5.15.178",
+    "origin": "https://android.googlesource.com/kernel/common",
+    "commit": "6f2f96be86b93de6ed58a2c46b456fb49734c382",
+    "worktree_dirty": false,
+    "patch_bytes": 0,
+    "untracked_source_files": 0
+  },
+  {
+    "name": "hmos-work--gki-sheng-exports",
+    "origin": "https://android.googlesource.com/kernel/common",
+    "commit": "6f2f96be86b93de6ed58a2c46b456fb49734c382",
+    "worktree_dirty": true,
+    "patch_bytes": 456,
+    "patch": "patches/hmos-work--gki-sheng-exports.patch",
+    "untracked_source_files": 2
+  }
+]

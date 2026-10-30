@@ -1,0 +1,10 @@
+{
+  "libvulkan_freedreno.so": {
+    "bytes": 9339456,
+    "sha256": "ce1e10e7164e5abe59435ffa336e66dc6f01fec4d5da43100096120a081ca270"
+  },
+  "libvulkan_freedreno.so.gz": {
+    "bytes": 1821275,
+    "sha256": "3765bf10e5db75371867fc21f5d8f51d9084f90f2d55c7180707d20649c24090"
+  }
+}

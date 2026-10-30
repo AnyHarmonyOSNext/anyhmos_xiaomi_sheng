@@ -1,0 +1,29 @@
+{
+  "snapshot_date": "2026-10-30",
+  "current_persistent_version": "v145",
+  "package_type": "redacted_text_source_snapshot",
+  "complete_rom": false,
+  "screen_off_user_accepted": true,
+  "git_upload_performed": false,
+  "external_binaries_included": false,
+  "files_by_section": {
+    "README.en.md": 1,
+    "README.md": 1,
+    "analysis": 212,
+    "compat": 2390,
+    "docs": 5,
+    "external": 286,
+    "output": 55,
+    "tools": 1144
+  },
+  "excluded_categories": {
+    "symlink_or_cache": 1,
+    "not_source_extension": 3246
+  },
+  "notes": [
+    "Historical and withdrawn experiments are included for review, not automatic enablement.",
+    "Host paths, the test serial, and textual private network addresses are publication placeholders.",
+    "Checksums cover the exported/redacted bytes, not the original development files.",
+    "No blanket license is assigned; see docs/PROVENANCE.md."
+  ]
+}

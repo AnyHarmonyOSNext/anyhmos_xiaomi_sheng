@@ -1,0 +1,32 @@
+{
+  "status": "built_not_tested_readonly",
+  "source": "backed-up TWRP recovery_a.img",
+  "source_sha256": "e49349c89ace199c2543cba20edfa5cdcd823fa2bcf42e293eb50bbcaa8c6206",
+  "files": [
+    {
+      "name": "bootctrl.xiaomi_sm8550.so",
+      "bytes": 53488,
+      "sha256": "a8180cca581f5bd0afdacc215ce29db785d971544e05d9e200872db63bb2d7e1"
+    },
+    {
+      "name": "libsheng_bootcontrol_guarded_v135.so",
+      "bytes": 7944,
+      "sha256": "92db6e9f567ba53854d5dd84b2143ce6f65fca9b9b7555d5b5fc39a4b8dc5430"
+    },
+    {
+      "name": "libsheng_bootcontrol_readonly_v135.so",
+      "bytes": 6184,
+      "sha256": "6d9f42f4eb2f45a80dc4968617890047506d80d15f9d5b27836ea81c45c3402d"
+    },
+    {
+      "name": "libz.so",
+      "bytes": 98000,
+      "sha256": "603d90b6d9586dcdc51b28defdd6e89e07724b6df069529ecc10039f8424ef04"
+    }
+  ],
+  "archive": {
+    "file": "output/bootcontrol-readonly-v135.tar.gz",
+    "bytes": 74027,
+    "sha256": "a029afa2b44adba98b8b4f5e489347ae800defdee536dbcede83a9edd3522bc5"
+  }
+}

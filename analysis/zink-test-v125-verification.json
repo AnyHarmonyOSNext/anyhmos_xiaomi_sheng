@@ -1,0 +1,24 @@
+{
+  "version": "v125",
+  "status": "built_not_flashed",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v125.img",
+    "bytes": 100663296,
+    "sha256": "43513140007a8337041742b0245bd44d7306d5a40850c74a2897c9f6c40984f9"
+  },
+  "cpio_verified": true,
+  "preserved_v124_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/zink-private-test.tar.gz"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "metadata_v124_unchanged": true,
+  "global_egl_unchanged": true,
+  "private_zink_test_only": true,
+  "cold_boot_verified": false
+}

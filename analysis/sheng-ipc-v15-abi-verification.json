@@ -1,0 +1,10 @@
+{
+  "sha256": "6a0abb43bc8dee8c17f70ef45b28f36cde9efdb943699c5a8045b26ed0bb05ad",
+  "bytes": 553264,
+  "imports_checked_against_rebuilt_gki": 147,
+  "also_observed_in_stock_modules": 134,
+  "cfi_check_present": true,
+  "module_btf_removed": true,
+  "runtime_tested": false,
+  "artifact": "compat/sheng-hmos-ipc/v15/sheng_hmos_ipc.ko"
+}

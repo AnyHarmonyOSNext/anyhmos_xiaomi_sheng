@@ -1,0 +1,10 @@
+{
+  "libdisplay_buffer_vdi_impl.z.so": {
+    "bytes": 16760,
+    "sha256": "2e52ebe729d736e770872396c63fd45143072582e788dc743a83fbb684b6c52f"
+  },
+  "alpha_metadata_probe": {
+    "bytes": 11640,
+    "sha256": "e653a5a32fc707c890976418339f53e50de86665d196cb6f7d588fa074ed524e"
+  }
+}

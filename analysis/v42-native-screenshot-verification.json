@@ -1,0 +1,23 @@
+{
+  "file": "C:\\SHENG_WORKSPACE\\output\\screenshots\\v42-native-display-20261027-1702.jpeg",
+  "bytes": 97655,
+  "sha256": "a705b6ea044d63ee09d2b76395bf96bf66e508095ba3bcd1a5ed3b28964a169f",
+  "width": 2032,
+  "height": 3048,
+  "bgr_min": [
+    0,
+    0,
+    0
+  ],
+  "bgr_max": [
+    0,
+    0,
+    0
+  ],
+  "bgr_mean": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "source": "original snapshot_display, native init role, actual DMS/RenderService; no image synthesis/edit"
+}

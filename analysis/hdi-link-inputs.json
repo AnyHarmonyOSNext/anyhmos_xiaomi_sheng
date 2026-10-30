@@ -1,0 +1,92 @@
+[
+  {
+    "name": "libdisplay_composer_proxy_1.0.z.so",
+    "original_path": "/system/lib64/libdisplay_composer_proxy_1.0.z.so",
+    "bytes": 138576,
+    "sha256": "f3e50ffdf0175ebc05d8d4998943b41ceaa360e4aff9d06e79fb10e6ec8cd145"
+  },
+  {
+    "name": "libdisplay_composer_proxy_1.1.z.so",
+    "original_path": "/system/lib64/libdisplay_composer_proxy_1.1.z.so",
+    "bytes": 109488,
+    "sha256": "2d4bd9da06aa4be54bbc98f2b2443949f465c1e76bdabde5e7a7c46c7c422f5d"
+  },
+  {
+    "name": "libdisplay_composer_proxy_1.2.z.so",
+    "original_path": "/system/lib64/libdisplay_composer_proxy_1.2.z.so",
+    "bytes": 111024,
+    "sha256": "26314b5ffed7af777f53092a1bbe37af4b4a7def2ef7481b7c87886d63f1fba0"
+  },
+  {
+    "name": "libdisplay_composer_proxy_1.3.z.so",
+    "original_path": "/system/lib64/libdisplay_composer_proxy_1.3.z.so",
+    "bytes": 121600,
+    "sha256": "3eacded064550aef04864254db3677d603c84ef9e5377419b444d2b4f6817024"
+  },
+  {
+    "name": "libutils.z.so",
+    "original_path": "/system/lib64/chipset-sdk-sp/libutils.z.so",
+    "bytes": 224440,
+    "sha256": "2b886ea36377c5fabde05ee0aa938183e6a56e42547862eb5facbd135fbccb3b"
+  },
+  {
+    "name": "libhdi_base.z.so",
+    "original_path": "/system/lib64/chipset-sdk-sp/libhdi_base.z.so",
+    "bytes": 100152,
+    "sha256": "21e6760749c58abcd27d47b1c00c994b80fc441b76bd33f110b2a09709e34bcd"
+  },
+  {
+    "name": "libhdi.z.so",
+    "original_path": "/system/lib64/chipset-sdk-sp/libhdi.z.so",
+    "bytes": 107960,
+    "sha256": "94babbe407a0cd59d88f44de57ec97237e43748cedeb37ea8327158d92b28ba9"
+  },
+  {
+    "name": "libipc_single.z.so",
+    "original_path": "/system/lib64/platformsdk/libipc_single.z.so",
+    "bytes": 572640,
+    "sha256": "0a0254af83e76a05fa40ba5193a33bf5884875c405dc9839b26f08fb9b2b91ac"
+  },
+  {
+    "name": "libipc_common.z.so",
+    "original_path": "/system/lib64/platformsdk/libipc_common.z.so",
+    "bytes": 71056,
+    "sha256": "f65995f8be5e2ebebf6c4cc1b80de87cf96d32de22988944ff044d3cc90274f8"
+  },
+  {
+    "name": "libhdf_utils.z.so",
+    "original_path": "/system/lib64/chipset-sdk-sp/libhdf_utils.z.so",
+    "bytes": 103440,
+    "sha256": "7949ee90416db10f0ed5c7641786591d7a98eb34c18ff8cad0762b11c82abb72"
+  },
+  {
+    "name": "libhdifd_parcelable.z.so",
+    "original_path": "/system/lib64/chipset-sdk/libhdifd_parcelable.z.so",
+    "bytes": 24224,
+    "sha256": "2a535fc8e9bcaac6487f5f1893634bd4104fc3aec3d6fe15f50018ea4a6516e9"
+  },
+  {
+    "name": "libhilog.so",
+    "original_path": "/system/lib64/platformsdk/libhilog.so",
+    "bytes": 24672,
+    "sha256": "e5eca932dd25947878a00ee4a476fcf8fc496649c13564203dc28b6e385b7c92"
+  },
+  {
+    "name": "libsec_shared.z.so",
+    "original_path": "/system/lib64/chipset-sdk-sp/libsec_shared.z.so",
+    "bytes": 59384,
+    "sha256": "30c5a5ec5c406760900e8d267946bada549848012b22b436f0e0909a32aa4dba"
+  },
+  {
+    "name": "libc++.so",
+    "original_path": "/system/lib64/chipset-sdk-sp/libc++.so",
+    "bytes": 1282896,
+    "sha256": "e240c077a62d8a5b013d2fa1d17ed3b6b94bf4ec082222fc1388ffd9806bc341"
+  },
+  {
+    "name": "libdistributeddatasvcfwk.z.so",
+    "original_path": "/system/lib64/libdistributeddatasvcfwk.z.so",
+    "bytes": 578640,
+    "sha256": "77b6e7accf037cae71605f19848100e218c00c263f4fcff63445f74d1e4a86dd"
+  }
+]

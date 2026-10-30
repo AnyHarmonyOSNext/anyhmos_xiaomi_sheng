@@ -1,0 +1,5 @@
+{
+  "bytes": 15912,
+  "sha256": "49db4ecaa0306c9689c58428c0335318fe107725e8afd09d9bea0390d72b4436",
+  "mode": "same-thread inline only when gate file exists; cross-thread original queue retained"
+}

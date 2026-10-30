@@ -1,0 +1,9 @@
+{
+  "sheng-hmos-ipc": 15,
+  "sheng-hmos-ipc-exports": 16,
+  "sheng-firmware-contract": 3,
+  "sheng-useriam-port": 166,
+  "sheng-display-dsc": 3,
+  "sheng-ipc-tests": 2,
+  "sheng-graphics-port": 39
+}

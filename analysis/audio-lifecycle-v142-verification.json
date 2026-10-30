@@ -1,0 +1,38 @@
+{
+  "version": "v142",
+  "status": "flash_boot_audio_user_confirmed",
+  "cpio_verified": true,
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v142.img",
+    "bytes": 100663296,
+    "sha256": "365a51bb2819e85cb8d4985e1277194640d60b4a7a98db8719611342ba8cf210"
+  },
+  "preserved_v141_entries": true,
+  "changed_entries": [
+    "sheng-audio-v1/SHA256SUMS",
+    "sheng-audio-v1/audio/native/lib64/libsheng_audio_vdi.so",
+    "sheng-audio-v1/manifest.json"
+  ],
+  "audio_payload_checksums_verified": true,
+  "audio_library_sha256": "bdb31b5b56c379ca1141bc9bfa0d9067c45ebb2df47b4b664a83fed7964248ca",
+  "hot_playback_user_confirmed": true,
+  "hot_pause_resume_user_confirmed": true,
+  "cold_boot_verified": false,
+  "normal_reboot_verified": false,
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_unchanged": true,
+  "usb_v121_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "hardware_volume_unchanged": true,
+  "usb_first_boot_role_drop_fixed": false,
+  "readback_verified": true,
+  "flash_boot_id": "0481d576-12ec-4f34-9d72-8f5c79acf595",
+  "flash_boot_audio_user_confirmed": true,
+  "flash_boot_pause_resume_commands_verified": true,
+  "framework_exit_code": 0,
+  "framework_complete_uptime": 168.43,
+  "slot_mark_successful": false,
+  "slot_mark_failure": "callback -999 rejected by original guard; no bypass"
+}

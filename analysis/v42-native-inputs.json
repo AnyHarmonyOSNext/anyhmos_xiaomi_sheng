@@ -1,0 +1,31 @@
+{
+  "status": "candidate_not_flashed",
+  "config_bytes": 19693,
+  "resource_limits": [
+    "setrlimit RLIMIT_NICE 40 40",
+    "setrlimit RLIMIT_NOFILE 32768 32768"
+  ],
+  "token_service_native_uid": "access_token",
+  "snapshot_role": {
+    "name": "sheng_snapshot",
+    "path": [
+      "/system/bin/snapshot_display",
+      "-i",
+      "0",
+      "-f",
+      "/data/local/tmp/sheng-capture/display0.jpeg"
+    ],
+    "uid": "shell",
+    "gid": [
+      "shell"
+    ],
+    "permission": [
+      "ohos.permission.CAPTURE_SCREEN"
+    ],
+    "disabled": 1,
+    "once": 1,
+    "start-mode": "condition",
+    "sandbox": 0
+  },
+  "notes": "Snapshot is an explicit one-shot role with only CAPTURE_SCREEN; actual native init/token manager policy is used. No permission checks/token IDs/kernel APIs are forged."
+}

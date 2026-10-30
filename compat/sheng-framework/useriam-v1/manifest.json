@@ -1,0 +1,26 @@
+{
+  "interface_commit": "74caef74888bc73eecd3719e59f09b7e4b4e9d6f",
+  "extended_operations": "unsupported, failure -8",
+  "artifacts": {
+    "libsheng_userauth_4_0.so": {
+      "bytes": 260568,
+      "gzip_bytes": 97668,
+      "sha256": "f23c1322446bab6901a8186f2ff543bb188b6c1365ceb8884810c4828a7cbc62"
+    },
+    "libuser_auth_interface_service_4.1.z.so": {
+      "bytes": 21064,
+      "gzip_bytes": 6349,
+      "sha256": "3ae1c6fe7f7b0f189fea8436771564e6f78caeb2bba779ac25341c58b42d6b1a"
+    },
+    "libsheng_user_auth_driver.so": {
+      "bytes": 26032,
+      "gzip_bytes": 7719,
+      "sha256": "9eecdabc6815e5d5fe643c470610c2ede18bbdd18a1b2bd449cd08515d761331"
+    },
+    "useriam_empty_contract": {
+      "bytes": 25192,
+      "gzip_bytes": 9036,
+      "sha256": "6af2b61c0e81c6f77e83e7610ec0654cc91e6fe281b98a9feae3d7ee4663532a"
+    }
+  }
+}

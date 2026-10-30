@@ -1,0 +1,10 @@
+{
+  "composer_vdi.cpp": {
+    "bytes": 28691,
+    "sha256": "ac7cef402cf01e0e8cc87ccc380ff345f4b60ac6292ea1c8a93a9df2c99957e6"
+  },
+  "libdisplay_composer_vdi_impl.z.so": {
+    "bytes": 107440,
+    "sha256": "f8d4b0c5436c9c131558a55538f9ba3c4e95c7c14e75ebe6696b509b434688d5"
+  }
+}

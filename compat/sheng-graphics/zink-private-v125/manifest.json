@@ -1,0 +1,22 @@
+{
+  "native_zink_contract": {
+    "bytes": 16688,
+    "sha256": "dac4d7103e9d1a70dd3e6e9dfb169b4eaf0a858829002da7f52279995c135ee9"
+  },
+  "libEGL_impl.so": {
+    "bytes": 317080,
+    "sha256": "c4fa4639d5d1b66a17380cb57d3a192b1edba9d10282cdd62debbbed42edc6e5"
+  },
+  "libGLESv2_impl.so.2": {
+    "bytes": 54568,
+    "sha256": "34c1ae97b9c1d22d75a917864eb492bda6b433a0039febda3cf912129719c65f"
+  },
+  "libGLESv1_CM_impl.so.1": {
+    "bytes": 22712,
+    "sha256": "a9e5c19f128ea64d98afc58b1d1e2197dd95441994ef846815b08f3a72baf12d"
+  },
+  "libgallium-25.0.1.so": {
+    "bytes": 14380440,
+    "sha256": "af831f3bcd8958164447d2fd78e83a80aa04bc2d181da130f522f6f35fb75620"
+  }
+}

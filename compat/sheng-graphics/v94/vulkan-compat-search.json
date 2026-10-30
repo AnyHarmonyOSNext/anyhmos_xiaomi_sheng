@@ -1,0 +1,15 @@
+{
+  "name": "vulkan-compat-search",
+  "input_sha256": "3d6aa4145996faf241c5e5a2ba1a9161fffe30101c9f19b5f40da25743a5da2d",
+  "output_sha256": "1da47edf2298c34eed6ba625c60be4dcece4c4c3e2bbf2de97cd4e3977a09901",
+  "source": "work\\donor-hdi-link\\libvulkan.so",
+  "target": "/hmos-root/compat/lib64/libvulkan.so",
+  "changes": [
+    {
+      "offset": 94581,
+      "before": "2f73797374656d2f6574633a2f76656e646f722f65746300",
+      "after": "2f636f6d7061742f65746300000000000000000000000000"
+    }
+  ],
+  "validation": "OFFLINE_CANDIDATE_NOT_FLASHED"
+}

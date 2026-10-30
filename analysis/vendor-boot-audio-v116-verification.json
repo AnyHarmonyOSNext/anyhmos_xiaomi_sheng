@@ -1,0 +1,17 @@
+{
+  "image": "output\\vendor_boot_hmos_audio_v116.img",
+  "bytes": 100663296,
+  "sha256": "e997f7880c11df5fbbdb1b90661e2fa627dd1ec32dd61f8746df8fff3c95196d",
+  "original_sha256": "2f30ea2ca6ea3752924f0c1e27c0ba74d0256de1bfc90cc4f6df6e5eaf1a6c98",
+  "header_version": 4,
+  "page_size": 4096,
+  "original_cpio_entries": 372,
+  "preserved_original_entries": true,
+  "added_prefix": "sheng-audio-v1/",
+  "compressed_ramdisk_bytes": 40016119,
+  "original_compressed_bytes": 30994054,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "ramdisk_table_unchanged_except_size": true,
+  "avb_footer": "not copied: device AVB verification already disabled; no vbmeta writes"
+}

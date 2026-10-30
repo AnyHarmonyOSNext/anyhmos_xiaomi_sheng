@@ -1,0 +1,28 @@
+{
+  "version": "v126",
+  "status": "flashed_cold_tested",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v126.img",
+    "bytes": 100663296,
+    "sha256": "89c80804adb94c204b201563983b2f1453c62edb37b00e5fdd1633d12bee8192"
+  },
+  "cpio_verified": true,
+  "preserved_v125_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/apply-compat-paths.sh",
+    "sheng-compat-v118/graphics/start-graphics-v116.sh",
+    "sheng-compat-v118/graphics/zink-runtime-v126.tar.gz"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "metadata_v124_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "real_egl_window_green_pixels": 1024,
+  "cold_boot_verified": true,
+  "partition_readback_verified": true,
+  "boot_id": "eab03188-fd7e-451f-b71b-cedd1bdb0c4f"
+}

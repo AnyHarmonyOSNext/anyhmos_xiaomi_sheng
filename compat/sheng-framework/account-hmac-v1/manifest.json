@@ -1,0 +1,20 @@
+{
+  "scope": "account file HMAC only, no TEE or authentication implementation",
+  "donor": {
+    "libaccountmgr.z.so": "5b2173e6f641a7608bc39c5a1b4755bc39b7755b806dc4c83439bfcdee912e44",
+    "libhukssdk.z.so": "3541cfb288bd149d10f5a401703358c2f2c4c92a1802352903cd44a2e4f56b89",
+    "libcrypto_openssl.z.so": "6a61befa16ace41b044af17472c42d45ce4f22c1c41a6fd9841e917e8fb6f8ac"
+  },
+  "upstream": {
+    "security_huks": "334b31453086b90ebe8ab70cc8d9e90cd6694149",
+    "account_os_account": "c093fc450e5015230859f702fbd12238f5bdf8e2"
+  },
+  "libsheng_account_hmac.so": {
+    "sha256": "5e66b2ba082bd1b81bff30b71c302368d505114dff59fe92adcd8dffc60fed19",
+    "bytes": 14320
+  },
+  "account_hmac_contract": {
+    "sha256": "0219d173e8be2a0fd045d975f2f4519333501e73ad0922020d67073b1d2d3dbe",
+    "bytes": 18960
+  }
+}

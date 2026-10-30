@@ -1,0 +1,375 @@
+{
+  "files": [
+    {
+      "partition": "vendor",
+      "path": "/lib64/libar-pal.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libar-pal.so",
+      "bytes": 4670848,
+      "sha256": "01aa46fc8b3099e1a52730ec7ac3de13e9037f54af8bd371d5ab7db7b3048718",
+      "needed": [
+        "libar-gsl.so",
+        "liblog.so",
+        "libexpat.so",
+        "liblx-osal.so",
+        "libaudioroute.so",
+        "libcutils.so",
+        "libutilscallstack.so",
+        "libagmclient.so",
+        "libaudioroute_ext.so",
+        "libxlog.so",
+        "libagm.so",
+        "libhardware.so",
+        "libPeripheralStateUtils.so",
+        "libtinyalsa.so",
+        "libtinycompress.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/bin/PalTest",
+      "local": "work\\stock-pal-runtime\\vendor\\bin\\PalTest",
+      "bytes": 15440,
+      "sha256": "65c4f99439ddf4add4ad5524379d005cc98f588250d1bad1d24b8e4b2362eeb5",
+      "needed": [
+        "libpalclient.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libutilscallstack.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\libutilscallstack.so",
+      "bytes": 31624,
+      "sha256": "011659e5b9e34713c1d5edfe6893d68e48f774d946312fbf15dc3dcb326511ba",
+      "needed": [
+        "libcutils.so",
+        "liblog.so",
+        "libutils.so",
+        "libunwindstack.so",
+        "libvndksupport.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libagmclient.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libagmclient.so",
+      "bytes": 81536,
+      "sha256": "bf66e35a211363b39634896a5640ced5bf3b7d9774f465f72a6985e31d80d8ff",
+      "needed": [
+        "libhidlbase.so",
+        "libutils.so",
+        "liblog.so",
+        "libcutils.so",
+        "libhardware.so",
+        "libbase.so",
+        "vendor.qti.hardware.AGMIPC@1.0.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "odm",
+      "path": "/lib64/libaudioroute_ext.so",
+      "local": "work\\stock-pal-runtime\\odm\\lib64\\libaudioroute_ext.so",
+      "bytes": 45184,
+      "sha256": "3c79e68f8d21491081dca19f18faa60e0586ad3c9ec3e0be264817ff4a1e154b",
+      "needed": [
+        "liblog.so",
+        "libcutils.so",
+        "libtinyalsa.so",
+        "libaudioroute.so",
+        "libexpat.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libhardware.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\libhardware.so",
+      "bytes": 11024,
+      "sha256": "c212ff292986cc577544fc7ffc402c0b7e6babd4612ef4c4de06415eb7c7ab82",
+      "needed": [
+        "libcutils.so",
+        "liblog.so",
+        "libvndksupport.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libPeripheralStateUtils.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libPeripheralStateUtils.so",
+      "bytes": 15248,
+      "sha256": "49980b9ff4cb3f86b62171d6d7b686240ebedd9ff49d6e9c81f0a13429185650",
+      "needed": [
+        "libminksocket_vendor.so",
+        "liblog.so",
+        "libutils.so",
+        "libcutils.so",
+        "libbase.so",
+        "libminkdescriptor.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libtinycompress.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libtinycompress.so",
+      "bytes": 23896,
+      "sha256": "1f66196b86ca44bad0fc7bd5cca01cf1b64642d5c46323fe4661d57f51281f8b",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libpalclient.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libpalclient.so",
+      "bytes": 131304,
+      "sha256": "aa85e1fdb3c7d556faaebc88c4e4904685dd0e9b4841690af1ef7888c8c0e989",
+      "needed": [
+        "libhidlbase.so",
+        "libhidltransport.so",
+        "libutils.so",
+        "liblog.so",
+        "libcutils.so",
+        "libfmq.so",
+        "libhardware.so",
+        "libbase.so",
+        "vendor.qti.hardware.pal@1.0.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libunwindstack.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\libunwindstack.so",
+      "bytes": 734256,
+      "sha256": "514a15f7179e87acaa714cf1f58262bc086989acf5d7073510b1c5aedd37c336",
+      "needed": [
+        "libbase.so",
+        "liblog.so",
+        "liblzma.so",
+        "libz.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libhidlbase.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\libhidlbase.so",
+      "bytes": 1345752,
+      "sha256": "3d93461b9edf4dcb5ae24651016416550a6e4f1a908b40dc5fd4d1b94c8ac64c",
+      "needed": [
+        "libbase.so",
+        "liblog.so",
+        "libutils.so",
+        "libcutils.so",
+        "libvndksupport.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/vendor.qti.hardware.AGMIPC@1.0.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\vendor.qti.hardware.AGMIPC@1.0.so",
+      "bytes": 370792,
+      "sha256": "0038d407e088030c7c25dd9da803be29ddff339c3053828052d9a686b1da181c",
+      "needed": [
+        "libhidlbase.so",
+        "liblog.so",
+        "libutils.so",
+        "libcutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libminksocket_vendor.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libminksocket_vendor.so",
+      "bytes": 62008,
+      "sha256": "c91754c6b49bb9f2c1d3b603ebb6a9148a96ab22115b75a34305708165826633",
+      "needed": [
+        "libcutils.so",
+        "liblog.so",
+        "libqrtr.so",
+        "libvmmem.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libminkdescriptor.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libminkdescriptor.so",
+      "bytes": 45760,
+      "sha256": "fb8d804eab4b856aa1d14174b8f75ec8b77aea6b326f93c150da25c3609aefe9",
+      "needed": [
+        "liblog.so",
+        "libutils.so",
+        "libqcbor.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libhidltransport.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libhidltransport.so",
+      "bytes": 10512,
+      "sha256": "0e84e96f24da8a1ca3b1518e27c31e77f7b71bdad6299d04a99d0d1123e5ba06",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libfmq.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\libfmq.so",
+      "bytes": 23096,
+      "sha256": "b774a7a42e487794d9651c6ae20d9811861202408274982d7c4699f8905c0a0d",
+      "needed": [
+        "libbase.so",
+        "liblog.so",
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/vendor.qti.hardware.pal@1.0.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\vendor.qti.hardware.pal@1.0.so",
+      "bytes": 330376,
+      "sha256": "e44eabc880fd36a9a1230b89c940734b4e5151229e08764b47bdd87c50ae8507",
+      "needed": [
+        "libhidlbase.so",
+        "liblog.so",
+        "libutils.so",
+        "libcutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/liblzma.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\liblzma.so",
+      "bytes": 167504,
+      "sha256": "84c14f721eb3006319467cffbbaff0a88dfbec64daa858615f3c251f5acdef15",
+      "needed": [
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libz.so",
+      "local": "work\\stock-pal-runtime\\system\\system\\lib64\\libz.so",
+      "bytes": 105808,
+      "sha256": "92523ca4cee0e669cf3418ff0937971c886967a846ce09d21b0ca8d7a4bdbd17",
+      "needed": [
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libqrtr.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libqrtr.so",
+      "bytes": 23792,
+      "sha256": "be219825ebfc4ba0f3f5f82c80bf87ceab9f4749048146a4d7a06319c43d1733",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libvmmem.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libvmmem.so",
+      "bytes": 40688,
+      "sha256": "796c71ea830a1f07aa76d22c7d06b3214ba8723b1e18213099820dda24dcc1a7",
+      "needed": [
+        "liblog.so",
+        "libbase.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libqcbor.so",
+      "local": "work\\stock-pal-runtime\\vendor\\lib64\\libqcbor.so",
+      "bytes": 23440,
+      "sha256": "bda86553e45dce1da186830619909b3bae95ff9a91ce3a5df94fa0801c8b2500",
+      "needed": [
+        "liblog.so",
+        "libutils.so",
+        "libcutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    }
+  ],
+  "missing": []
+}

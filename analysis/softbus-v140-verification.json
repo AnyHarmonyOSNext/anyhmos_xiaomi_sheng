@@ -1,0 +1,36 @@
+{
+  "version": "v140",
+  "status": "flashed_readback_verified_unexpected_usb_disconnect_paused",
+  "cpio_verified": true,
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v140.img",
+    "bytes": 100663296,
+    "sha256": "3298a521da701c9ebc95fede8fea5019d6560a7ccbfd38cee4b609accee40215"
+  },
+  "preserved_v139_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/bluetooth-v136/SHA256SUMS",
+    "sheng-compat-v118/bluetooth-v136/init-bluetooth-v136.cfg",
+    "sheng-compat-v118/bluetooth-v136/softbus_server.json",
+    "sheng-compat-v118/graphics/apply-hardware-v116.sh"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "wifi_v134_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "original_softbus_profile_sha256": "ec66ea2b5973445f302e342db82b980f3b9ead6d22f53c51eadc05a87666e084",
+  "original_softbus_permissions_preserved": true,
+  "critical_restart_disabled": true,
+  "dm_source_reference_commit": "2adef0db2499308206951284bfa49bee675ea0d6",
+  "cold_boot_verified": false,
+  "normal_reboot_verified": false,
+  "softbus_sa_verified": false,
+  "device_manager_sa_verified": false,
+  "boot_id": "7b71dd68-17c2-4c25-b085-4b08d945a90e",
+  "readback_verified": true,
+  "disconnect_log": "output/logs/command-shell-20261030-144237-c99ccaf39b47.log"
+}

@@ -1,0 +1,56 @@
+{
+  "version": "v134",
+  "status": "cold_boot_framework_and_wifi6_ui_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v134.img",
+    "bytes": 100663296,
+    "sha256": "eae74493e4602620c22424bd7a7e2248fec25d5bb7da1d2c92115c9d8b8b084c"
+  },
+  "cpio_verified": true,
+  "preserved_v132_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/apply-hardware-v116.sh",
+    "sheng-compat-v118/graphics/init-wifi-v116.cfg",
+    "sheng-compat-v118/graphics/libsheng_wifi_category_v134.so"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "graphics_v130_unchanged": true,
+  "battery_v131_unchanged": true,
+  "startup_v132_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "isolated_original_hal_verified": true,
+  "isolated_passthrough_and_invalid_pointer_verified": true,
+  "cold_boot_verified": true,
+  "native_uid_wifi_category_verified": true,
+  "original_framework_connected_category_verified": true,
+  "wifi_ui_verified": true,
+  "actual_wifi7_connection_verified": false,
+  "library_sha256": "586ddea072b4585044907f819b7335b032d3761884913f5b64d86a77901004a9",
+  "partition_readback_verified": true,
+  "boot_id": "fd01ce1a-c6e3-4d0c-9736-dd9159672557",
+  "evidence": [
+    "output/logs/command-shell-20261030-114029-7b55fdf244c1.log",
+    "output/logs/command-shell-20261030-114211-6455f62e3dfb.log",
+    "output/logs/command-shell-20261030-114234-c5ba0485faab.log"
+  ],
+  "connected_wpa_generation": 6,
+  "connected_framework_category": 2,
+  "driver_chip_category_mask": 7,
+  "feature_query_unmodified_success": true,
+  "desktop_after_animation_verified": true,
+  "autostart_complete_uptime": 165.68,
+  "desktop_screenshot": {
+    "file": "output/screenshots/v134-desktop-1143.jpeg",
+    "bytes": 242238,
+    "sha256": "0362d1ba49ed74db13f03dc2c821c70a8f5f93b1d16550c6e19cbacc0053ace5",
+    "native": true,
+    "viewed": true,
+    "wifi6_icon_visible": true
+  },
+  "ordinary_reboot_verified": false
+}

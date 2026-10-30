@@ -1,0 +1,34 @@
+{
+  "version": "v141",
+  "status": "paused_unexpected_usb_role_none_before_desktop",
+  "cpio_verified": true,
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v141.img",
+    "bytes": 100663296,
+    "sha256": "f672adb5f6b0d064984fa76310383003e5cebc1461c9e49b10a48a7d43ea52d0"
+  },
+  "preserved_v140_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/apply-hardware-v116.sh",
+    "sheng-compat-v118/graphics/hw_defaults-v141.para"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "sys_prod_image_unchanged": true,
+  "original_parameter_sha256": "47e94ce212bf301531e1e0f6480f9b4c566296a557e8fc03b44d958ed81fe8a2",
+  "corrected_parameter_sha256": "3fa79d36281510333d96de8ff23844e40229b1d227ada18ca0eff2fbf24a9dc2",
+  "cold_boot_verified": false,
+  "normal_reboot_verified": false,
+  "bt_ui_three_cycles_verified": false,
+  "early_reply_boot_id": "e58b1027-7f0d-4992-900f-2aa63185baec",
+  "early_reply_uptime_seconds": 17.22,
+  "parameter_false_verified": true,
+  "early_evidence": "output/logs/command-shell-20261030-163029-04f19ded7aa8.log",
+  "usb_failure_evidence": "output/logs/command-shell-20261030-163159-9b63356027b9.log",
+  "usb_failure_uptime_seconds": 115.849
+}

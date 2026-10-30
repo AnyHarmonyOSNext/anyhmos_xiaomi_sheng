@@ -1,0 +1,14 @@
+{
+  "libdisplay_buffer_vdi_impl.z.so": {
+    "bytes": 16376,
+    "sha256": "613803a7210a406d822a797f775a5dc017237decca3e71217c0978464511086e"
+  },
+  "libvulkan_freedreno.so": {
+    "bytes": 9339424,
+    "sha256": "48a2ca02cb20f19ef15184b5923a5133c8f690e0b94c5bd460fd48fcbfa00b2b"
+  },
+  "libvulkan_freedreno.so.gz": {
+    "bytes": 1821234,
+    "sha256": "335ee2544add80fe478f52cadef544417e8cd3ead5662e348f6bf59c446685c2"
+  }
+}

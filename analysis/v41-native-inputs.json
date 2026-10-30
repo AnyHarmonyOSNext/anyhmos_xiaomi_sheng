@@ -1,0 +1,30 @@
+{
+  "config_bytes": 17738,
+  "foundation_uid": "foundation",
+  "foundation_groups": [
+    "system",
+    "appspawn",
+    "update",
+    "data_reserve",
+    "app_install",
+    "gameservice_server"
+  ],
+  "foundation_permission_count": 101,
+  "profile": {
+    "process": "foundation",
+    "systemability": [
+      {
+        "name": 4607,
+        "libpath": "libscreen_session_manager.z.so",
+        "run-on-create": true,
+        "distributed": false,
+        "bootphase": "CoreStartPhase",
+        "dump_level": 1,
+        "min_hdi_proxy_version": []
+      }
+    ]
+  },
+  "saspawn": false,
+  "saspawn_source_reference": "openharmony/startup_init 970d25f5bda91afa7e02fce69d134b716d0b141d services/init/init_service_manager.c GetServiceSaspawn default enabled for sa_main",
+  "status": "candidate_not_flashed"
+}

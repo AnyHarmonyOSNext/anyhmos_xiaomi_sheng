@@ -1,0 +1,652 @@
+{
+  "files": [
+    {
+      "partition": "vendor",
+      "path": "/lib64/libagm.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libagm.so",
+      "bytes": 196744,
+      "sha256": "5e03733144c4f9675c4bc7cd49dfd93f420896f53671215b58234a91a8547ac8",
+      "needed": [
+        "libar-gsl.so",
+        "liblog.so",
+        "libcutils.so",
+        "liblx-osal.so",
+        "libaudioroute.so",
+        "libats.so",
+        "libxlog.so",
+        "libmisight.so",
+        "libtinyalsa.so",
+        "libaudio_log_utils.so",
+        "libexpat.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libar-gsl.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libar-gsl.so",
+      "bytes": 228824,
+      "sha256": "790733c4aec67484598493463e065ad2430ea8b5bb3d1d6d946c64c2dba856f4",
+      "needed": [
+        "liblx-osal.so",
+        "libar-acdb.so",
+        "liblx-ar_util.so",
+        "libar-gpr.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libar-gpr.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libar-gpr.so",
+      "bytes": 71008,
+      "sha256": "889bf98e52e22e86b20624f067aef356a286eda0dd5c30cefd5f856f7d9c204a",
+      "needed": [
+        "liblx-osal.so",
+        "libcutils.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libar-acdb.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libar-acdb.so",
+      "bytes": 324152,
+      "sha256": "92f72a3e19b054c0b831a8159623d15490b96912232eb12d2b73c95510092d55",
+      "needed": [
+        "liblx-osal.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libagmmixer.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libagmmixer.so",
+      "bytes": 40688,
+      "sha256": "c0193c521ca50bfec27560655af34d9e9c5a4bfd832231619e749b95554c4364",
+      "needed": [
+        "libtinyalsa.so",
+        "libexpat.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/liblx-osal.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\liblx-osal.so",
+      "bytes": 66240,
+      "sha256": "15c2a0dd57e36985fe6705e02c47607d472928241201142fcecc695266bff161",
+      "needed": [
+        "liblog.so",
+        "libdiag.so",
+        "libion.so",
+        "libpdmapper.so",
+        "libpdnotifier.so",
+        "libcutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libats.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libats.so",
+      "bytes": 121744,
+      "sha256": "84675cccd3da121ffd9547f3ff7eb433fd5f1e8a3eae5389253e66336446833e",
+      "needed": [
+        "liblx-osal.so",
+        "libutils.so",
+        "libcutils.so",
+        "libdiag.so",
+        "libar-gsl.so",
+        "libar-acdb.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libxlog.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libxlog.so",
+      "bytes": 23856,
+      "sha256": "8bf9a80bf4d0c09f1d7e468aa27f047ebf5c1ab83aad8a24996b246953d7af20",
+      "needed": [
+        "liblog.so",
+        "libcutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libmisight.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libmisight.so",
+      "bytes": 28112,
+      "sha256": "3824459c572a90ae201ac6df1ec9b1b55c8a52aed20f540bfc478691f970a462",
+      "needed": [
+        "liblog.so",
+        "libcutils.so",
+        "libutils.so",
+        "libjsoncpp.so",
+        "libc.so",
+        "libc++.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libaudio_log_utils.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libaudio_log_utils.so",
+      "bytes": 37360,
+      "sha256": "3336cde2d6d2519821283bb26c5075ac8387d50d6bec2ad6bcdac84bc4a6bfb9",
+      "needed": [
+        "libutils.so",
+        "libcutils.so",
+        "libexpat.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/liblx-ar_util.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\liblx-ar_util.so",
+      "bytes": 40408,
+      "sha256": "270ac0dc462e1a486f2515b97420deb6cd5c595c49df4ebb71b3c9a540c37293",
+      "needed": [
+        "liblog.so",
+        "liblx-osal.so",
+        "libxlog.so",
+        "libmisight.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libdiag.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libdiag.so",
+      "bytes": 309480,
+      "sha256": "98092b0c7bc606628491f14a8b8ce8c2f0f35c73212fcc74a6fa24b057427043",
+      "needed": [
+        "liblog.so",
+        "libc.so",
+        "libcutils.so",
+        "libcrypto.so",
+        "libssl.so",
+        "libc++.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libpdmapper.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libpdmapper.so",
+      "bytes": 28320,
+      "sha256": "866602880f71d3e7afff366b399df9b118f3414a9462c26bf0b269c4fc3d2cd2",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "libjson.so",
+        "libqmi_cci.so",
+        "libqmi_common_so.so",
+        "libqmi_encdec.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libpdnotifier.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libpdnotifier.so",
+      "bytes": 19896,
+      "sha256": "6dc83ebb6bb176b0e23a99ea5545b9940d754db76d3b7efac565887372071e8b",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "libqmi_cci.so",
+        "libqmi_common_so.so",
+        "libqmi_encdec.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libjson.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libjson.so",
+      "bytes": 48960,
+      "sha256": "e3d55bbe040726fd1cc03d60b734cbe10e6193bd16079b923611b5e42bba5881",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libqmi_cci.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libqmi_cci.so",
+      "bytes": 58192,
+      "sha256": "dbae7f2977d3033fcbf8ad095cc597aec3b7a1983593551fd672cab550c94a8f",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libqmi_encdec.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libqmi_common_so.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libqmi_common_so.so",
+      "bytes": 15056,
+      "sha256": "2b9229f511d66a1543fe12471b230ed20ed95e83795761f8648f854606aef7da",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/lib64/libqmi_encdec.so",
+      "local": "work\\stock-audio-runtime\\vendor\\lib64\\libqmi_encdec.so",
+      "bytes": 27448,
+      "sha256": "caef1fbf0c7a32dcceb6ed4e3f4885048b76c4d57779ade1455c3bb97720dc85",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "vendor",
+      "path": "/bin/agmplay",
+      "local": "work\\stock-audio-runtime\\vendor\\bin\\agmplay",
+      "bytes": 32072,
+      "sha256": "9e4c392a0c45a3e0f94b9d345b44ed32372ba761e45ceac5012fce049a4f6d45",
+      "needed": [
+        "libtinyalsa.so",
+        "libagmmixer.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "odm",
+      "path": "/etc/acdbdata/Forte/Forte_acdb_cal.acdb",
+      "local": "work\\stock-audio-runtime\\odm\\etc\\acdbdata\\Forte\\Forte_acdb_cal.acdb",
+      "bytes": 2804834,
+      "sha256": "d9c2b9bf1281337bebfcaf498b2a9d12bd583f548a86bdf006cf5f8683bde6e4",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/etc/acdbdata/Forte/Forte_workspaceFileXml.qwsp",
+      "local": "work\\stock-audio-runtime\\odm\\etc\\acdbdata\\Forte\\Forte_workspaceFileXml.qwsp",
+      "bytes": 831840,
+      "sha256": "6836a92b70a1eb6169053ee1b0d9994d964c12de4976ac3d2b48f436f09d4e10",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/etc/audio/sku_kalama/resourcemanager_kalama_mtp.xml",
+      "local": "work\\stock-audio-runtime\\odm\\etc\\audio\\sku_kalama\\resourcemanager_kalama_mtp.xml",
+      "bytes": 114803,
+      "sha256": "dabb48abf7841ad511881195a334496bbe406451b61636e8ff652a70d12ce83f",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/etc/init/init.cirrus.rc",
+      "local": "work\\stock-audio-runtime\\odm\\etc\\init\\init.cirrus.rc",
+      "bytes": 310,
+      "sha256": "889c35f9e3ad000bc0edad570a6c4dff488d81a1032f5fc22107d1de20fe8c72",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/BLH-cs35l43-dsp1-spk-prot.bin",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\BLH-cs35l43-dsp1-spk-prot.bin",
+      "bytes": 13612,
+      "sha256": "0f4e2138b94364d051995bc0abaadc2e5a468eb7dc48933c5bad9a30f06f4af0",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/BLL-cs35l43-dsp1-spk-prot.bin",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\BLL-cs35l43-dsp1-spk-prot.bin",
+      "bytes": 14568,
+      "sha256": "cfc9ce1678e290ab39cede51fa9aa0ea1b370bdf2f5604c79581419137f46a97",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/BRL-cs35l43-dsp1-spk-prot.bin",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\BRL-cs35l43-dsp1-spk-prot.bin",
+      "bytes": 14568,
+      "sha256": "ffb24e16da20e0c63c0c94c9f2986e32ca5d99e5537033b1061fb70779b4b63b",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/TLH-cs35l43-dsp1-spk-prot.bin",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\TLH-cs35l43-dsp1-spk-prot.bin",
+      "bytes": 13616,
+      "sha256": "50cef4822bcbc1047a1634e7abb96dce37d5e03cd8e0de241c0f477c06b808d3",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/TLL-cs35l43-dsp1-spk-prot.bin",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\TLL-cs35l43-dsp1-spk-prot.bin",
+      "bytes": 14608,
+      "sha256": "2365b66dbaeb8063403ac5e70b795cbd4822e4842552a2de6ef96f59f96459e1",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/TRL-cs35l43-dsp1-spk-prot.bin",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\TRL-cs35l43-dsp1-spk-prot.bin",
+      "bytes": 14568,
+      "sha256": "3f3f6696438bc51cf9a1f288efc9f352f94ab9a6993f00ddddfe7554428deeb0",
+      "needed": []
+    },
+    {
+      "partition": "odm",
+      "path": "/firmware/cs35l43-dsp1-spk-prot.wmfw",
+      "local": "work\\stock-audio-runtime\\odm\\firmware\\cs35l43-dsp1-spk-prot.wmfw",
+      "bytes": 38564,
+      "sha256": "bcddaf83e276b49815eeed283e8aacdd30a819447122a27d118445c5c97d21e7",
+      "needed": []
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libc++.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libc++.so",
+      "bytes": 1066192,
+      "sha256": "c6486cd3f0e6dd6a12346d3b1d55ef4bef7f1cc11e4a26bbe9da720c07d4b83b",
+      "needed": [
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/bootstrap/libc.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\bootstrap\\libc.so",
+      "bytes": 1218592,
+      "sha256": "8a2198821dd8178bf16e3723fc5b5f9f888f09c16ea00ace422f3331332b5981",
+      "needed": [
+        "ld-android.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libcrypto.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libcrypto.so",
+      "bytes": 1617552,
+      "sha256": "c254591c94a960c0fd439c2a3f55d602e59a1fdd6438498969cfece930a507d3",
+      "needed": [
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libcutils.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libcutils.so",
+      "bytes": 106144,
+      "sha256": "cae2a8f99d1f6f5dbd077c2a8ab45bc6f071ef6c90e8c48e8c393601032c582d",
+      "needed": [
+        "liblog.so",
+        "libbase.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/bootstrap/libdl.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\bootstrap\\libdl.so",
+      "bytes": 13976,
+      "sha256": "e32913b439727002d665a72a78c86f837b41bc963b369438df8aa4d2ca1fdfb9",
+      "needed": [
+        "ld-android.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libexpat.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libexpat.so",
+      "bytes": 168568,
+      "sha256": "a5508ee0391db4e393e4027a2127d85d557c6a8e96f30bac8417cca5d1c0fe51",
+      "needed": [
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libion.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libion.so",
+      "bytes": 18544,
+      "sha256": "eafb340040467490c4f5931f392ce28799aad3a989591ed04c438676fd7d73e6",
+      "needed": [
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libjsoncpp.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libjsoncpp.so",
+      "bytes": 192424,
+      "sha256": "2b68b835dcd2c04a8206598477629a23b71f43acbcf34e4e5730efb1dedc7a0e",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/liblog.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\liblog.so",
+      "bytes": 90440,
+      "sha256": "8fd8485f1d998abac9b99a8933469fcdff3d60428f36628f321a28ff7268b3a0",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/bootstrap/libm.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\bootstrap\\libm.so",
+      "bytes": 232688,
+      "sha256": "8eac3daf8a9fb0957d77a24e9fa8a3528afcb557d4e4b86ceee27a4211b0d53d",
+      "needed": [
+        "libc.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libssl.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libssl.so",
+      "bytes": 501792,
+      "sha256": "5a341b66102eb994fd5bca16e41c087fbaf76b68851a346f3b848ae9aee2eac4",
+      "needed": [
+        "libcrypto.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libtinyalsa.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libtinyalsa.so",
+      "bytes": 52224,
+      "sha256": "b20ec3777c4308884acc00a872c5d20f5232ff56f8ddf2b309e494bccd02ecd2",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libutils.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libutils.so",
+      "bytes": 341544,
+      "sha256": "606d9ba9313c239a4e647ff60db3bb0588ca0afd5fb6112081af5d54d3fa20f7",
+      "needed": [
+        "libcutils.so",
+        "liblog.so",
+        "libvndksupport.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/ld-android.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\ld-android.so",
+      "bytes": 9608,
+      "sha256": "d357e5513beed05b0f40f9368cf0bdbb3b27322034cd01bb4a457f8fdfa312a4",
+      "needed": []
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libbase.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libbase.so",
+      "bytes": 206504,
+      "sha256": "f459e41668262f239b78c16c90bd43a1bc20363df4a05876e1c99a816b0aa955",
+      "needed": [
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/libvndksupport.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\libvndksupport.so",
+      "bytes": 14568,
+      "sha256": "b42c4cb76c31842c4ff619ae2d1f2e93763467ee5e21b7c7759e1bf371132241",
+      "needed": [
+        "libdl_android.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/lib64/bootstrap/libdl_android.so",
+      "local": "work\\stock-audio-runtime\\system\\system\\lib64\\bootstrap\\libdl_android.so",
+      "bytes": 10200,
+      "sha256": "589cbbb97b74225c2305e963634cfb654f62f1a9a026b32c7af1fd2a7a1e0a31",
+      "needed": [
+        "ld-android.so"
+      ]
+    },
+    {
+      "partition": "system",
+      "path": "/system/bin/bootstrap/linker64",
+      "local": "work\\stock-audio-runtime\\system\\system\\bin\\bootstrap\\linker64",
+      "bytes": 2309776,
+      "sha256": "1634e31f121b3cc21dca4a2c3626f867e5cecbf40f3bddd645ce2701457eef8f",
+      "needed": []
+    }
+  ],
+  "missing_from_vendor": [
+    "libaudioroute.so",
+    "libc++.so",
+    "libc.so",
+    "libcrypto.so",
+    "libcutils.so",
+    "libdl.so",
+    "libexpat.so",
+    "libion.so",
+    "libjsoncpp.so",
+    "liblog.so",
+    "libm.so",
+    "libssl.so",
+    "libtinyalsa.so",
+    "libutils.so"
+  ],
+  "unresolved": [
+    "libaudioroute.so"
+  ]
+}

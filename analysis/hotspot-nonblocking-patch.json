@@ -1,0 +1,16 @@
+{
+  "name": "donor hotspot SDK nonblocking SA1154 query",
+  "va": "0x8308",
+  "input_sha256": "57b264dc058d58adfac2e9ce48856ffcc011a832fc11577379018b4f62b2aa59",
+  "output_sha256": "6405b690bfe45d1f1567685f05ba0f7db8c54a54b3452dd8ae76b76403200b34",
+  "changes": [
+    {
+      "offset": 29448,
+      "before": "e91240f9",
+      "after": "e91640f9"
+    }
+  ],
+  "semantics": "Use original CheckSystemAbility(int) vtable+40 instead of blocking GetSystemAbility(int) vtable+32; retain original null/error path",
+  "vendor_modified": false,
+  "original_system_modified": false
+}

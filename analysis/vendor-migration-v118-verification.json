@@ -1,0 +1,59 @@
+{
+  "version": "v118",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v118.img",
+    "bytes": 100663296,
+    "sha256": "203a002eb24a75dd8828e9d0b01d84c2d3d91054c1c0f5ba56bbd06c45de6b8e"
+  },
+  "init_boot": {
+    "file": "init_boot_hmos_entry_v118.img",
+    "bytes": 8388608,
+    "sha256": "6f3eb88aa1422f6ed114f58c0e32e991b01b9ab3fa96c386626434891e215ef9"
+  },
+  "original_vendor_entries": 372,
+  "preserved_original_entries": true,
+  "preserved_v116_audio": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "ramdisk_table_unchanged_except_size": true,
+  "generic_entry_bytes": 4624,
+  "generic_names": [
+    "debug_ramdisk",
+    "dev",
+    "init",
+    "metadata",
+    "mnt",
+    "proc",
+    "second_stage_resources",
+    "sys",
+    "system",
+    "system/bin",
+    "system/bin/snapuserd",
+    "system/etc",
+    "system/etc/init",
+    "system/etc/init/snapuserd.rc",
+    "system/etc/ramdisk",
+    "system/etc/ramdisk/build.prop"
+  ],
+  "payload_prefix": "sheng-compat-v118/",
+  "aliases": [
+    "busybox",
+    "drm-probe",
+    "graphics",
+    "stock-gpu-firmware",
+    "hmos-ipc.ko",
+    "hmos-init-debug.cfg",
+    "hmos-hdf-graphics.hcb",
+    "hmos-native-hilog",
+    "init.android.original"
+  ],
+  "payload_entries": 123,
+  "compressed_ramdisk_bytes": 47702831,
+  "cpio_verified": true,
+  "msdp_persistent": true,
+  "physical_cold_boot_verified": false,
+  "cold_boot_user_confirmed_desktop": true,
+  "partition_readback_verified": true,
+  "boot_id": "9f6b6e9f-217d-4a9b-a1f8-de8313e4074f",
+  "msdp_patched_file_hash_verified": true
+}

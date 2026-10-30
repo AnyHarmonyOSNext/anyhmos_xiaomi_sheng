@@ -1,0 +1,66 @@
+{
+  "init": {
+    "path": "work\\hmos_system\\system\\system\\bin\\init",
+    "bytes": 798216,
+    "sha256": "a2d9c09eb841675c39086d7fb6f8769cc9be13099c50c4ed6e05eb1f59c03372",
+    "matches": {
+      "etc/init": [
+        36827
+      ]
+    },
+    "strings": [
+      {
+        "offset": 36827,
+        "string": "etc/init"
+      }
+    ]
+  },
+  "vulkan": {
+    "path": "work\\donor-hdi-link\\libvulkan.so",
+    "bytes": 527032,
+    "sha256": "3d6aa4145996faf241c5e5a2ba1a9161fffe30101c9f19b5f40da25743a5da2d",
+    "matches": {
+      "/system/etc:/vendor/etc": [
+        94581
+      ]
+    },
+    "strings": [
+      {
+        "offset": 94581,
+        "string": "/system/etc:/vendor/etc"
+      }
+    ]
+  },
+  "composer": {
+    "path": "work\\vendor-reference-readonly\\vendor\\lib64\\libdisplay_composer_service_1.5.z.so",
+    "bytes": 220912,
+    "sha256": "a500da1e57b5d3ebd042332e997ac7af159dd52b3fa8d41da8f60279f013523d",
+    "matches": {
+      "libdisplay_composer_vdi_impl.z.so": [
+        90381
+      ]
+    },
+    "strings": [
+      {
+        "offset": 90381,
+        "string": "libdisplay_composer_vdi_impl.z.so"
+      }
+    ]
+  },
+  "allocator": {
+    "path": "work\\vendor-reference-readonly\\vendor\\lib64\\liballocator_service_1.0.z.so",
+    "bytes": 24032,
+    "sha256": "eb5a54d6b2ec6a3e566a16c1f337f1030703347e8112bea4697d888c92ccbe78",
+    "matches": {
+      "libdisplay_buffer_vdi_impl.z.so": [
+        8496
+      ]
+    },
+    "strings": [
+      {
+        "offset": 8496,
+        "string": "libdisplay_buffer_vdi_impl.z.so"
+      }
+    ]
+  }
+}

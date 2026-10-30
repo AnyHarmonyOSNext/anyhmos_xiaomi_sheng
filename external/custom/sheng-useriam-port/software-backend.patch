@@ -1,0 +1,101 @@
+--- OpenHarmony-6.0/user_auth_interface_service.cpp
++++ Ace5/user_auth_interface_service.cpp
+@@ -287,7 +287,11 @@
+ 
+     ResultCode ret = RESULT_GENERAL_ERROR;
+     do {
+-        Uint64Array templateIdsIn = {info.templateIds.data(), info.templateIds.size()};
++        if (info.templateIds.size() > UINT32_MAX) {
++            ret = RESULT_BAD_PARAM;
++            break;
++        }
++        Uint64Array templateIdsIn = {info.templateIds.data(), static_cast<uint32_t>(info.templateIds.size())};
+         if (SetAttributeUint64Array(attribute, ATTR_TEMPLATE_ID_LIST, templateIdsIn) != RESULT_SUCCESS) {
+             IAM_LOGE("SetAttributeUint64Array templateIdsIn failed");
+             break;
+@@ -331,7 +335,11 @@
+ 
+     ResultCode ret = RESULT_GENERAL_ERROR;
+     do {
+-        Uint64Array templateIdsIn = {info.templateIds.data(), info.templateIds.size()};
++        if (info.templateIds.size() > UINT32_MAX) {
++            ret = RESULT_BAD_PARAM;
++            break;
++        }
++        Uint64Array templateIdsIn = {info.templateIds.data(), static_cast<uint32_t>(info.templateIds.size())};
+         if (SetAttributeUint64Array(attribute, ATTR_TEMPLATE_ID_LIST, templateIdsIn) != RESULT_SUCCESS) {
+             IAM_LOGE("SetAttributeUint64Array templateIdsIn failed");
+             break;
+@@ -377,7 +385,11 @@
+ 
+     ResultCode ret = RESULT_GENERAL_ERROR;
+     do {
+-        Uint64Array templateIdsIn = {info.templateIds.data(), info.templateIds.size()};
++        if (info.templateIds.size() > UINT32_MAX) {
++            ret = RESULT_BAD_PARAM;
++            break;
++        }
++        Uint64Array templateIdsIn = {info.templateIds.data(), static_cast<uint32_t>(info.templateIds.size())};
+         if (SetAttributeUint64Array(attribute, ATTR_TEMPLATE_ID_LIST, templateIdsIn) != RESULT_SUCCESS) {
+             IAM_LOGE("SetAttributeUint64Array templateIdsIn failed");
+             break;
+@@ -466,7 +478,11 @@
+     IF_TRUE_LOGE_AND_RETURN_VAL(attribute == nullptr, RESULT_GENERAL_ERROR);
+     ResultCode ret = RESULT_GENERAL_ERROR;
+     do {
+-        Uint64Array templateIdsIn = {info.templateIds.data(), info.templateIds.size()};
++        if (info.templateIds.size() > UINT32_MAX) {
++            ret = RESULT_BAD_PARAM;
++            break;
++        }
++        Uint64Array templateIdsIn = {info.templateIds.data(), static_cast<uint32_t>(info.templateIds.size())};
+         if (SetAttributeUint64Array(attribute, ATTR_TEMPLATE_ID_LIST, templateIdsIn) != RESULT_SUCCESS) {
+             IAM_LOGE("SetAttributeUint64Array templateIdsIn failed");
+             break;
+@@ -617,9 +633,19 @@
+ 
+ int32_t UserAuthInterfaceService::GetAllUserInfo(std::vector<UserInfo> &userInfos)
+ {
+-    IAM_LOGI("GetAllUserInfo mock start");
+-    static_cast<void>(userInfos);
+-
++    // Query the same persisted database used by the extended user-info API.
++    std::lock_guard<std::mutex> lock(g_mutex);
++    std::vector<ExtUserInfo> storedUsers;
++    const int32_t result = GetAllExtUserInfo(storedUsers);
++    if (result != RESULT_SUCCESS) {
++        return result;
++    }
++    std::vector<UserInfo> queriedUsers;
++    queriedUsers.reserve(storedUsers.size());
++    for (const auto &storedUser : storedUsers) {
++        queriedUsers.push_back(storedUser.userInfo);
++    }
++    userInfos.swap(queriedUsers);
+     return RESULT_SUCCESS;
+ }
+ 
+@@ -1795,7 +1821,6 @@
+         return RESULT_GENERAL_ERROR;
+     }
+ 
+-    int32_t funcRet = RESULT_GENERAL_ERROR;
+     int32_t ret = RESULT_GENERAL_ERROR;
+     if (memcpy_s(authResultParam->localUdid, sizeof(authResultParam->localUdid), g_localUdid.c_str(),
+         g_localUdid.length()) != EOK) {
+@@ -1816,6 +1841,7 @@
+     }
+     if (!CopyHdiAuthResultInfo(authResultParam, &authResultInfo, message)) {
+         IAM_LOGE("copy authResult info failed");
++        ret = RESULT_GENERAL_ERROR;
+         goto FAIL;
+     }
+     ret = CreateExecutorCommand(authResultInfo.userId, authResultInfo);
+@@ -1824,7 +1850,6 @@
+         goto FAIL;
+     }
+ 
+-    funcRet = RESULT_SUCCESS;
+ FAIL:
+     DestoryBuffer(messageBuffer);
+     DestroyAuthResultParam(authResultParam);

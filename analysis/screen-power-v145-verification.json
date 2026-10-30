@@ -1,0 +1,30 @@
+{
+  "version": "v145",
+  "status": "flashed_screen_off_user_confirmed",
+  "cpio_verified": true,
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v145.img",
+    "bytes": 100663296,
+    "sha256": "bf39eaa2f45386d09621a9a4cfbbd4725e673cb046fb777d277a40eea70e6895"
+  },
+  "preserved_v143_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/libdisplay_composer_vdi_impl.z.so",
+    "sheng-compat-v118/graphics/native_display_wake"
+  ],
+  "compat_manifest_verified": true,
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "egl_v143_preserved": true,
+  "original_gpu_governor_unchanged": true,
+  "cold_boot_verified": true,
+  "physical_screen_off_verified": true,
+  "readback_sha256_verified": true,
+  "boot_id": "bf8b7c3c-89f9-459c-8366-023b97eb6f81",
+  "screen_off_user_confirmed": true,
+  "deep_sleep_verified": false,
+  "extended_physical_cycles_verified": false
+}

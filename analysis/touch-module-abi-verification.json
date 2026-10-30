@@ -1,0 +1,26 @@
+{
+  "module_load_flags": 0,
+  "original_metadata_preserved": true,
+  "artifacts": {
+    "modules/xiaomi_touch.ko": {
+      "sha256": "da9accaffbd76a339c12e998757ccc3406973b6bf41f72bca615a81752e5c791",
+      "bytes": 130376,
+      "imports_checked": 64,
+      "cfi_present": true
+    },
+    "modules/nt36532_touch.ko": {
+      "sha256": "a1f3f907f4519eaf3d63243561fc32c7f75337188a3953b3857bcad60135233f",
+      "bytes": 936656,
+      "imports_checked": 125,
+      "cfi_present": true
+    },
+    "firmware/novatek_nt36532_n81a_fw_csot.bin": {
+      "sha256": "750508bb4d75472d35ce5852ec8470d66afa6bf4a4274c136b3759034260ef59",
+      "bytes": 245760
+    },
+    "firmware/novatek_nt36532_n81a_mp_csot.bin": {
+      "sha256": "443bbd89dcfcc0359b7dd0d84b70bb18345c5c42877e4efd484dcf2db4796f27",
+      "bytes": 245760
+    }
+  }
+}

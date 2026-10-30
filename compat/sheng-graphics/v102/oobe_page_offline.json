@@ -1,0 +1,14 @@
+[
+  {
+    "key": "wlan",
+    "action": "delete"
+  },
+  {
+    "key": "activation_lock",
+    "action": "delete"
+  },
+  {
+    "key": "account_login",
+    "action": "delete"
+  }
+]

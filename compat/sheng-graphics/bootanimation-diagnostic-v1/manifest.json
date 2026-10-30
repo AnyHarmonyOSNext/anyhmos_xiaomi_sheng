@@ -1,0 +1,8 @@
+{
+  "path": "compat\\sheng-graphics\\bootanimation-diagnostic-v1\\bootpic.zip",
+  "bytes": 95488,
+  "sha256": "0b6fb88aecb025f66b7e81600bba4a1a1ac936958e7f8b1340f700626585e042",
+  "frames": 300,
+  "fps": 30,
+  "status": "offline synthetic diagnostic asset for original boot picture player; not a system screenshot"
+}

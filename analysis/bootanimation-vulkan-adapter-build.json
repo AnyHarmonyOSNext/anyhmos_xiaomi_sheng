@@ -1,0 +1,14 @@
+{
+  "libsheng_boot_vulkan.so": {
+    "bytes": 6408,
+    "sha256": "065b07b34ffec32c35192a423e49b8e286b45e9ed2efbbadd0e1adc2b856f8c3"
+  },
+  "bootanimation-launcher": {
+    "bytes": 6096,
+    "sha256": "24de1c5e020a24bfeca0821cf44bbbe64624afe961987537fd211930b9fae2fe"
+  },
+  "render_base_required_sha256": "0a699e2317dab4699117a90e7e21d5727bd823e3474a70ebaed4d32667e519ff",
+  "status": "candidate; not tested",
+  "source_basis": "OpenHarmony-6.0-Release public inline RSSurfaceOhosVulkan::SetSkContext; exact donor layout verified in constructor and RequestFrame",
+  "context_member_offset": 312
+}

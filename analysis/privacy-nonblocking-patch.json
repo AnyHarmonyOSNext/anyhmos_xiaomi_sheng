@@ -1,0 +1,25 @@
+{
+  "label": "privacy-nonblocking",
+  "source": "work/hmos_system/system/system/lib64/libsps_privacy_indicator_service_intf.z.so",
+  "runtime": "/system/lib64/libsps_privacy_indicator_service_intf.z.so",
+  "input_sha256": "93718bf0c2bf1647c528c8a09135da291fa807ab35025eeb0ccb6d4d8aa162c2",
+  "instructions": [
+    {
+      "va": "0x1a7d8",
+      "before": "c91240f9",
+      "after": "c91640f9"
+    }
+  ],
+  "semantics": "InitializeProxy uses real CheckSystemAbility(SA66090) instead of blocking GetSystemAbility; preserve original null/error handling and do not report successful registration",
+  "changes": [
+    {
+      "va": "0x1a7d8",
+      "offset": 104408,
+      "before": "c91240f9",
+      "after": "c91640f9"
+    }
+  ],
+  "output_sha256": "b193f5ab4919893a90d28ada02c000fccefeb16548f81315175f69802d5af9de",
+  "vendor_modified": false,
+  "original_system_modified": false
+}

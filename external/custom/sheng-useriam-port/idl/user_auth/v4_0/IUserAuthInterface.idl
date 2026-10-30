@@ -1,0 +1,555 @@
+/*
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @addtogroup HdfUserAuth
+ * @{
+ *
+ * @brief Provides APIs for the user_auth driver.
+ *
+ * The user_auth driver provides a unified interface for the user_auth service to access the user_auth driver.
+ * After obtaining the user_auth driver proxy, the service can call related APIs to register executors,
+ * manage credentials, and complete password and biometric authentication.
+ * @since 3.2
+ * @version 1.0
+ */
+
+/**
+ * @file IUserAuthInterface.idl
+ *
+ * @brief Declares the user_auth driver APIs, which can be used to register executors,
+ * manage credentials, and complete password and biometric authentication.
+ *
+ * @since 3.2
+ * @version 1.0
+ */
+
+package ohos.hdi.user_auth.v4_0;
+
+import ohos.hdi.user_auth.v4_0.UserAuthTypes;
+import ohos.hdi.user_auth.v4_0.IMessageCallback;
+
+/**
+ * @brief Declares the APIs of the user_auth driver.
+ *
+ * @since 3.2
+ * @version 1.0
+ */
+interface IUserAuthInterface {
+    /**
+     * @brief Initializes the cache information of the user_auth driver.
+     *
+     * @param deviceUdid Indicates the device udid.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    Init([in] String deviceUdid);
+    /**
+     * @brief Adds an authentication executor to obtain the authentication capability.
+     *
+     * @param info Indicates executor registration information. See {@link ExecutorRegisterInfo}.
+     * @param index Indicates the executor index under the authentication framework.
+     * @param publicKey Indicates the public key of the authentication framework.
+     * @param templateIds Indicates template IDs enrolled by the executors.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    AddExecutor([in] struct ExecutorRegisterInfo info, [out] unsigned long index,
+        [out] unsigned char[] publicKey, [out] unsigned long[] templateIds);
+    /**
+     * @brief Deletes an executor.
+     *
+     * @param index Indicates the executor index under the authentication framework.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    DeleteExecutor([in] unsigned long index);
+    /**
+     * @brief Opens a session for authentication credential management.
+     *
+     * @param userId Indicates the user ID.
+     * @param challenge Indicates the random number, which is used to generate an authentication token.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    OpenSession([in] int userId, [out] unsigned char[] challenge);
+    /**
+     * @brief Closes the authentication credential management session.
+     *
+     * @param userId Indicates the user ID.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    CloseSession([in] int userId);
+    /**
+     * @brief Updates the enrollment result and completes the enrollment.
+     *
+     * @param userId Indicates the user ID.
+     * @param scheduleResult Indicates the enrollment result issued by the executor.
+     * @param info Indicates the enrollment result. See {@link EnrollResultInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    UpdateEnrollmentResult([in] int userId, [in] unsigned char[] scheduleResult, [out] struct EnrollResultInfo info);
+    /**
+     * @brief Cancels an enrollment.
+     *
+     * @param userId Indicates the user ID.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    CancelEnrollment([in] int userId);
+    /**
+     * @brief Deletes credential information.
+     *
+     * @param userId Indicates the user ID.
+     * @param credentialId Indicates the credential index.
+     * @param authToken Indicates the authentication token of the user password.
+     * @param operateResult Indicates the credential delete result. See {@link CredentialOperateResult}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.1
+     */
+    DeleteCredential([in] int userId, [in] unsigned long credentialId, [in] unsigned char[] authToken,
+        [out] struct CredentialOperateResult operateResult);
+    /**
+     * @brief Obtains credential information.
+     *
+     * @param userId Indicates the user ID.
+     * @param authType Indicates the authentication type. See {@link AuthType}.
+     * @param infos Indicates credential information. See {@link CredentialInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    GetCredential([in] int userId, [in] int authType, [out] struct CredentialInfo[] infos);
+    /**
+     * @brief Obtains user information.
+     *
+     * @param userId Indicates the user ID.
+     * @param secureUid Indicates the secure user ID.
+     * @param pinSubType Indicates the sub type of PIN authentication. See {@link PinSubType}.
+     * @param infos Indicates enrolled information. See {@link EnrolledInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    GetUserInfo([in] int userId, [out] unsigned long secureUid, [out] int pinSubType,
+        [out] struct EnrolledInfo[] infos);
+    /**
+     * @brief Deletes a pin and a user from the IAM subsystem.
+     *
+     * @param userId Indicates the user ID.
+     * @param authToken Indicates the authentication token of the user password.
+     * @param deletedInfos Indicates the credential information to delete. See {@link CredentialInfo}.
+     * @param rootSecret protection key for the user file key.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    DeleteUser([in] int userId, [in] unsigned char[] authToken, [out] struct CredentialInfo[] deletedInfos,
+        [out] unsigned char[] rootSecret);
+    /**
+     * @brief Forcibly deletes a user.
+     *
+     * @param userId Indicates the user ID.
+     * @param deletedInfos Indicates the credential information to delete. See {@link CredentialInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    EnforceDeleteUser([in] int userId, [out] struct CredentialInfo[] deletedInfos);
+    /**
+     * @brief Updates the authentication result, and evaluates the result of the authentication solution.
+     *
+     * @param contextId Indicates the context index.
+     * @param scheduleResult Indicates the authentication result issued by the executor.
+     * @param info Indicates authentication result information. See {@link AuthResultInfo}.
+     * @param enrolledState EnrolledID information.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    UpdateAuthenticationResult([in] unsigned long contextId, [in] unsigned char[] scheduleResult,
+        [out] struct AuthResultInfo info, [out] EnrolledState enrolledState);
+    /**
+     * @brief Cancels authentication.
+     *
+     * @param contextId Indicates the context index.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    CancelAuthentication([in] unsigned long contextId);
+    /**
+     * @brief Updates the identification result, and evaluates the result of the identification solution.
+     *
+     * @param contextId Indicates the context index.
+     * @param scheduleResult Indicates the identification result issued by the executor.
+     * @param info Indicates identification result information. See {@link IdentifyResultInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    UpdateIdentificationResult([in] unsigned long contextId, [in] unsigned char[] scheduleResult,
+        [out] struct IdentifyResultInfo info);
+    /**
+     * @brief Cancels identification.
+     *
+     * @param contextId Indicates the context index.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 1.0
+     */
+    CancelIdentification([in] unsigned long contextId);
+    /**
+     * @brief Check whether the authentication capability is avaliable.
+     *
+     * @param userId Indicates the user ID.
+     * @param authType Indicates the authentication type. See {@link AuthType}.
+     * @param authTrustLevel Indicates the authentication trust level.
+     * @param checkResult Indicates check result.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    GetAvailableStatus([in] int userId, [in] int authType, [in] unsigned int authTrustLevel, [out] int checkResult);
+    /**
+     * @brief Obtains the valid authentication methods under the current authentication trust level.
+     *
+     * @param userId Indicates the user ID.
+     * @param authTypes Indicates the authentication types to be filtered. See {@link AuthType}.
+     * @param authTrustLevel Indicates the authentication trust level.
+     * @param validTypes Indicates the valid authentication types. See {@link AuthType}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    GetValidSolution([in] int userId, [in] int[] authTypes, [in] unsigned int authTrustLevel,
+        [out] int[] validTypes);
+    /**
+     * @brief Begins authentication, and generates the authentication solution.
+     *
+     * @param contextId Indicates the context index.
+     * @param param Indicates input parameters. See {@link AuthParam}.
+     * @param scheduleInfos Indicates scheduling information. See {@link ScheduleInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    BeginAuthentication([in] unsigned long contextId, [in] struct AuthParam param,
+        [out] struct ScheduleInfo[] scheduleInfos);
+    /**
+     * @brief Begins the enrollment of authentication credentials.
+     * If the authentication type is PIN, this method updates the existing PIN credential.
+     *
+     * @param userId Indicates the user ID.
+     * @param authToken Indicates the authentication token of the user password.
+     * @param param Indicates input parameters. See {@link EnrollParam}.
+     * @param info Indicates scheduling information. See {@link ScheduleInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    BeginEnrollment([in] unsigned char[] authToken, [in] struct EnrollParam param,
+        [out] struct ScheduleInfo info);
+    /**
+     * @brief Begins identification, and generates the identification solution.
+     *
+     * @param contextId Indicates the context index.
+     * @param authType Indicates the identification type. See @{AuthType}.
+     * @param challenge Indicates the identification challenge.
+     * @param executorSensorHint Indicates the executor sensor hint.
+     * The value <b>0</b> indicates that no value is specified.
+     * @param scheduleInfo Indicates scheduling information. See {@link ScheduleInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 3.2
+     * @version 2.0
+     */
+    BeginIdentification([in] unsigned long contextId, [in] int authType, [in] unsigned char[] challenge,
+        [in] unsigned int executorSensorHint, [out] struct ScheduleInfo scheduleInfo);
+    /**
+     * @brief Get all enrolled user information.
+     *
+     * @param userInfos List of all userInfo. See @{UserInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 4.0
+     * @version 1.0
+     */
+    GetAllUserInfo([out] UserInfo[] userInfos);
+    /**
+     * @brief Get all credential of enrolled users.
+     *
+     * @param userInfos List of all users. See @{ExtUserInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 4.0
+     * @version 1.0
+     */
+    GetAllExtUserInfo([out] ExtUserInfo[] userInfos);
+
+    /**
+     * @brief Querying EnrolledId information.
+     *
+     * @param userId Indicates the user ID.
+     * @param authType Indicates the identification type. See @{AuthType}.
+     * @param enrolledState Enrolled state.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    GetEnrolledState([in] int userId, [in] int authType, [out] struct EnrolledState enrolledState);
+
+    /**
+     * @brief Check if unlock result can be reused and return token.
+     *
+     * @param info Request information of reused unLock result. See {@link ReuseUnlockParam}.
+     * @param reuseInfo Reuse unlock info. See {@link ReuseUnlockInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    CheckReuseUnlockResult([in] struct ReuseUnlockParam reuseParam, [out] ReuseUnlockInfo reuseInfo);
+    /**
+     * @brief Send message.
+     *
+     * @param scheduleId Indicates the schedule ID of the message.
+     * @param srcRole is the role of source. See {@link ExecutorRole}.
+     * @param msg is the message content.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    SendMessage([in] unsigned long scheduleId, [in] int srcRole, [in] unsigned char[] msg);
+    /**
+     * @brief Register message callback.
+     *
+     * @param messageCallback Indicates the message callback. See {@link IMessageCallback}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    RegisterMessageCallback([in] IMessageCallback messageCallback);
+    /**
+     * @brief Prepare remote auth.
+     *
+     * @param remoteUdid Indicates the remote device udid.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    PrepareRemoteAuth([in] String remoteUdid);
+    /**
+     * @brief Get local schedule from message.
+     *
+     * @param remoteUdid Indicates the remote device udid.
+     * @param message is message received.
+     * @param scheduleInfo is schedule info. See {@link ScheduleInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    GetLocalScheduleFromMessage([in] String remoteUdid, [in] unsigned char[] message, [out] ScheduleInfo scheduleInfo);
+    /**
+     * @brief Get signed executor info.
+     *
+     * @param authTypes Indicates the auth types. See @{AuthType}.
+     * @param executorRole Indicates the role of executor. See {@link ExecutorRole}.
+     * @param remoteUdid Indicates the remote device udid.
+     * @param signedExecutorInfo Indicates the signed executor info.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    GetSignedExecutorInfo([in] int[] authTypes, [in] int executorRole, [in] String remoteUdid,
+        [out] unsigned char[] signedExecutorInfo);
+    /**
+     * @brief Get auth result from message.
+     *
+     * @param remoteUdid Indicates the remote device udid.
+     * @param message is message received.
+     * @param authResultInfo Indicates authentication result information. See {@link AuthResultInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+     GetAuthResultFromMessage([in] String remoteUdid, [in] unsigned char[] message, [out] struct AuthResultInfo authResultInfo);
+    /**
+     * @brief Set global config param.
+     *
+     * @param param The value of global config parameter. See @{GlobalConfigParam}.
+     * @return Return set result(0:success; other:failed).
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    SetGlobalConfigParam([in] GlobalConfigParam param);
+    /**
+     * @brief Obtains credential information.
+     *
+     * @param credentialId Indicates the credential ID.
+     * @param infos Indicates credential information. See {@link CredentialInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.0
+     * @version 1.0
+     */
+    GetCredentialById([in] unsigned long credentialId, [out] struct CredentialInfo info);
+    /**
+     * @brief Verify token and return the plainText. 
+     *
+     * @param tokenIn Token signed by userAuth.
+     * @param allowableDuration Allowable duration of token.
+     * @param tokenPlainOut Token plainText.
+     * @param rootSecret protection key for the user file key.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 5.1
+     * @version 1.0
+     */
+    VerifyAuthToken([in] unsigned char[] tokenIn, [in] unsigned long allowableDuration,
+        [out] struct UserAuthTokenPlain tokenPlainOut, [out] unsigned char[] rootSecret);
+    /**
+     * @brief Updates the abandon result and completes the abandoned.
+     *
+     * @param userId Indicates the user ID.
+     * @param scheduleResult Indicates the abandon result issued by the executor.
+     * @param infos Indicates the credential information to delete. See {@link CredentialInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 6.0
+     * @version 1.0
+     */
+    UpdateAbandonResult([in] int userId, [in] unsigned char[] scheduleResult, [out] struct CredentialInfo[] infos);
+    /**
+     * @brief Clear unavailable credential.
+     *
+     * @param userIdss Indicates the user ID.
+     * @param infos Indicates the credential information to clear. See {@link CredentialInfo}.
+     *
+     * @return Returns <b>0</b> if the operation is successful.
+     * @return Returns a non-zero value if the operation fails.
+     *
+     * @since 6.0
+     * @version 1.0
+     */
+    ClearUnavailableCredential([in] int[] userIds, [out] struct CredentialInfo[] infos);
+}
+/** @} */

@@ -1,0 +1,41 @@
+{
+  "version": "v143",
+  "status": "flashed_readback_verified",
+  "cpio_verified": true,
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v143.img",
+    "bytes": 100663296,
+    "sha256": "74ee88b754f0d62fbd44df964a925d8ca8aaca3592e18ae01aae7ef46ebc4d58"
+  },
+  "preserved_v142_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/appdata-sandbox.json.gz",
+    "sheng-compat-v118/graphics/apply-app-sandbox.sh",
+    "sheng-compat-v118/graphics/start-native-desktop-v116.sh"
+  ],
+  "compat_manifest_verified": true,
+  "sandbox_json_sha256": "efaa00c5e6cda288f33b698920b3e988247e66fcec6b5abad539cc4e51945e5a",
+  "sandbox_diff_only_render_gpu_pid_namespace": true,
+  "boot_sound_missing_reason_fallback": "UNKNOWN",
+  "hot_boot_sound_user_confirmed": true,
+  "hot_renderer_creation_verified": true,
+  "webview_content_verified": false,
+  "cold_boot_verified": true,
+  "boot_sound_cold_boot_user_confirmed": true,
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "usb_v121_unchanged": true,
+  "readback_boot_id": "e89a9523-9257-48d0-9898-e1b07453d76f",
+  "readback_verified": true,
+  "persistent_sandbox_sha_verified": true,
+  "cold_boot_audio_frames": 532800,
+  "cold_boot_audio_nonzero_samples": 724431,
+  "cold_boot_audio_peak_s16": 6047,
+  "original_bootcontrol_mark_successful": true,
+  "original_bootcontrol_mark_rc": 0,
+  "cold_desktop_screenshot": "v143-cold-desktop-1752.jpeg"
+}

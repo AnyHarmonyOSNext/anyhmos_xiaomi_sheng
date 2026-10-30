@@ -1,0 +1,12 @@
+{
+  "token_contract": {
+    "sha256": "ddf0998c3e5e45cb501d52e5c9a186c73d25dfbfe5f5abc41bcd0ce0291ae76a",
+    "bytes": 604240,
+    "run_on_device": false
+  },
+  "binder_nested": {
+    "sha256": "29ec21fd81ea8f308862109d6aa4e13f1e8e8930801967ee4b1523d5111290ad",
+    "bytes": 612432,
+    "run_on_device": false
+  }
+}

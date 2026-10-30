@@ -1,0 +1,37 @@
+{
+  "status": "candidate_not_flashed",
+  "boot_role": {
+    "name": "bootanimation",
+    "path": [
+      "/system/bin/bootanimation"
+    ],
+    "bootevents": [
+      "bootevent.bootanimation.started",
+      "bootevent.bootanimation.finished"
+    ],
+    "importance": -20,
+    "once": 1,
+    "uid": "graphics",
+    "gid": [
+      "graphics",
+      "data_reserve",
+      "dev_dma_heap"
+    ],
+    "secon": "u:r:bootanimation:s0",
+    "disabled": 1,
+    "start-mode": "condition",
+    "sandbox": 0,
+    "saspawn": false
+  },
+  "native_render_required_input_sha256": "0a699e2317dab4699117a90e7e21d5727bd823e3474a70ebaed4d32667e519ff",
+  "native_render_expected_patched_sha256": "d423413ec1fc58f40c5b04846b00530a4d82d0929eee769ede3bf5c605e5a77d",
+  "assets": {
+    "bootanimation-real": "1947fcb520bc5794103c2ef4777a3e0ab225640485d4d7a2c7a8934eb9f3bbd0",
+    "bootanimation-launcher": "24de1c5e020a24bfeca0821cf44bbbe64624afe961987537fd211930b9fae2fe",
+    "libsheng_boot_vulkan.so": "065b07b34ffec32c35192a423e49b8e286b45e9ed2efbbadd0e1adc2b856f8c3",
+    "bootpic.zip": "0b6fb88aecb025f66b7e81600bba4a1a1ac936958e7f8b1340f700626585e042",
+    "apply-rosen-handle.sh": "94aa41e0e8925ad18b045d01e974dc3dc2399d138b4d5afdce417e083a0e84a8",
+    "bootanimation-diagnostic.json": "150291b9f8ae65d55b4e2ea917138e4182cad3b62b919eee0a62f5715f9a1f34"
+  },
+  "scope": "Original init identity + EOF fix + original Vulkan SetSkContext adapter + private OHOS external handle flag interoperability; explicit gated diagnostic, not desktop. Known original Turnip v1 kept."
+}

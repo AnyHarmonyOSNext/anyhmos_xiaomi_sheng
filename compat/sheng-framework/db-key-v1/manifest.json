@@ -1,0 +1,11 @@
+{
+  "libdbkeys.so": {
+    "bytes": 16232,
+    "sha256": "eb0c3a10b9cc1f468341d1e7cc8293d829bd795e108d39379a1919ff9cbeca8a"
+  },
+  "db_key_contract": {
+    "bytes": 21696,
+    "sha256": "71c87415e2dce5a002a79e180094d69c1225b9d5ac5ce387939811fc96355c06"
+  },
+  "scope": "Only imported Sks* symbols in the original RDB/KV wrapping helpers; real per-UID software AES256-GCM, no TEE/authentication replacement"
+}

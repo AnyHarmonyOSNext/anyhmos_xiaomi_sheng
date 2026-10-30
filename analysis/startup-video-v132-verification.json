@@ -1,0 +1,178 @@
+{
+  "version": "v132",
+  "status": "flashed_readback_verified",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_compat_v132.img",
+    "bytes": 100663296,
+    "sha256": "42f59b550cca6bda6a2fbdcf260771ff12d07ba4a1384eaee5bd1df62b64342f"
+  },
+  "cpio_verified": true,
+  "preserved_v131_entries": true,
+  "changed_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/start-native-desktop-v116.sh"
+  ],
+  "init_boot_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "stock_vendor_modules_and_audio_unchanged": true,
+  "usb_v121_unchanged": true,
+  "graphics_v130_unchanged": true,
+  "battery_v131_unchanged": true,
+  "original_gpu_governor_unchanged": true,
+  "original_boot_video_asset_unchanged": true,
+  "hot_original_video_first_frame_and_completion_verified": true,
+  "boot_completed_requires_original_verified_unlock": true,
+  "cold_boot_verified": true,
+  "cold_boot_video_frame_verified": false,
+  "stage_timings_verified": true,
+  "desktop_after_animation_verified": true,
+  "boot_id": "24867ba2-91fc-42f9-9280-e16e0176c276",
+  "first_observed_complete_usb_reply_seconds": 41.08,
+  "whole_partition_readback_verified": true,
+  "cold_boot_video_playback_log_verified": true,
+  "cold_boot_capture_observer_result": "No fresh frame before ScreenManager readiness; do not claim cold visual verification",
+  "stages": [
+    {
+      "name": "prepare",
+      "uptime": 12.6
+    },
+    {
+      "name": "hilog",
+      "uptime": 12.61
+    },
+    {
+      "name": "core",
+      "uptime": 29.69
+    },
+    {
+      "name": "memmgr",
+      "uptime": 31.81
+    },
+    {
+      "name": "core",
+      "uptime": 39.71
+    },
+    {
+      "name": "diagnostics",
+      "uptime": 40.28
+    },
+    {
+      "name": "deviceproviders",
+      "uptime": 40.43
+    },
+    {
+      "name": "database",
+      "uptime": 40.48
+    },
+    {
+      "name": "time",
+      "uptime": 70.55
+    },
+    {
+      "name": "framework",
+      "uptime": 71.8
+    },
+    {
+      "name": "media",
+      "uptime": 78.68
+    },
+    {
+      "name": "codec",
+      "uptime": 79.9
+    },
+    {
+      "name": "wireless",
+      "uptime": 80.02
+    },
+    {
+      "name": "audio",
+      "uptime": 95.05
+    },
+    {
+      "name": "netstack",
+      "uptime": 95.57
+    },
+    {
+      "name": "graphics",
+      "uptime": 113.05
+    },
+    {
+      "name": "hardware",
+      "uptime": 122.68
+    },
+    {
+      "name": "bootanimation",
+      "uptime": 122.72
+    },
+    {
+      "name": "touch",
+      "uptime": 125.39
+    },
+    {
+      "name": "uideps",
+      "uptime": 126.6
+    },
+    {
+      "name": "scene",
+      "uptime": 126.82
+    },
+    {
+      "name": "inputmethod",
+      "uptime": 126.94
+    },
+    {
+      "name": "scene",
+      "uptime": 127.07
+    },
+    {
+      "name": "wake",
+      "uptime": 138.64
+    },
+    {
+      "name": "unlock",
+      "uptime": 140.72
+    },
+    {
+      "name": "bootcomplete",
+      "uptime": 143.98
+    },
+    {
+      "name": "capture",
+      "uptime": 144.03
+    },
+    {
+      "name": "complete",
+      "uptime": 165.31
+    }
+  ],
+  "original_video_first_frame_message": true,
+  "original_video_complete_state": 8,
+  "original_video_duration_seconds": 8.055,
+  "boot_complete_seconds": 143.98,
+  "autostart_exit": 0,
+  "autostart_seconds": 165.32,
+  "boot_video_fallback_stop_used": false,
+  "battery_public_ndk": {
+    "capacity": 96,
+    "plugged": 2,
+    "sysfs_capacity": 96,
+    "usb_online": 1
+  },
+  "desktop": {
+    "file": "output/screenshots/v132-desktop-1051.jpeg",
+    "bytes": 243285,
+    "sha256": "e9bc8200fd946f4e71184b5c053f86173a7c2e2007c2002069a0505927e4098b",
+    "visually_inspected": true
+  },
+  "clock_statusbar_and_widget_match": true,
+  "normal_reboot_without_reflash": {
+    "boot_id": "9b7959d9-0d46-402d-a5bc-1d5175d24985",
+    "complete_usb_reply": true,
+    "observed_uptime_seconds": 243.62,
+    "autostart_seconds": 165.36,
+    "autostart_exit": 0,
+    "partition_readback_matches": true,
+    "proof": "output/logs/command-shell-20261030-105931-d7bdc74a6f9e.log"
+  }
+}

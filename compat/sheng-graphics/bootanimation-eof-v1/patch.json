@@ -1,0 +1,33 @@
+{
+  "name": "sheng-bootanimation-eof-v1",
+  "input_sha256": "f019c8fbf7a263d5e4f0e6440e206bcb40b622964065b75b9da383535ba5910b",
+  "output_sha256": "1947fcb520bc5794103c2ef4777a3e0ab225640485d4d7a2c7a8934eb9f3bbd0",
+  "guards": [
+    {
+      "offset": 157120,
+      "bytes": "02008452621e00942009f837280340f9880900b4e902186b"
+    },
+    {
+      "offset": 52380,
+      "bytes": "00000000000000000000000000000000"
+    }
+  ],
+  "changes": [
+    {
+      "offset": 232,
+      "before": "010000000500000000d000000000000000e000000000000000e0000000000000305c020000000000305c0200000000000010000000000000",
+      "after": "01000000050000009ccc0000000000009cdc0000000000009cdc000000000000945f020000000000945f0200000000000010000000000000"
+    },
+    {
+      "offset": 157128,
+      "before": "2009f837",
+      "after": "b599ff17"
+    },
+    {
+      "offset": 52380,
+      "before": "00000000000000000000000000000000",
+      "after": "1f0000716bd20c5400cb0c5449660014"
+    }
+  ],
+  "validation": "Original native init UID1003 bootanimation read 300 PNG frames after this fix; no desktop or scanout claim."
+}

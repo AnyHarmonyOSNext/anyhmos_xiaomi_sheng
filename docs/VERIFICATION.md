@@ -1,0 +1,37 @@
+# 验证范围 / Verification scope
+
+下列记录来自本项目本地真机测试记录；原始设备日志、应用遥测、网络标识及屏幕内容未收入公开包。构建报告和文件哈希可以帮助识别产物，不能独立代替实物功能验收。
+
+The following summarizes local device tests. Private raw logs, app telemetry, network identifiers and screenshots are excluded. Build reports and hashes identify artifacts; they do not independently establish hardware functionality.
+
+| 项目 / Item | 证据与结论 / Evidence and conclusion |
+| --- | --- |
+| 桌面 / Desktop | 多轮原生截图与用户操作确认；v145 自动启动约 172.10s 完成，原 BootControl 门槛后成功。Native desktop captures across rounds; v145 startup completed and passed its original boot-success gates. |
+| 持久载荷 / Persistence | v118 主载荷迁 vendor_boot，最小 init_boot；v145 整分区读回 SHA 与构建值一致。Exact v145 partition readback matched its image hash. |
+| 点击等待 / Tap stall | 同步 Binder 等待约 1922ms，局部 MSDP 修补后的对照约 7ms，用户确认改善。Not an end-to-end latency benchmark. |
+| 电池 / Battery | v131 原 NDK capacity=94、plugged=2，与同轮 sysfs 及系统状态栏对应。No full charge/thermal/standby qualification. |
+| Wi-Fi | v134 原框架标准=6、真实 WPA 协商=6、状态栏小6；没有 Wi-Fi 7 实链验证。Negotiated capability is not throughput. |
+| 蓝牙 / Bluetooth | v139 设置开关 OFF/ON、原服务状态与发现附近设备；未配对未知外设，蓝牙音频未验。Discovery does not establish pairing or A2DP. |
+| 音频 / Audio | v142 用户确认视频暂停/续播有声，真实 PAL 流关闭/重开有记录；v143 实际重启开机声音由用户确认。No exhaustive routing/quality test. |
+| 媒体 / Media | v129 真实视频 surface 帧序列及 HEIC NDK 像素对照；属于软件路径/像素验证，不代表硬解或全部格式。 |
+| EGL/WebView | v144 原生 fixture 复现首次无绘制 swap 的尺寸回退，修补后 fixture 消费正确像素；真实网页仍白屏。Fixture passing is not WebView acceptance. |
+| 电源 / Power | 旧版已复现 OFF 后 late frame 重新 ACTIVE1；v145 捕获 `POWER_OFF_LATCH suppressed late frame without DRM commit`。用户最新实测明确确认熄屏已好，短按熄屏按此验收。Earlier explicit ON requests had possible manual interference; they do not override the latest physical acceptance. |
+| USB | 多轮冷/普通重启完整回包；仍有角色切换/在途通信问题。60s 超限后的 `exit=-1 signal=9` 属于完整终止回复，已修主机误判。 |
+
+## v145 验收边界 / v145 acceptance boundary
+
+当前 v145 镜像为 100663296 字节，SHA-256 `bf39eaa2f45386d09621a9a4cfbbd4725e673cb046fb777d277a40eea70e6895`。相对 v143 只改变以下 ramdisk 条目：
+
+- `sheng-compat-v118/graphics/native_display_wake`
+- `sheng-compat-v118/graphics/libdisplay_composer_vdi_impl.z.so`
+- `sheng-compat-v118/MANIFEST.json`
+
+解包往返、无关条目、DTB、bootconfig 和 manifest 校验通过。实际刷入/读回并启动成功，**用户确认短按熄屏已正常**。长时间保持熄屏、多轮实体按键循环、深睡与异常恢复未完成完整验收，单独保留为待验证项。
+
+Container roundtrip and unchanged-entry checks passed; the flashed partition matched and boot succeeded. **The user confirmed physical screen-off now works.** Prolonged standby, repeated physical-button cycles, deep sleep and abnormal recovery remain separate open acceptance items; this is not a claim of complete power-management parity.
+
+## 历史与当前 / Historical versus current
+
+模块分项可用不意味着每个新版都完成全部回归。蓝牙配对、蓝牙音频、硬解、WebView、144Hz、TEE、相机和全面稳定性均不能标为完成。发生新的故障应保留旧验收的版本/场景范围，同时单独记录新问题，不能把历史成功外推成当前全通过。
+
+Historical success is tied to its version and scenario. Use the main README's detailed matrix for open items. A diagnostic pattern, screenshot, service registration, return code or advertised capability must not be substituted for the corresponding user-visible acceptance test.
