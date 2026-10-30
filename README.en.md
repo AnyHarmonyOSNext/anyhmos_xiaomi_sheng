@@ -29,7 +29,7 @@ This repository contains the component sources currently in use, startup configu
 | USB debugging | Tools provide command execution, file transfer and screenshots. | Communication can still stop after rebooting or USB state changes. Connection reliability needs improvement. |
 | A/B boot | The system can mark a boot successful after the desktop is ready. | Full OTA and A/B update support is unfinished. |
 | Web pages and WebView | Not working correctly yet. | Some pages fail to open or remain blank. Douyin web login can remain on a loading screen. |
-| Security and encryption | Software compatibility implementations support selected services and applications. | TEE, hardware-backed keys, lock credentials and HUKS are incomplete. Stock-equivalent security is unavailable; payment and DRM features are unverified. |
+| Security and encryption | Software compatibility implementations support selected services and applications. | TEE, hardware-backed keys, lock credentials and HUKS are incomplete. Stock-equivalent security is unavailable; Encrypted apps from the app market can't be decrypted for use;payment and DRM features are unverified. |
 | Camera, microphone, sensors and accessories | Unfinished. | Camera capture, recording, sensors, stylus and keyboard accessories need individual adaptation and testing. |
 | Cross-device features | Unfinished. | Device discovery, connections and cross-device functionality need further adaptation. |
 
