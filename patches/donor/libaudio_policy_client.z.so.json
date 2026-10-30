@@ -1,0 +1,13 @@
+{
+  "name": "libaudio_policy_client.z.so",
+  "input_sha256": "38e59767cb5d9c2d1e7cf895efb68ecaeedc1fc1f12284d9e63f6f3544f3da1d",
+  "output_sha256": "0b8b895c9bd3ee14632f73a443da982a6a4d59c0c94b29db77e5ce914affb6ee",
+  "changes": [
+    {
+      "offset": 239108,
+      "before": "80020012",
+      "after": "00008052"
+    }
+  ],
+  "basis": "Final v145 deployed payload compared with its original donor input"
+}

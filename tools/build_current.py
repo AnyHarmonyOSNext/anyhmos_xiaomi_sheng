@@ -1,0 +1,203 @@
+"""Build the selected implementations directly; never regenerate older versions.
+
+Run in WSL. --list and --dry-run do not compile or touch a device. External
+SDK/upstream headers, libdrm and donor libraries must be supplied separately.
+"""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parent.parent
+DEPS = Path(os.environ.get('SHENG_DEPS', '/root/hmos-work/graphics-deps'))
+SDK = Path(os.environ.get('SHENG_SDK', '/root/hmos-work/sdk-6.0.0.47/installed/native'))
+UPSTREAM = Path(os.environ.get('SHENG_UPSTREAM', str(DEPS/'source')))
+LINK = Path(os.environ.get('SHENG_DONOR_LINK', str(ROOT/'work/donor-hdi-link')))
+STAGE = Path(os.environ.get('SHENG_STAGE', str(DEPS/'stage')))
+
+
+def includes(paths):
+    return ['-I'+str(p) for p in paths]
+
+
+def commands(out):
+    clang = str(SDK/'llvm/bin/clang')
+    clangpp = str(SDK/'llvm/bin/clang++')
+    cflags = ['--target=aarch64-linux-ohos', '-O2', '-Wall', '-Wextra']
+    cppflags = cflags+['-std=c++17', '-fno-exceptions', '-fno-rtti', '-nostdlib++',
+        '-include', str(ROOT/'compat/platform/platform_cpp_config.h')]
+    hdf = UPSTREAM/'drivers_hdf_core'
+    shared_inc = [hdf/'interfaces/inner_api'/p for p in
+                  ('hdi','ipc','hdi/base','utils','osal/uhdf','core')]
+    shared_inc += [UPSTREAM/'commonlibrary_c_utils/base/include',
+        UPSTREAM/'communication_ipc/interfaces/innerkits/ipc_core/include',
+        UPSTREAM/'communication_ipc/interfaces/innerkits/ipc_single/include',
+        UPSTREAM/'hiviewdfx_hilog/interfaces/native/innerkits/include']
+    cpp_runtime = [str(LINK/'libc++.so')]
+    hdi_libs = [str(LINK/n) for n in ('libhdi.z.so','libhdi_base.z.so',
+        'libutils.z.so','libipc_single.z.so','libipc_common.z.so','libc++.so')]
+    result = {}
+
+    def add(key, output, src, flags=(), libs=(), inc=(), cpp=False):
+        compiler = clangpp if cpp else clang
+        result[key] = [compiler]+(cppflags if cpp else cflags)+includes(inc)+list(flags)+[
+            str(ROOT/s) for s in src]+list(libs)+['-o', str(out/output)]
+
+    for key, output, source in [
+        ('bootstrap','hmos-probe','compat/bootstrap/hmos_probe_v121.c'),
+        ('init-entry','init','compat/bootstrap/init_entry.c'),
+    ]:
+        flags = ['-static','-O2','-Wall','-Wextra','-Werror']
+        if key=='init-entry':
+            flags=['-nostdlib','-static','-Os','-fno-stack-protector','-fno-builtin',
+                   '-Wl,-e,_start,-z,noexecstack,--build-id=none']
+        result[key]=['aarch64-linux-gnu-gcc',*flags,str(ROOT/source),'-o',str(out/output)]
+    display_inc = [ROOT/'compat/display',ROOT/'compat/display/include/vdi-only',
+        ROOT/'compat/display/include',ROOT/'compat/display/include/display/buffer',
+        UPSTREAM/'drivers_hdf_core/interfaces/inner_api/hdi/base',
+        UPSTREAM/'drivers_peripheral/display/buffer/hdi_service/include',
+        UPSTREAM/'drivers_interface/display/composer/common/include',
+        UPSTREAM/'hiviewdfx_hilog/interfaces/native/innerkits/include',
+        STAGE/'include',STAGE/'include/libdrm']
+    add('composer','libdisplay_composer_vdi_impl.z.so',
+        ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp'],
+        ['-g','-shared','-fPIC','-Wl,-z,defs','-Wl,-soname,libdisplay_composer_vdi_impl.z.so'],
+        [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
+    add('allocator','libdisplay_buffer_vdi_impl.z.so',['compat/display/buffer_vdi.cpp'],
+        ['-g','-DACE5_LINEAR_STRIDE_ALIGNMENT=128','-shared','-fPIC','-Wl,-z,defs',
+         '-Wl,-soname,libdisplay_buffer_vdi_impl.z.so'],cpp_runtime,display_inc,True)
+    add('allocator-contract','alpha_metadata_probe',['tests/display/alpha_metadata_probe.cpp'],
+        [],cpp_runtime,display_inc,True)
+    add('display-wake','native_display_wake',['compat/display/native_display_wake.cpp'],
+        ['-Os','-std=c++17'],cpp_runtime,[],True)
+    add('touch','sheng_thp_bridge',
+        ['compat/touch/bridge.cpp','compat/touch/nvt_touch_core.cpp','compat/touch/nvt_finger_filter.cpp'],
+        ['-std=c++20','-fexceptions'],cpp_runtime,[ROOT/'compat/touch'],True)
+    add('touch-launcher','native_thp_launcher',['compat/touch/launcher.c'])
+
+    audio=ROOT/'compat/audio'
+    add('audio-vdi','libsheng_audio_vdi.so',['compat/audio/audio_vdi.c','compat/audio/pal_client.c'],
+        ['-D_GNU_SOURCE','-shared','-fPIC','-Wl,-z,defs','-Wl,-soname,libsheng_audio_vdi.so'],
+        ['-pthread'],[audio,audio/'include'])
+    for key,source,libs in [
+        ('audio-loader','audio_vdi_loader.c',['-ldl']),
+        ('audio-manager','audio_manager_service.c',['-ldl','-pthread']),
+    ]:
+        output='libsheng_audio_vdi_loader.so' if key=='audio-loader' else 'libsheng_audio_manager_service.so'
+        add(key,output,['compat/audio/'+source],['-shared','-fPIC','-Wl,-z,defs'],libs)
+    add('audio-hdi','native_audio_hdi_publisher',['compat/audio/native_audio_hdi_publisher.c'],
+        [],['-ldl'],shared_inc)
+    add('audio-launcher','native_audio_service_launcher',['compat/audio/native_audio_service_launcher.c'])
+    add('audio-check','native_system_audio_check',['compat/audio/native_system_audio_check.c'],[],['-lohaudio','-lm'])
+    palinc=Path(os.environ.get('SHENG_PAL_INCLUDE','/root/hmos-reference/pal-sm8550-a13/inc'))
+    bionic=Path(os.environ.get('SHENG_BIONIC_LINK',str(ROOT/'work/audio-bionic-v1/lib64')))
+    bflags=['--target=aarch64-linux-android33','--sysroot='+str(SDK/'sysroot'),
+        '-isystem',str(SDK/'sysroot/usr/include/aarch64-linux-ohos'),
+        '-fuse-ld=lld','-fPIC','-shared','-nostdlib','-D_GNU_SOURCE','-mno-outline-atomics',
+        '-O2','-Wall','-Wextra','-Werror','-Wl,-z,defs','-L'+str(bionic)]
+    result['pal-server']=[clang,*bflags,'-I'+str(palinc),'-Wl,-soname,libsheng_pal_server.so',
+        str(audio/'pal_server.c'),'-lc','-ldl','-o',str(out/'libsheng_pal_server.so')]
+    # The lifecycle shim is Bionic and must not silently pick the OHOS libc.
+    result['pal-lifecycle']=[clang,*bflags,'-Wl,-soname,libsheng_pal_lifecycle.so',str(audio/'pal_lifecycle.c'),'-lc','-ldl',
+        '-o',str(out/'libsheng_pal_lifecycle.so')]
+    pd=audio/'pd-mapper'
+    result['pd-mapper']=['aarch64-linux-gnu-gcc','-static','-O2','-D_GNU_SOURCE',
+        '-I'+str(pd),*[str(pd/n) for n in ('pd-mapper.c','assoc.c','json.c','servreg_loc.c',
+          'qrtr.c','qmi.c','logging.c')],'-o',str(out/'sheng-pd-mapper')]
+
+    add('wifi-category','libsheng_wifi_category_v134.so',
+        ['compat/wifi/wifi_caps_v134.c','compat/wifi/wifi_category_ioctl_v134.c'],
+        ['-std=gnu11','-fPIC','-fvisibility=hidden','-shared',
+         '-Wl,-soname,libsheng_wifi_category_v134.so'],[],[ROOT/'compat/wifi/include',ROOT/'compat/wifi'])
+    add('wifi-contract','native_wifi_category_probe_v134',
+        ['compat/wifi/wifi_caps_v134.c','compat/wifi/native_wifi_category_probe_v134.c'],
+        ['-std=gnu11'],['-ldl'],[ROOT/'compat/wifi/include',ROOT/'compat/wifi'])
+    for key,source in [('storage-launcher','storage_ram_launcher.c'),('storage-no-tee','storage_ram_no_tee.c')]:
+        shared=key=='storage-no-tee'
+        add(key,'libsheng_ram_no_tee.so' if shared else 'storage-ram-launcher',
+            ['compat/framework/account/'+source],['-shared','-fPIC','-Wl,-z,relro,-z,now'] if shared else [])
+    huks=UPSTREAM/'security_huks/interfaces/inner_api/huks_standard/main/include'
+    add('account-hmac','libsheng_account_hmac.so',['compat/framework/account/account_hmac.c'],
+        ['-std=gnu11','-Wno-misleading-indentation','-shared','-fPIC','-Wl,-z,relro,-z,now',
+         '-Wl,--version-script='+str(ROOT/'compat/framework/account/exports.map')],
+        [str(LINK/'libcrypto_openssl.z.so'),'-Wl,--allow-shlib-undefined'],[huks])
+    add('database','libdbkeys.so',['compat/framework/database/db_key.c'],
+        ['-std=gnu11','-Wno-misleading-indentation','-shared','-fPIC','-Wl,-z,relro,-z,now',
+         '-Wl,--version-script='+str(ROOT/'compat/framework/database/exports.map'),'-Wl,-soname,libdbkeys.so'],
+        [str(LINK/'libhukssdk.z.so'),str(LINK/'libcrypto_openssl.z.so'),'-Wl,--allow-shlib-undefined'],[huks])
+    for key,source,output in [
+        ('battery-publisher','compat/battery/native_battery_hdi_publisher_v131.cpp','native_battery_hdi_publisher_v131'),
+        ('bluetooth-publisher','compat/bluetooth/native_bt_hdi_publisher_v136.cpp','native_bt_hdi_publisher_v136'),
+    ]:
+        group='battery' if key.startswith('battery') else 'bluetooth'
+        inc=[ROOT/'compat'/group/'include',ROOT/'compat'/group/'include'/('bluetooth/hci' if group=='bluetooth' else 'battery')]
+        libs=hdi_libs.copy()
+        if group=='bluetooth':
+            btlibs=Path(os.environ.get('SHENG_BT_VENDOR_LINK',str(ROOT/'work/donor-bluetooth-v136/vendor/lib64')))
+            libs+=[str(btlibs/'libbluetooth_hci_stub_1.0.z.so')]
+        add(key,output,[source],[],libs+['-ldl','-Wl,--allow-shlib-undefined'],inc+shared_inc,True)
+    result['bluetooth-vendor']=[clangpp,*cflags,
+        '-I'+str(UPSTREAM/'drivers_peripheral/bluetooth/hci/hdi_service/implement'),
+        '-shared','-fPIC',str(ROOT/'compat/bluetooth/bluetooth_vendor_v136.cpp'),
+        '-ldl','-o',str(out/'libbt_vendor_sheng_v136.so')]
+    headers=Path(os.environ.get('SHENG_ANDROID_CPP_HEADERS','/root/hmos-work/clang-prebuilt/clang-r450784e/include/c++/v1'))
+    for name in ('bridge','identity','initialize'):
+        result['bluetooth-'+name]=[str(SDK/'llvm/bin/clang++'),*bflags,
+            '-nostdinc++','-isystem',str(headers),'-std=c++17','-fno-exceptions',
+            str(ROOT/f'compat/bluetooth/bluetooth_{name}_v136.cpp'),'-lc++','-lc','-ldl',
+            '-o',str(out/f'libsheng_bt_{name}_v136.so')]
+    # v139 host check is a two-translation-unit helper, not the old v137 binary.
+    result['bluetooth-current-c']=[clang,*cflags,'-DSHENG_CURRENT_BT_API','-c',
+        str(ROOT/'compat/bluetooth/native_bt_host_check_v137.c'),'-o',str(out/'bt-current.o')]
+    add('bluetooth-current','native_bt_host_check_v139',
+        ['compat/bluetooth/native_bt_current_v139.cpp'],[],
+        [str(out/'bt-current.o'),*cpp_runtime,'-ldl','-Wl,--allow-shlib-undefined'],[],True)
+    # Common service launchers do not require the removed per-round builders.
+    for source in ('native_render_launcher.c','native_brightness_launcher.c','native_bundle_cli.c'):
+        add(source[:-2],source[:-2],['compat/services/'+source],[],['-ldl'])
+    add('boot-launcher','bootanimation-launcher',['compat/services/bootanimation_launcher.c'])
+    add('boot-vulkan','libsheng_boot_vulkan.so',['compat/services/bootanimation_vulkan_adapter.cpp'],
+        ['-shared','-fPIC','-Wl,-z,defs'],cpp_runtime,[],True)
+    add('surface-post','libsheng_surface_diagnostic.so',
+        ['compat/services/surface_post.cpp','compat/services/native_buffer_import_observer.S'],
+        ['-shared','-fPIC'],cpp_runtime,[],True)
+    return result
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('targets',nargs='*')
+    parser.add_argument('--list',action='store_true')
+    parser.add_argument('--dry-run',action='store_true')
+    parser.add_argument('--out',type=Path,default=ROOT/'work/current-build')
+    args=parser.parse_args()
+    out=args.out.resolve()
+    plan=commands(out)
+    if args.list:
+        print('\n'.join(plan));return
+    if not args.targets:parser.error('Select targets explicitly, or use --list.')
+    if any(name not in plan for name in args.targets):parser.error('Unknown target')
+    targets=list(dict.fromkeys(args.targets))
+    if 'bluetooth-current' in targets and 'bluetooth-current-c' not in targets:
+        targets.insert(targets.index('bluetooth-current'),'bluetooth-current-c')
+    if args.dry_run:
+        print(json.dumps({name:plan[name] for name in targets},indent=2));return
+    out.mkdir(parents=True,exist_ok=True)
+    report={}
+    for name in targets:
+        command=plan[name]
+        subprocess.run(command,check=True)
+        artifact=Path(command[command.index('-o')+1])
+        if artifact.suffix!='.o':
+            strip='aarch64-linux-gnu-strip' if command[0]=='aarch64-linux-gnu-gcc' else str(SDK/'llvm/bin/llvm-strip')
+            subprocess.run([strip,str(artifact)],check=True)
+        report[name]=dict(command=command,bytes=artifact.stat().st_size,
+            sha256=hashlib.sha256(artifact.read_bytes()).hexdigest())
+    (out/'build-report.json').write_text(json.dumps(report,indent=2)+'\n')
+    print(json.dumps({k:{'bytes':v['bytes'],'sha256':v['sha256']} for k,v in report.items()},indent=2))
+
+
+if __name__=='__main__':main()

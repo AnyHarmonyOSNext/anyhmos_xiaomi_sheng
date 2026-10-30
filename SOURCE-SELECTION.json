@@ -1,0 +1,1886 @@
+{
+  "baseline": "v146",
+  "selection_date": "2026-10-31",
+  "policy": "One accepted implementation per component, plus required shared/ABI dependencies.",
+  "component_versions": {
+    "display": "v145",
+    "allocator": "v130",
+    "turnip": "v128",
+    "egl": "v126",
+    "touch": "service-v2",
+    "audio": "v142",
+    "wifi_category": "v134",
+    "bluetooth": "v139 plus v141 capability correction",
+    "battery": "v131",
+    "bootstrap": "v118",
+    "usb_probe": "v121",
+    "database": "v2",
+    "memmgr": "v2",
+    "startup": "v143 boot-sound integration",
+    "ipc": "v16 typed-export implementation"
+  },
+  "not_retained": [
+    "v144 EGL/WebView experiments",
+    "GPU governor policies",
+    "144Hz experiments",
+    "DSC fix/observe experiments",
+    "older composer/allocator/audio implementations",
+    "chronological probe and flash chains",
+    "old image verification reports",
+    "duplicate WSL IPC exports and generated module metadata"
+  ],
+  "runtime_text": [
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-audio-card.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-audio-card.sh",
+      "sha256": "ad8aea789e09bc3b854a66d22d16500e97d64338a45a954c285feda3b3550c90"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-audio-transport.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-audio-transport.sh",
+      "sha256": "91f0df7dd89c0a08f008ded3660d349a8fa9aaf01a8e875acd05145e149d6622"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-audio_pkt_dlkm.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-audio_pkt_dlkm.sh",
+      "sha256": "fbea23958ffdfff69e4ea8b932640e679adc64d5e1669248523e1553c970268d"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-bt_fm_slim.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-bt_fm_slim.sh",
+      "sha256": "e5dfb99ceb71f67f1af7291f769ec9bab2b0e853d3093be5c505b5c0b6fac591"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-qcom_q6v5_pas.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-qcom_q6v5_pas.sh",
+      "sha256": "11ae239c05d867bdff4ab991303e4fa927093f59d83ad5d81bcca430d541e25c"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-qrtr-smd.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-qrtr-smd.sh",
+      "sha256": "a2daed902b58d6c81e1cbc5ecb5a5225b3308497f1393cc8461119d50abb6ffd"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-slim-qcom-ngd-ctrl.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-slim-qcom-ngd-ctrl.sh",
+      "sha256": "7f569da75bc7974d3b1719fc679b5fbb4cb92f15d2b332d3e6e47db1413fdbe5"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-smp2p.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-smp2p.sh",
+      "sha256": "948a64268d3463642abbcec8c158277f171ace4db40d980643494f9047328ae1"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/load-official303-wcd938x_slave_dlkm.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/load-official303-wcd938x_slave_dlkm.sh",
+      "sha256": "d1607d8f632c422ca90bac5247b52d165f5342ec81ffab6c8a270c9c7fbea6b5"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/stage-audio-firmware.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/stage-audio-firmware.sh",
+      "sha256": "b1093f5ed6ce827d5957554aaccd7baf81fcf58cbb985ec9865a90cff7772a9e"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/stage-audio-nodes.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/stage-audio-nodes.sh",
+      "sha256": "3992982a5068a5117689071d2baee279090550c74de10e8abc7fd513cf3fae60"
+    },
+    {
+      "path": "runtime/audio/audio/scripts/stage-audio-supplement.sh",
+      "ramdisk_entry": "sheng-audio-v1/audio/scripts/stage-audio-supplement.sh",
+      "sha256": "e8377c09f269bfdf641e374a64cf25402bdf51babafe3c9d8975d46fd888c3e0"
+    },
+    {
+      "path": "runtime/compat/bluetooth-v136/bluetooth_service_v136.json",
+      "ramdisk_entry": "sheng-compat-v118/bluetooth-v136/bluetooth_service_v136.json",
+      "sha256": "405e661390f7ba5f1338eb437035458fa6e886175becdc92f292d1e45ee90b89"
+    },
+    {
+      "path": "runtime/compat/bluetooth-v136/init-bluetooth-v136.cfg",
+      "ramdisk_entry": "sheng-compat-v118/bluetooth-v136/init-bluetooth-v136.cfg",
+      "sha256": "aa486f25247529a1fecaa80284e839772f4609dd350f8cc9552f9e8b259fcc36"
+    },
+    {
+      "path": "runtime/compat/bluetooth-v136/load-official303-btpower.sh",
+      "ramdisk_entry": "sheng-compat-v118/bluetooth-v136/load-official303-btpower.sh",
+      "sha256": "cf07d4619bf64b93013fd58a94834a405eb2301a67744b94dd775f945fbe89c9"
+    },
+    {
+      "path": "runtime/compat/bluetooth-v136/load-official303-msm_geni_serial.sh",
+      "ramdisk_entry": "sheng-compat-v118/bluetooth-v136/load-official303-msm_geni_serial.sh",
+      "sha256": "6ef311234b11c7d31963647223136ef274e92c26f039910b61ddf1081cea94bb"
+    },
+    {
+      "path": "runtime/compat/bluetooth-v136/softbus_server.json",
+      "ramdisk_entry": "sheng-compat-v118/bluetooth-v136/softbus_server.json",
+      "sha256": "ec66ea2b5973445f302e342db82b980f3b9ead6d22f53c51eadc05a87666e084"
+    },
+    {
+      "path": "runtime/compat/bluetooth-v136/start-bluetooth-v136.sh",
+      "ramdisk_entry": "sheng-compat-v118/bluetooth-v136/start-bluetooth-v136.sh",
+      "sha256": "219705913aa0ee291a8d69e35513d9c3e45e69c7874bbef967ea007060c7dd7f"
+    },
+    {
+      "path": "runtime/compat/graphics/appdata-sandbox-isolated.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/appdata-sandbox-isolated.json.gz",
+      "sha256": "0199560a89c4f6a8ea3606fc990627ae84daef6760462d5cb0c8862371563505"
+    },
+    {
+      "path": "runtime/compat/graphics/appdata-sandbox.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/appdata-sandbox.json.gz",
+      "sha256": "efaa00c5e6cda288f33b698920b3e988247e66fcec6b5abad539cc4e51945e5a"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-account-hmac.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-account-hmac.sh",
+      "sha256": "1286af75d40f023e2856bf83241c0496282163b8f2d2888f0e10e4475dd7b96a"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-app-sandbox.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-app-sandbox.sh",
+      "sha256": "1dfca11dd27192efc1f1517655c7dedf7bf25b66f285ff2441c9d8dac7ad03ec"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-audio-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-audio-v116.sh",
+      "sha256": "68bc52c72c559ae69b66e2b90ee4fb112ff74e671b10170176ec3ec42827227c"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-audio-wait-v1.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-audio-wait-v1.sh",
+      "sha256": "0706e65a54e8ab246503694818a1e91b213c5aa4f4abb5bcf832dbacebc623e5"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-cli-wait-v1.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-cli-wait-v1.sh",
+      "sha256": "daebe654e8b338126d25e7a0500d6ba20236de3ae3729c2cd3ec3d550d087f89"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-compat-paths.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-compat-paths.sh",
+      "sha256": "ef53595feb081e60e11525a87f07969a263b1d3b3df5b486ff1c5d28c52118ef"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-db-key-v2.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-db-key-v2.sh",
+      "sha256": "ffea0d69424612a8dfdb83403a1f675a542b121fecc62acd3aae04376a2ec5ce"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-framework-dev.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-framework-dev.sh",
+      "sha256": "4e750c1c209232ffa0f90733404c6a1b25969ca38186ea72b9e0d823872b7193"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-hardware-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-hardware-v116.sh",
+      "sha256": "d160f691fa26d6b1e4763dd3254534cf1fa754c87a5e9abceb529d809536f828"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-memmgr-v2.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-memmgr-v2.sh",
+      "sha256": "556d72ffb8127a9c22691fc008620567b13755db598132a610f786fec1fcea7c"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-msdp-local-v1.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-msdp-local-v1.sh",
+      "sha256": "68f7bd14d2d226d9ce94a2daea558221f9d5136b41434a98e154cf616b1afd74"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-preload.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-preload.sh",
+      "sha256": "e91d2afd1cc664fdc31d5ce3f32b69c418923c1514bbfa288952baea537b7b74"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-render-usage.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-render-usage.sh",
+      "sha256": "9ac1ff2a9daf6f89f4581c2f204a798f3ef5744083a548c4a90158d53bfbf35d"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-rosen-handle.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-rosen-handle.sh",
+      "sha256": "b3eada18083f458317469738808d708dadd42c8e7feaee0801e62e1b194d9b16"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-rs-commit-sync-v1.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-rs-commit-sync-v1.sh",
+      "sha256": "cb012197d121c82aecac84fecc99a8b2761a589bb998cd50f66987e98d165200"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-runtime-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-runtime-v116.sh",
+      "sha256": "fbc5d533a6848f1b0c323180f5ae73399bb0b973b401b3319753ae1582406201"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-storage-local-v1.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-storage-local-v1.sh",
+      "sha256": "e3a99957db36447321748dd6c603580025a44d2361c99a0ff32963d1a84bd51b"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-time-v1.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-time-v1.sh",
+      "sha256": "59924f5ac59c3ba65df3b504f40b27e3fa726f4472868e044b912c413527fc59"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-touch.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-touch.sh",
+      "sha256": "ae1539305b71cc84e2b4104e44890cf261411fed6afc3fc9d461d6b69292a23e"
+    },
+    {
+      "path": "runtime/compat/graphics/apply-useriam.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/apply-useriam.sh",
+      "sha256": "e7535a668bcec38b41c9464649e96d0eef1eb69b0d1216875f90a3d8ac47618d"
+    },
+    {
+      "path": "runtime/compat/graphics/device_manager.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/device_manager.json",
+      "sha256": "fb5674ac2c8428fb743b8b0be424327126300f1ca7df59a83a41d5dd7f1d252e"
+    },
+    {
+      "path": "runtime/compat/graphics/deviceinfoservice.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/deviceinfoservice.json",
+      "sha256": "1606ab78640fca7e9702b6645d87e1748b14dd83c3a94a6ff9564442dcf75453"
+    },
+    {
+      "path": "runtime/compat/graphics/download_server.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/download_server.json",
+      "sha256": "92f3327af5105a156620256b1f9251753d70b7b3078f76acf7afaef258567629"
+    },
+    {
+      "path": "runtime/compat/graphics/foundation-app-core.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/foundation-app-core.json",
+      "sha256": "e6e3704f8b32b0bbfb3df07cd2a63e102bf8bbf88a4c580a963f902d57d4c5b1"
+    },
+    {
+      "path": "runtime/compat/graphics/foundation-screen-only.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/foundation-screen-only.json",
+      "sha256": "e54ce67c38abe9e19d0fc00f2ceab1383787c20ab15f7392e7d9b81bc55dd5d4"
+    },
+    {
+      "path": "runtime/compat/graphics/framework-dev-patch.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/framework-dev-patch.json",
+      "sha256": "ba427c99c5b0a1db3573481b7e5364eb830d566c500017d5773bfeed1d55fc41"
+    },
+    {
+      "path": "runtime/compat/graphics/hw_defaults-v141.para",
+      "ramdisk_entry": "sheng-compat-v118/graphics/hw_defaults-v141.para",
+      "sha256": "3fa79d36281510333d96de8ff23844e40229b1d227ada18ca0eff2fbf24a9dc2"
+    },
+    {
+      "path": "runtime/compat/graphics/i18n_service.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/i18n_service.json",
+      "sha256": "8f4afc28b097b24716508ad95c645e848a005ac798b61e14ccd45d5ee76bc98f"
+    },
+    {
+      "path": "runtime/compat/graphics/init-compat-scan.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/init-compat-scan.json",
+      "sha256": "d989b8070f3d5203f2a7ad4b1377b1b2fc56ae3fbd35a6c3c5d3abe8acd5b3b5"
+    },
+    {
+      "path": "runtime/compat/graphics/init-desktop-services.cfg",
+      "ramdisk_entry": "sheng-compat-v118/graphics/init-desktop-services.cfg",
+      "sha256": "3726614226783e19b634ecf13f082b4aa6639fde9cbcb9eff26e9289dbd943b5"
+    },
+    {
+      "path": "runtime/compat/graphics/init-hardware-v116.cfg",
+      "ramdisk_entry": "sheng-compat-v118/graphics/init-hardware-v116.cfg",
+      "sha256": "25bd27a13dd929d9c10028eb0262e08a49e3b1cc853e350b5c5b1957dafe813d"
+    },
+    {
+      "path": "runtime/compat/graphics/init-platform-v116.cfg",
+      "ramdisk_entry": "sheng-compat-v118/graphics/init-platform-v116.cfg",
+      "sha256": "2fef38725b92ae82f4b3863e5618f1683a198866eebfdb5e518a2c593225765b"
+    },
+    {
+      "path": "runtime/compat/graphics/init-userdata-ext4.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/init-userdata-ext4.sh",
+      "sha256": "2ba17ec94a08d58b43cf9af85ada0cbc32df0343ff85a962d55052a64c9d3b97"
+    },
+    {
+      "path": "runtime/compat/graphics/init-wifi-v116.cfg",
+      "ramdisk_entry": "sheng-compat-v118/graphics/init-wifi-v116.cfg",
+      "sha256": "b01f396940e3548d9960cf183fee3ec731ca85c747874b17337207d63f613b93"
+    },
+    {
+      "path": "runtime/compat/graphics/installs-debug-start.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/installs-debug-start.json",
+      "sha256": "7c61b137b47c87ea69dfa6894d8bb7f41505e55992ad87ae7d4c8aab95144484"
+    },
+    {
+      "path": "runtime/compat/graphics/ld-musl-aarch64.path",
+      "ramdisk_entry": "sheng-compat-v118/graphics/ld-musl-aarch64.path",
+      "sha256": "aea65425940bbfb839a95af9de056cbae8e41e0d5ddec2fad255fa8e97bbd676"
+    },
+    {
+      "path": "runtime/compat/graphics/ld-musl-namespace-aarch64-New.ini",
+      "ramdisk_entry": "sheng-compat-v118/graphics/ld-musl-namespace-aarch64-New.ini",
+      "sha256": "ecdf73de2b3420e2cc6e584df9a18ebedb8e3bb2bd6e63770077521fed0cf691"
+    },
+    {
+      "path": "runtime/compat/graphics/ld-musl-namespace-aarch64-flex.ini",
+      "ramdisk_entry": "sheng-compat-v118/graphics/ld-musl-namespace-aarch64-flex.ini",
+      "sha256": "397fe8b6158b049e634a8a8c5887753f0b8bade74d78c70007eb8d925b61fe27"
+    },
+    {
+      "path": "runtime/compat/graphics/ld-musl-namespace-aarch64-test.ini",
+      "ramdisk_entry": "sheng-compat-v118/graphics/ld-musl-namespace-aarch64-test.ini",
+      "sha256": "a13d5c451b29631ee5f669c2d6c8ae99941774006ede86e9697ecea656876c75"
+    },
+    {
+      "path": "runtime/compat/graphics/ld-musl-namespace-aarch64.ini",
+      "ramdisk_entry": "sheng-compat-v118/graphics/ld-musl-namespace-aarch64.ini",
+      "sha256": "ccbd794e469ff5cf8e218d45f7788ae4a80e5afeaf10361a970af47cff196666"
+    },
+    {
+      "path": "runtime/compat/graphics/load-official303-cnss2.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/load-official303-cnss2.sh",
+      "sha256": "7a14f9ceddf8c6a600675c337a8aa38d5bf2480ebf267dcf3fbed4db42f3bd0f"
+    },
+    {
+      "path": "runtime/compat/graphics/load-official303-qca_cld3_kiwi_v2.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/load-official303-qca_cld3_kiwi_v2.sh",
+      "sha256": "caf8f67fdb1a1eaa9c86ed460cc97d281b94c2853a9e59526c3c0a873603449a"
+    },
+    {
+      "path": "runtime/compat/graphics/load-official303-qrtr-mhi.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/load-official303-qrtr-mhi.sh",
+      "sha256": "cfc9b24a9aba38f304d3dba832c6b3679f5b2e242862fbcecad6a7c4493f1375"
+    },
+    {
+      "path": "runtime/compat/graphics/locationhub-state.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/locationhub-state.json",
+      "sha256": "9016de251d3a4e917dcc905ac042f264048010a92f331de8efde687c7a031d95"
+    },
+    {
+      "path": "runtime/compat/graphics/mark-boot-success-v135.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/mark-boot-success-v135.sh",
+      "sha256": "69d47e7af36cae3a4a621615d1570dacb1a95eb21403f1c84983522af76f51c4"
+    },
+    {
+      "path": "runtime/compat/graphics/msdp-input-only.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/msdp-input-only.json",
+      "sha256": "1a952b7325ef996a63426986d90913982b61eacd99064e02cd64ca2c419a6c2d"
+    },
+    {
+      "path": "runtime/compat/graphics/oobe_page_offline.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/oobe_page_offline.json",
+      "sha256": "16bdf2f41dec2eb06a90bc0b2f20167272abe5e165ae77d4d514785a20bcf1b8"
+    },
+    {
+      "path": "runtime/compat/graphics/pasteboard-service-eager.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/pasteboard-service-eager.json",
+      "sha256": "111381ad23af0e9d7b09663e62384b8f5a69a22d7b61c6010fb69e874497eec4"
+    },
+    {
+      "path": "runtime/compat/graphics/powermgr.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/powermgr.json",
+      "sha256": "9819fc85d02c838e03aae4dc70258572f70a481ee5eadb715aaf1d3aa84de8aa"
+    },
+    {
+      "path": "runtime/compat/graphics/service_router.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/service_router.json",
+      "sha256": "d5b28711846bfb4d1ae77f20f095e8fab1ce401235acca5ec0dc5d3aa154bb68"
+    },
+    {
+      "path": "runtime/compat/graphics/sheng-turnip.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/sheng-turnip.json",
+      "sha256": "ccb31e47edf3b26fe825ef595287a9c10231d853720856e1deb9d788c572fd32"
+    },
+    {
+      "path": "runtime/compat/graphics/stage-wifi-ram.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/stage-wifi-ram.sh",
+      "sha256": "00f8bd5e0dfad8e640af515ae908f88c77c7397817eb8cd9093b6bcb584f7a73"
+    },
+    {
+      "path": "runtime/compat/graphics/start-audio-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/start-audio-v116.sh",
+      "sha256": "5e8bf6f2e7b076aa039c3be29de5515dc466fcee9ce04c07ffd746d793939369"
+    },
+    {
+      "path": "runtime/compat/graphics/start-graphics-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/start-graphics-v116.sh",
+      "sha256": "3c707af23e1594d6f08a83cbf0e899fba458002c9cbae60a0f357dd52c8e4d52"
+    },
+    {
+      "path": "runtime/compat/graphics/start-native-desktop-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/start-native-desktop-v116.sh",
+      "sha256": "80193add9993cbd797d7cf7acc38b02d52efe9f9571b147dd479e280b3782de8"
+    },
+    {
+      "path": "runtime/compat/graphics/start-wifi-v116.sh",
+      "ramdisk_entry": "sheng-compat-v118/graphics/start-wifi-v116.sh",
+      "sha256": "2aec5130f654a01da19cc4a4182fa0a755f0385f77928ef00654a2bbce85cb5d"
+    },
+    {
+      "path": "runtime/compat/graphics/useriam-core.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/useriam-core.json",
+      "sha256": "dea9eb1e96a2b5e8b457cf5ed34ea8ed88c9b24af87f0e84d5665bd7e1c6e4b7"
+    },
+    {
+      "path": "runtime/compat/graphics/vulkan-compat-search.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/vulkan-compat-search.json",
+      "sha256": "bd38a905327f2485540ede77e4fa71036f78a87028abf617b5431c91561f9b08"
+    },
+    {
+      "path": "runtime/compat/graphics/wifi-manager-eager.json",
+      "ramdisk_entry": "sheng-compat-v118/graphics/wifi-manager-eager.json",
+      "sha256": "7d04f53be760110934430f6e113890a057886dcfefb157fee9c71c844040611a"
+    },
+    {
+      "path": "runtime/compat/hmos-init-debug.cfg",
+      "ramdisk_entry": "sheng-compat-v118/hmos-init-debug.cfg",
+      "sha256": "369af218bd02a5e561e4559c07db3c039d9372f4ff0be5ac07bddc749b8258fc"
+    }
+  ],
+  "merged_donor_patches": [
+    "patches/donor/libaudio_policy_client.z.so.json",
+    "patches/donor/libcode_sign_utils.z.so.json",
+    "patches/donor/libsensor_client.z.so.json",
+    "patches/donor/libsps_privacy_indicator_service_intf.z.so.json",
+    "patches/donor/libwifi_sdk.z.so.json"
+  ],
+  "source_origins": {
+    "compat/ipc/access_tokenid.c": {
+      "source": "external/custom/sheng-hmos-ipc-exports/access_tokenid.c",
+      "sha256": "e90435cfbe6fd00d329f945cb24cfcef3fb0180da810bb598b25895639be8bbd"
+    },
+    "compat/ipc/access_tokenid.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/access_tokenid.h",
+      "sha256": "a8e0461a71f3791a809c6a597aa9eddaa74527fe4abd2d0517af24c3c4760f1a"
+    },
+    "compat/ipc/ace5_tokens.c": {
+      "source": "external/custom/sheng-hmos-ipc-exports/ace5_tokens.c",
+      "sha256": "bf27e6cf6a312a793cf854b0501e53680d49703b23dd33dd5dad457f8b7f7a75"
+    },
+    "compat/ipc/ace5_tokens.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/ace5_tokens.h",
+      "sha256": "6bf19607f0dd83d917481d9c0874bc5534a3a33bde10633c02b049723a9caa4e"
+    },
+    "compat/ipc/binder.c": {
+      "source": "external/custom/sheng-hmos-ipc-exports/binder.c",
+      "sha256": "53c4c9acff5e52cd9a304acc838808dfe80e5f228da3c2ddb9c25d935bf9fc7b"
+    },
+    "compat/ipc/binder_alloc.c": {
+      "source": "external/custom/sheng-hmos-ipc-exports/binder_alloc.c",
+      "sha256": "9e7e01f90668876d8215929c056cc82631b91162534fe1c68ab764e70272d836"
+    },
+    "compat/ipc/binder_alloc.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/binder_alloc.h",
+      "sha256": "d09ad816fc55c1f4059d516ec312e9552606fc75f4d5c9ad9c086b189a245f15"
+    },
+    "compat/ipc/binder_internal.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/binder_internal.h",
+      "sha256": "6a536cce808191d135e16120560988fb6a584a5e371c545a16e4b02336a3c2e7"
+    },
+    "compat/ipc/binder_trace.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/binder_trace.h",
+      "sha256": "e70ff350a5d32580196fa934ac9d70f6f8963767cb41ae9277563b4fe1ad867e"
+    },
+    "compat/ipc/dbitmap.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/dbitmap.h",
+      "sha256": "4e30d8f64337735bdda142193db861cc809759373cd7ce92a17ffcad145de1b9"
+    },
+    "compat/ipc/hmos_config.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/hmos_config.h",
+      "sha256": "7da98ae3267b9f16b714ec379e221d1d97f441ca8ae65b8196ed3b5868736cf6"
+    },
+    "compat/ipc/Makefile": {
+      "source": "external/custom/sheng-hmos-ipc-exports/Makefile",
+      "sha256": "12cb7846d2394b14ab13043ca2639deaeb3c1c118b4e3103547f284cd1409bf1"
+    },
+    "compat/ipc/private_api.c": {
+      "source": "external/custom/sheng-hmos-ipc-exports/private_api.c",
+      "sha256": "15c33183a4e8b3cd2d47d0531b400c88e66abbd9385d4110dc995ae78d62878c"
+    },
+    "compat/ipc/private_api.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/private_api.h",
+      "sha256": "1acfd6090fe2d6b9781db299f6d02921995c54c9112be76f40a4c61185dbfb75"
+    },
+    "compat/ipc/sheng_hmos_api_v1.h": {
+      "source": "external/custom/sheng-hmos-ipc-exports/sheng_hmos_api_v1.h",
+      "sha256": "6363ed42233aa642437f33a8364ff407bb62787301b9580913f6e492639c55fa"
+    },
+    "tests/ipc/binder_nested.c": {
+      "source": "compat/sheng-hmos-ipc/tests/binder_nested.c",
+      "sha256": "38e528d510548973d4cde88e119b3985708b54ba0fe37ed21362fba958c6f1e2"
+    },
+    "tests/ipc/token_contract.c": {
+      "source": "compat/sheng-hmos-ipc/tests/token_contract.c",
+      "sha256": "5828126b3c9c77dc45f613dac5a02b0b6dd34a2aa71b15aefe6874f05b846bd0"
+    },
+    "compat/kernel/kernel.config": {
+      "source": "analysis/kernel.config",
+      "sha256": "fe494eff425a5b7b39db09a4959d2e98b97cd5086bd0b6a4554b5ad7d1387fb6"
+    },
+    "external/overlays/hmos-work--gki-sheng-exports/drivers/android/sheng_hmos_api_v1.h": {
+      "source": "external/overlays/hmos-work--gki-sheng-exports/drivers/android/sheng_hmos_api_v1.h",
+      "sha256": "6363ed42233aa642437f33a8364ff407bb62787301b9580913f6e492639c55fa"
+    },
+    "external/overlays/hmos-work--gki-sheng-exports/drivers/android/sheng_hmos_exports.c": {
+      "source": "external/overlays/hmos-work--gki-sheng-exports/drivers/android/sheng_hmos_exports.c",
+      "sha256": "5e3867b5e9562616d8a12f641ab79d364b12e1b7f9096644139b7bab1e06c959"
+    },
+    "external/patches/hmos-work--gki-sheng-exports.patch": {
+      "source": "external/patches/hmos-work--gki-sheng-exports.patch",
+      "sha256": "65a28c8f464e3db34e4ec602cdb0414d25cdf319ec713d6991837a9c3cf1d420"
+    },
+    "compat/display/composer_vdi.cpp": {
+      "source": "compat/sheng-power/screen-v145/composer_vdi.cpp",
+      "sha256": "8a63e4fd7b3a4a04daf851f213eb2c27823012b2a3283b0f4b9214ae2122cdd9"
+    },
+    "compat/display/composer_unsupported.cpp": {
+      "source": "compat/sheng-graphics/brightness-v1/composer_unsupported.cpp",
+      "sha256": "f78edbaba01306e7a17f0148626a7c987a572d70db584c48dea4e111067c3cf1"
+    },
+    "compat/display/buffer_vdi.cpp": {
+      "source": "compat/sheng-graphics/alpha-metadata-v130/buffer_vdi.cpp",
+      "sha256": "04752b942cd8304dc28dd01e40f88c42f7eb6190fe0c34d461bf82e6b050cbbb"
+    },
+    "tests/display/alpha_metadata_probe.cpp": {
+      "source": "compat/sheng-graphics/alpha-metadata-v130/alpha_metadata_probe.cpp",
+      "sha256": "279506d8d1380eff046a8262dbebdd293f22be74ad535a15b7a05e85124e3f68"
+    },
+    "compat/display/log.h": {
+      "source": "external/custom/sheng-graphics-port/adapter/log.h",
+      "sha256": "222a3da6dabbabae07284c38f13f2f1f81a812f2fd9557aa4497b077e40618f2"
+    },
+    "compat/platform/platform_cpp_config.h": {
+      "source": "external/custom/sheng-graphics-port/tests/platform_cpp_config.h",
+      "sha256": "e98ca53719580fd9c471aba14de3ab8886964afbc3b8651bdfadcd1df4bcc686"
+    },
+    "compat/display/native_display_wake.cpp": {
+      "source": "tools/native_display_wake_v2.cpp",
+      "sha256": "c213a27d038a98305a54dcfa7ebc7c569b3f4d592e1632a905b24c4e8af2d432"
+    },
+    "compat/display/include/display/buffer/v1_0/display_buffer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/display/buffer/v1_0/display_buffer_type.h",
+      "sha256": "06325818e27c0e1bea777cb8043148573642a9c0c9c93c1af5dd120d859d528e"
+    },
+    "compat/display/include/display/buffer/v1_2/display_buffer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/display/buffer/v1_2/display_buffer_type.h",
+      "sha256": "7436f5824b809c4cb06a08b799ce98f488de942b39335c78bb715c965324a225"
+    },
+    "compat/display/include/display/composer/v1_0/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/display/composer/v1_0/display_composer_type.h",
+      "sha256": "ca5ac326cdebbe9b68bb9e5c50d163bb758c8be2d410e30f82c936bfaa8ce906"
+    },
+    "compat/display/include/display/composer/v1_1/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/display/composer/v1_1/display_composer_type.h",
+      "sha256": "f61e5e87c82425fcc38d6b35034935bd757ab20ca7911236d12085bdad44b9be"
+    },
+    "compat/display/include/display/composer/v1_2/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/display/composer/v1_2/display_composer_type.h",
+      "sha256": "0958fb3873f27b1775da2410fcff5ad0381b8053703c63857d6528e2e98e0bae"
+    },
+    "compat/display/include/display/composer/v1_3/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/display/composer/v1_3/display_composer_type.h",
+      "sha256": "b06f5aea85b5224ce39d655163740e6e773f3b23dbb9480979924d7ab0e46625"
+    },
+    "compat/display/include/vdi-only/composer_exports.h": {
+      "source": "external/custom/sheng-graphics-port/generated/vdi-only/composer_exports.h",
+      "sha256": "15853280f8b2162a01b12b734e89c2da0d5e8472a8b6c052c7dde837c47565a9"
+    },
+    "compat/display/include/vdi-only/display/composer/v1_0/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/vdi-only/display/composer/v1_0/display_composer_type.h",
+      "sha256": "4ff93b31be2b9fa06e13d1b13f8c5c1367cf234b94246c7f25fdddd49a41d0e7"
+    },
+    "compat/display/include/vdi-only/display/composer/v1_1/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/vdi-only/display/composer/v1_1/display_composer_type.h",
+      "sha256": "17f27c6c33e3c9470ccd38ba5f0e5d3347564e83357d4097270bdd235db8c638"
+    },
+    "compat/display/include/vdi-only/display/composer/v1_2/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/vdi-only/display/composer/v1_2/display_composer_type.h",
+      "sha256": "29e1b3ed4c11f8a7c6a480d8babd156b41d4fcd84d70599b770446690d925d7c"
+    },
+    "compat/display/include/vdi-only/display/composer/v1_3/display_composer_type.h": {
+      "source": "external/custom/sheng-graphics-port/generated/vdi-only/display/composer/v1_3/display_composer_type.h",
+      "sha256": "e40cc9ca4abd2d197462ffa8b13fbd7854a2008f15a25dc1bc409741fd6d2980"
+    },
+    "external/patches/source--mesa3d.patch": {
+      "source": "deployed v126 EGL + current Turnip/Mesa changes",
+      "sha256": "0715d42aa228ea909552c91ce897c0d70d30d85c6c7d717209d713852ec304cf"
+    },
+    "external/overlays/source--mesa3d/src/freedreno/vulkan/tu_ohos.cc": {
+      "source": "external/overlays/source--mesa3d/src/freedreno/vulkan/tu_ohos.cc",
+      "sha256": "e3ce96bd5989fb1ba75b64545a883c9ac0fe15d416c8edb77a23c501dbb462f1"
+    },
+    "external/overlays/source--mesa3d/src/freedreno/vulkan/tu_ohos.h": {
+      "source": "external/overlays/source--mesa3d/src/freedreno/vulkan/tu_ohos.h",
+      "sha256": "8c845fac3a1f655f72b42b88ab16f64aafd9ee16f4e075c001a801868eced945"
+    },
+    "external/dependency-records/build-report.json": {
+      "source": "external/dependency-records/build-report.json",
+      "sha256": "f06ca9d26322e7eff724fcf56ffcfd44b57894a031a11104246e692446118dfe"
+    },
+    "external/dependency-records/sources.json": {
+      "source": "external/dependency-records/sources.json",
+      "sha256": "276c50e7433b8eea49ef8e4c70aaadfdb2893dcda3e4b7d61fdd8e3f829b6206"
+    },
+    "external/upstream-sources.json": {
+      "source": "external/upstream-sources.json",
+      "sha256": "a916036a67af6b9ee5d18b94c47df9ed9f37499b480c0ce7868485ce66dee0d3"
+    },
+    "external/licenses/brightness-reference--powermgr_display_manager/LICENSE": {
+      "source": "external/licenses/brightness-reference--powermgr_display_manager/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/desktop-debug--ability_runtime_6/LICENSE": {
+      "source": "external/licenses/desktop-debug--ability_runtime_6/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/desktop-debug--msdp_device_status_6/LICENSE": {
+      "source": "external/licenses/desktop-debug--msdp_device_status_6/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/desktop-debug--theme_screenlock_mgr/LICENSE": {
+      "source": "external/licenses/desktop-debug--theme_screenlock_mgr/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/hmos-reference--agm/NOTICE": {
+      "source": "external/licenses/hmos-reference--agm/NOTICE",
+      "sha256": "7ccb13409640578734b163586a963b7fc3e49bbed0dc890418f2bebb0c92861c"
+    },
+    "external/licenses/hmos-reference--data-service-upstream/LICENSE": {
+      "source": "external/licenses/hmos-reference--data-service-upstream/LICENSE",
+      "sha256": "59899c6091b540582ed617e8eeaac4919dc985ccfc35459ee9752b699be5205b"
+    },
+    "external/licenses/hmos-reference--memmgr-upstream/LICENSE": {
+      "source": "external/licenses/hmos-reference--memmgr-upstream/LICENSE",
+      "sha256": "809fa1ed21450f59827d1e9aec720bbc4b687434fa22283c6cb5dd82a47ab9c0"
+    },
+    "external/licenses/hmos-reference--pd-mapper/LICENSE": {
+      "source": "external/licenses/hmos-reference--pd-mapper/LICENSE",
+      "sha256": "7dee823e01767086947374629f3a5d03870c8c487d81f28e754eb2643f634362"
+    },
+    "external/licenses/hmos-reference--qrtr/LICENSE": {
+      "source": "external/licenses/hmos-reference--qrtr/LICENSE",
+      "sha256": "e04f492e71bc5cfe131942eb127c7906d2627831ab910bb894402b476b5d7488"
+    },
+    "external/licenses/hmos-reference--sheng-audio-kernel/NOTICE": {
+      "source": "external/licenses/hmos-reference--sheng-audio-kernel/NOTICE",
+      "sha256": "628dbecb3dd8d6c4e494921d7c7583fa2082140353d81543230db5323b82f3cf"
+    },
+    "external/licenses/hmos-reference--sheng-display-drivers/NOTICE": {
+      "source": "external/licenses/hmos-reference--sheng-display-drivers/NOTICE",
+      "sha256": "8e73ad81c5a10e891cd42d033ec5c46b97dcf41d2f1fb9d4b480496006dd7ce3"
+    },
+    "external/licenses/hmos-reference--xiaomi-sheng-thp/LICENSE": {
+      "source": "external/licenses/hmos-reference--xiaomi-sheng-thp/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "external/licenses/hmos-work--gki-5.15.178/COPYING": {
+      "source": "external/licenses/hmos-work--gki-5.15.178/COPYING",
+      "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0"
+    },
+    "external/licenses/hmos-work--gki-sheng-exports/COPYING": {
+      "source": "external/licenses/hmos-work--gki-sheng-exports/COPYING",
+      "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0"
+    },
+    "external/licenses/source--account_os_account/LICENSE": {
+      "source": "external/licenses/source--account_os_account/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--bounds_checking_function/LICENSE": {
+      "source": "external/licenses/source--bounds_checking_function/LICENSE",
+      "sha256": "a60fd35084fbae31b57d35b339ef60d110fb5fd50cf429bdef9887b192989f73"
+    },
+    "external/licenses/source--bundlemanager_bundle_framework/LICENSE": {
+      "source": "external/licenses/source--bundlemanager_bundle_framework/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--commonlibrary_c_utils/LICENSE": {
+      "source": "external/licenses/source--commonlibrary_c_utils/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--communication_ipc/LICENSE": {
+      "source": "external/licenses/source--communication_ipc/LICENSE",
+      "sha256": "809fa1ed21450f59827d1e9aec720bbc4b687434fa22283c6cb5dd82a47ab9c0"
+    },
+    "external/licenses/source--communication_wifi/LICENSE": {
+      "source": "external/licenses/source--communication_wifi/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--distributedhardware_device_manager/LICENSE": {
+      "source": "external/licenses/source--distributedhardware_device_manager/LICENSE",
+      "sha256": "809fa1ed21450f59827d1e9aec720bbc4b687434fa22283c6cb5dd82a47ab9c0"
+    },
+    "external/licenses/source--drivers_hdf_core/LICENSE": {
+      "source": "external/licenses/source--drivers_hdf_core/LICENSE",
+      "sha256": "fb8dbedf4bdb8ad876a29237ff47a9e4576ad8ca19940accb75762e44a21d1e2"
+    },
+    "external/licenses/source--drivers_interface/LICENSE": {
+      "source": "external/licenses/source--drivers_interface/LICENSE",
+      "sha256": "809fa1ed21450f59827d1e9aec720bbc4b687434fa22283c6cb5dd82a47ab9c0"
+    },
+    "external/licenses/source--drivers_peripheral/LICENSE": {
+      "source": "external/licenses/source--drivers_peripheral/LICENSE",
+      "sha256": "5218a8ffe6bfbd61ae064e832075996ab78a871a765e1281d73598fd4a24e3c3"
+    },
+    "external/licenses/source--filemanagement_storage_service/LICENSE": {
+      "source": "external/licenses/source--filemanagement_storage_service/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--graphic_graphic_2d/LICENSE": {
+      "source": "external/licenses/source--graphic_graphic_2d/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--hiviewdfx_hilog/LICENSE": {
+      "source": "external/licenses/source--hiviewdfx_hilog/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--powermgr_battery_manager/LICENSE": {
+      "source": "external/licenses/source--powermgr_battery_manager/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--security_huks/LICENSE": {
+      "source": "external/licenses/source--security_huks/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--startup_appspawn/LICENSE": {
+      "source": "external/licenses/source--startup_appspawn/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--startup_init/LICENSE": {
+      "source": "external/licenses/source--startup_init/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "external/licenses/source--window_window_manager/LICENSE": {
+      "source": "external/licenses/source--window_window_manager/LICENSE",
+      "sha256": "0cec06e0e55fbc3dc5cee4fca9b607f66cb8f4e4dbcf3b3c013594dd156732e9"
+    },
+    "compat/audio/audio_manager_service.c": {
+      "source": "compat/sheng-audio/pal-bridge-v1/audio_manager_service.c",
+      "sha256": "22295caeff83a34eec29d569c899246d63a62ea9910a4e00b9d4178428e79072"
+    },
+    "compat/audio/audio_vdi_loader.c": {
+      "source": "compat/sheng-audio/pal-bridge-v1/audio_vdi_loader.c",
+      "sha256": "df8130cdfbc7459b6de4376597a0cac47a4aabdc287f097fd1a4bf0a85d1abf5"
+    },
+    "compat/audio/include/audio_types_vdi.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/include/audio_types_vdi.h",
+      "sha256": "4b8fbf2283546720c4468dd65a05d51ee1e6114ec137611e1701c4cfc0c7a8b8"
+    },
+    "compat/audio/include/iaudio_adapter_vdi.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/include/iaudio_adapter_vdi.h",
+      "sha256": "3018ea5602f80478071c2e284db88a0e7de96ed3952e85636f7f0832156c2cb4"
+    },
+    "compat/audio/include/iaudio_callback_vdi.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/include/iaudio_callback_vdi.h",
+      "sha256": "951465a2c5530ac6081fa52b8dff57f04da5438ed5d90bbe23d73242465ff1cd"
+    },
+    "compat/audio/include/iaudio_capture_vdi.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/include/iaudio_capture_vdi.h",
+      "sha256": "27542c48d5a840f19b14122f0384d5b0dedbd4cece58b92c28c3d939c319546c"
+    },
+    "compat/audio/include/iaudio_manager_vdi.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/include/iaudio_manager_vdi.h",
+      "sha256": "136d1f6dc0ae7620e8966a86dd5a6eefeacf9cce773977bad2f8686d82262a4a"
+    },
+    "compat/audio/include/iaudio_render_vdi.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/include/iaudio_render_vdi.h",
+      "sha256": "a2faf5c3e5616b973290bcea3311d03e89d50db0713d511c44814a47b7f2cb1c"
+    },
+    "compat/audio/pal_client.c": {
+      "source": "compat/sheng-audio/pal-bridge-v1/pal_client.c",
+      "sha256": "e2cced2c0971251b676fde854ce2cbc998dfca104b5dcbeb9007cbad86c7fcf3"
+    },
+    "compat/audio/pal_client.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/pal_client.h",
+      "sha256": "45590ef665b0dfcda35277f8398fd39f3f65d1ab2eeb60baa5dde18fb6ad8234"
+    },
+    "compat/audio/pal_server.c": {
+      "source": "compat/sheng-audio/pal-bridge-v1/pal_server.c",
+      "sha256": "3d2992fde36307d8e53fcec0455adf2381720e0cb365f8530c0fecdcfea8fb16"
+    },
+    "compat/audio/protocol.h": {
+      "source": "compat/sheng-audio/pal-bridge-v1/protocol.h",
+      "sha256": "42ca9777727ae130025ac3eb5023cd9a6205975196b9b31f8e2b11747acd291f"
+    },
+    "compat/audio/audio_vdi.c": {
+      "source": "compat/sheng-audio/lifecycle-v142/audio_vdi.c",
+      "sha256": "4580526c5045fa0f719da3f98742cc11a44e781cbfbc2f362bff32ea53048e62"
+    },
+    "compat/audio/pal_lifecycle.c": {
+      "source": "compat/sheng-audio/pal-lifecycle-v1/pal_lifecycle.c",
+      "sha256": "e3df36c7c620f7e3549fe8b9110e694c5c657345bdf81147f22fe27f8de0fd4b"
+    },
+    "compat/audio/pd-mapper/assoc.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/assoc.c",
+      "sha256": "b6372d47c79faeb9779f8b087408d6251df061b3628b412b5327097bade76702"
+    },
+    "compat/audio/pd-mapper/assoc.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/assoc.h",
+      "sha256": "fdffc2f9d85043681f0fea8669aaaa67ab642817aece130a7a9b2a556977d6e4"
+    },
+    "compat/audio/pd-mapper/json.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/json.c",
+      "sha256": "ef7887df1f92c58623d44eb436d50b34b64c265f5ea2b7a7f9ef51dab4fee90f"
+    },
+    "compat/audio/pd-mapper/json.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/json.h",
+      "sha256": "f1abc6c87841678aee40a1ba6c93ce5f479d178bedcf058530c85d6fd8f8036b"
+    },
+    "compat/audio/pd-mapper/libqrtr.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/libqrtr.h",
+      "sha256": "32c6fd7e26eaa70086d4af6fa3011ec227e130659125f813ffc51ac833deca1f"
+    },
+    "compat/audio/pd-mapper/linux/qrtr.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/linux/qrtr.h",
+      "sha256": "3546a1b8ad68122bdeb185b28a67efc720fc83947b5379eafbb4ad272fcaf06f"
+    },
+    "compat/audio/pd-mapper/logging.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/logging.c",
+      "sha256": "a40eb62226579806fd258f0ecd454892f986877f6c3d9acf6ace5c1de5c4f005"
+    },
+    "compat/audio/pd-mapper/logging.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/logging.h",
+      "sha256": "2d5be650fa9881bddfbaa9c116f4454f10921b9db28ec34ea52b44f4932ff274"
+    },
+    "compat/audio/pd-mapper/ns.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/ns.h",
+      "sha256": "4c8045f90d3131bf21a78cce14f9cac21983bca7f31925b2640bdd8aee3712a7"
+    },
+    "compat/audio/pd-mapper/pd-mapper.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/pd-mapper.c",
+      "sha256": "bc223c82d4563da2a62231965dcfbcd5264951ddccf5c187cf153d345b465f07"
+    },
+    "compat/audio/pd-mapper/qmi.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/qmi.c",
+      "sha256": "dc5e608ed83348a1536b93877596a8bf4a32498e2b740d18f0f7b3a4951cf04b"
+    },
+    "compat/audio/pd-mapper/qrtr.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/qrtr.c",
+      "sha256": "e2aaa6829bb109c22f2b97c6eca8a1cbf6ff4d1c65d5283c83aa58bc89d91391"
+    },
+    "compat/audio/pd-mapper/servreg_loc.c": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/servreg_loc.c",
+      "sha256": "dbebcddc9a1aece4ea9fbe20cab199901d56b05748ca79b430a7c528229937a3"
+    },
+    "compat/audio/pd-mapper/servreg_loc.h": {
+      "source": "compat/sheng-audio/pd-mapper-v1/src/servreg_loc.h",
+      "sha256": "cfb403be771f584cf39006e9a01802b6bdb1cb5995db796625061c45a1a8c1c3"
+    },
+    "compat/audio/native_audio_hdi_publisher.c": {
+      "source": "tools/native_audio_hdi_publisher.c",
+      "sha256": "d8494c0f6f53b3129a24274417f7bf0f3846a082f60fa7e8a86bb44eecdb2cca"
+    },
+    "compat/audio/native_audio_service_launcher.c": {
+      "source": "tools/native_audio_service_launcher.c",
+      "sha256": "68c4ed716775b2074477949a685f76730d72b903fcc1e27c1f904250d758cc2b"
+    },
+    "compat/audio/native_system_audio_check.c": {
+      "source": "tools/native_system_audio_check.c",
+      "sha256": "a7fed63ae7a52e0e516fa766e350567b74e3ee1d3a68f155dee6199cca517432"
+    },
+    "compat/touch/LICENSE": {
+      "source": "compat/sheng-touch/upstream/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "compat/touch/nvt_finger_filter.cpp": {
+      "source": "compat/sheng-touch/upstream/nvt_finger_filter.cpp",
+      "sha256": "e3c910c6d3e561d4ecafeab6b1b5d6259a21820e8c84c263d40cd73e511d75c1"
+    },
+    "compat/touch/nvt_finger_filter.hpp": {
+      "source": "compat/sheng-touch/upstream/nvt_finger_filter.hpp",
+      "sha256": "f5c379edfcb660643e6f63e8b07148a20963d8c46248d4b89ed799ba12d02fbf"
+    },
+    "compat/touch/nvt_touch_core.cpp": {
+      "source": "compat/sheng-touch/upstream/nvt_touch_core.cpp",
+      "sha256": "e6408f4fa609f1ffd1718b3c67effb02d3db09e5d79e24c6c046b692097f4516"
+    },
+    "compat/touch/nvt_touch_core.hpp": {
+      "source": "compat/sheng-touch/upstream/nvt_touch_core.hpp",
+      "sha256": "42515bb7b4c138cf1148ff2d23f5fbf2838a98bf870500aa89b6b783e53a0c83"
+    },
+    "compat/touch/ORIGIN.md": {
+      "source": "compat/sheng-touch/upstream/ORIGIN.md",
+      "sha256": "8179a99e0d7bd5b9733a70d2a5a8b420804d56ecc99cd4bfeb4a41acf937d289"
+    },
+    "compat/touch/bridge.cpp": {
+      "source": "tools/sheng_thp_bridge_v2.cpp",
+      "sha256": "189a178d31168f2b0997a7472812cd5cc19c3d16cf4391646bb58eab99e6dca5"
+    },
+    "compat/touch/launcher.c": {
+      "source": "tools/native_thp_launcher.c",
+      "sha256": "14c5910d588f7b030be66c94e7c542487d3f802fb593650acb631ec64cfd5040"
+    },
+    "compat/framework/account/account_hmac.c": {
+      "source": "compat/sheng-framework/account-hmac-v1/account_hmac.c",
+      "sha256": "7922f0236e08ee895890fb5bc551ac1592c9cb84319dca4205c76275d9a5f821"
+    },
+    "compat/framework/account/exports.map": {
+      "source": "compat/sheng-framework/account-hmac-v1/exports.map",
+      "sha256": "60ab5524f40e13793e206f640bbc82ddc5005b7f891818bea4766cabb251e06a"
+    },
+    "compat/framework/account/storage_ram_launcher.c": {
+      "source": "compat/sheng-framework/account-hmac-v1/storage_ram_launcher.c",
+      "sha256": "ee5fe47c480c5b97a56ffa51d17cd644ed84f5684179ae1eba905bb658db6a1e"
+    },
+    "compat/framework/account/storage_ram_no_tee.c": {
+      "source": "compat/sheng-framework/account-hmac-v1/storage_ram_no_tee.c",
+      "sha256": "fcad0d1ef01b32e1d2ebf66c80b97a6b6a192868170cb0010864375c4261465e"
+    },
+    "compat/framework/database/contract.c": {
+      "source": "compat/sheng-framework/db-key-v2/contract.c",
+      "sha256": "b300dd5f8546b6ba637d7fce444c05d384af0312381a98ed2bef677fd60bd7f9"
+    },
+    "compat/framework/database/db_key.c": {
+      "source": "compat/sheng-framework/db-key-v2/db_key.c",
+      "sha256": "19284a1efc6e388563cbc2e46532f1ba6db8b9708e920a6a7e087ca1a588c04b"
+    },
+    "compat/framework/database/exports.map": {
+      "source": "compat/sheng-framework/db-key-v2/exports.map",
+      "sha256": "47d6478e9877983a0b8b913301b81f8a32427d719b63e54161bee5f737e164e0"
+    },
+    "compat/framework/database/manager_contract.cpp": {
+      "source": "compat/sheng-framework/db-key-v2/manager_contract.cpp",
+      "sha256": "87454b59dfecb4b2b41b8db271e22c468f3b2960485edc3249f5f6ec021315cf"
+    },
+    "compat/framework/fallbacks/el5_unavailable.c": {
+      "source": "compat/sheng-framework/persistent-v1/el5_unavailable.c",
+      "sha256": "b02f534a1895148143a4f699a65930d771e4b69db48ea8c7051fe8f95ece17e5"
+    },
+    "compat/framework/fallbacks/wifi_ui_unavailable.c": {
+      "source": "compat/sheng-framework/persistent-v1/wifi_ui_unavailable.c",
+      "sha256": "090d666ca93e1b2734e4edeb0657c76563ff6d299fa8d180d8916802ca28bc09"
+    },
+    "compat/framework/fallbacks/sceneboard_optional_sa.cpp": {
+      "source": "compat/sheng-framework/persistent-v1/sceneboard_optional_sa.cpp",
+      "sha256": "f2c2ca5b3371cbb9e8eec275a0179e9a957d8834364cca4e34f44fc7883bfd61"
+    },
+    "compat/framework/memmgr/memavailable.S": {
+      "source": "tools/memmgr_memavailable_aarch64.S",
+      "sha256": "bcd2e9560453dfdcdb8051e9e81333f6d52b67ba9fd2f45155c8088b5502d5f7"
+    },
+    "compat/useriam/adapter41.cpp": {
+      "source": "external/custom/sheng-useriam-port/adapter41.cpp",
+      "sha256": "bc744cade2b24da4ffebb5e008dbc5950f68ee6192afc98ea2f694904a8b0a51"
+    },
+    "compat/useriam/driver41.cpp": {
+      "source": "external/custom/sheng-useriam-port/driver41.cpp",
+      "sha256": "0998db6344a9505e17ad3d5a5a7838b5ea15a3c571a67d7247c4ee65618d7e2c"
+    },
+    "compat/useriam/generated/user_auth/v4_0/imessage_callback.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/imessage_callback.h",
+      "sha256": "4b6031f587d3d00145703529f78f5969c821f07d8d6b8c4653c9dedd3db20740"
+    },
+    "compat/useriam/generated/user_auth/v4_0/iuser_auth_interface.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/iuser_auth_interface.h",
+      "sha256": "300d17c636cc01a9dda1d6c2ddc8f54f72f2103163ed621933ad525b635f1542"
+    },
+    "compat/useriam/generated/user_auth/v4_0/message_callback_proxy.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/message_callback_proxy.h",
+      "sha256": "12e24dc646df07e11f4c5bcf3177be35c441f7597893f5d9e9c72daaa309ff4d"
+    },
+    "compat/useriam/generated/user_auth/v4_0/message_callback_service.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/message_callback_service.h",
+      "sha256": "34b659963c17e6824506bb60c4ea04dd38f16d6bdd676849644efcadef68c697"
+    },
+    "compat/useriam/generated/user_auth/v4_0/message_callback_stub.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/message_callback_stub.h",
+      "sha256": "7995b41f7e3bc504b84bbe84da778587f2454687e7536c3f5618dc861306db70"
+    },
+    "compat/useriam/generated/user_auth/v4_0/user_auth_interface_proxy.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/user_auth_interface_proxy.h",
+      "sha256": "de4d00a6624090320b2bd9829269b71913514cd1b5236b217327139c98122745"
+    },
+    "compat/useriam/generated/user_auth/v4_0/user_auth_interface_service.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/user_auth_interface_service.h",
+      "sha256": "2864db13153e3bc4af3ac759b06d7ddc5f9aa42734b38e1c26b3fbbf15442b6f"
+    },
+    "compat/useriam/generated/user_auth/v4_0/user_auth_interface_stub.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/user_auth_interface_stub.h",
+      "sha256": "0d3b6ecbcd1947aa4fc0110fe24811bcd8e1a92f03a0fa811c9db0d4b8f6f405"
+    },
+    "compat/useriam/generated/user_auth/v4_0/user_auth_types.h": {
+      "source": "external/custom/sheng-useriam-port/generated/user_auth/v4_0/user_auth_types.h",
+      "sha256": "0a4c8cf963358aa328cf2b211d93ed27ab6134751c00c22499fcc7c7b7d31e89"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/iuser_auth_interface.h": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/iuser_auth_interface.h",
+      "sha256": "3e5ec3f6d3a2c308e98c07c6bce2dc4304f055c2705ceb48e4756e05da7e8470"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_driver.cpp": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_driver.cpp",
+      "sha256": "43a9b67f8a5a5fc35d90a07703541617609b6eed32f231974a3032aa084085af"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_proxy.cpp": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_proxy.cpp",
+      "sha256": "8015f64e80b465bc0430c9a2f1add8a6421719a0c38085af31ea771087289b5f"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_proxy.h": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_proxy.h",
+      "sha256": "9e9e838e9e438f7bd48991717f49e826df78f5fdd51ef7b823bb9ea1c4fe3b6a"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_service.cpp": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_service.cpp",
+      "sha256": "d7b07adfeeda2adb5365d5f3894674c2d00166701f7a387a0e7db92ac2fbf430"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_service.h": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_service.h",
+      "sha256": "7b11639931b4cbcae822e389a38da98173ec63c3400cdf058b92e0689c9371fc"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_stub.cpp": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_stub.cpp",
+      "sha256": "f8c0965695d4ea3f2743d7254dde1a45406045bdd1dcf89221303f34d1c8ed2c"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_interface_stub.h": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_interface_stub.h",
+      "sha256": "e496d4fc8673f9039a61099b8f35bdae047c1e7b89d429d1c9036e0cb6a13c63"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_types.cpp": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_types.cpp",
+      "sha256": "b863cad3fda39be23880c6faa7aa9974981660326f3660b0a897d2eb8a99826a"
+    },
+    "compat/useriam/generated41/user_auth/v4_1/user_auth_types.h": {
+      "source": "external/custom/sheng-useriam-port/generated41/user_auth/v4_1/user_auth_types.h",
+      "sha256": "4d88bce4701e9027b3059c7ca1f7e3dc69e8643bda24b24243b2e45e9081a810"
+    },
+    "compat/useriam/idl/user_auth/v4_0/BUILD.gn": {
+      "source": "external/custom/sheng-useriam-port/idl/user_auth/v4_0/BUILD.gn",
+      "sha256": "1117b46f52658d77364a823e9ab4a1516641ed350e409833aed8f729bbd478f3"
+    },
+    "compat/useriam/idl/user_auth/v4_0/IMessageCallback.idl": {
+      "source": "external/custom/sheng-useriam-port/idl/user_auth/v4_0/IMessageCallback.idl",
+      "sha256": "d7a1fde5d10f4b75aad19b0452b217ca0232ac76eccb9cd9e92e7c3a9498d2fd"
+    },
+    "compat/useriam/idl/user_auth/v4_0/IUserAuthInterface.idl": {
+      "source": "external/custom/sheng-useriam-port/idl/user_auth/v4_0/IUserAuthInterface.idl",
+      "sha256": "2585e2a545c65a7783f0dd04321b52850434c8555679ac91cb94e918b0be2083"
+    },
+    "compat/useriam/idl/user_auth/v4_0/UserAuthTypes.idl": {
+      "source": "external/custom/sheng-useriam-port/idl/user_auth/v4_0/UserAuthTypes.idl",
+      "sha256": "703fbe13b92b6daa5bea68f4d07d65270b9510de524f211aab8a9f3089535a72"
+    },
+    "compat/useriam/idl/user_auth/v4_1/IUserAuthInterface.idl": {
+      "source": "external/custom/sheng-useriam-port/idl/user_auth/v4_1/IUserAuthInterface.idl",
+      "sha256": "e137446ceb55783f832404f64defebff34aa5eb6816b37c2ac46cf47ac4a767b"
+    },
+    "compat/useriam/idl/user_auth/v4_1/UserAuthTypes.idl": {
+      "source": "external/custom/sheng-useriam-port/idl/user_auth/v4_1/UserAuthTypes.idl",
+      "sha256": "ef045c81a8eeb3143c5019972b70996cb6002ff9b0a6b51877eccd021e381e94"
+    },
+    "compat/useriam/software-backend.patch": {
+      "source": "external/custom/sheng-useriam-port/software-backend.patch",
+      "sha256": "ee741591cf10c3e899c3b9512b19194f3468d5c9ddb872844d6dc12d87bf22a6"
+    },
+    "compat/useriam/user_auth_interface_service.cpp": {
+      "source": "external/custom/sheng-useriam-port/user_auth_interface_service.cpp",
+      "sha256": "3ad7c90aa35a684093ac5206e979da50516aef5b576a9a136613c90890569958"
+    },
+    "compat/useriam/build_backend.py": {
+      "source": "external/custom/sheng-useriam-port/build.py",
+      "sha256": "e52caba29c55535fe6b1b49625bd378a6731515fe027c955298e6911cd0db09c"
+    },
+    "tests/useriam/empty_contract.cpp": {
+      "source": "tools/useriam_empty_contract.cpp",
+      "sha256": "29ef143926a06f37dbe1ec2b6759a60509f6d45475938c907bb7aa17f1afdefa"
+    },
+    "compat/wifi/wifi_caps_v134.c": {
+      "source": "tools/wifi_caps_v134.c",
+      "sha256": "d61d3005f6698dd7a092ad18252882cebc3701d27371b7ae991a966517dec290"
+    },
+    "compat/wifi/wifi_caps_v134.h": {
+      "source": "tools/wifi_caps_v134.h",
+      "sha256": "7cc2348d789f3f47afc80d8af96d08c3b09d34bb5a15937588f984cecce016bd"
+    },
+    "compat/wifi/wifi_category_ioctl_v134.c": {
+      "source": "tools/wifi_category_ioctl_v134.c",
+      "sha256": "4cb4b34ee145ef69e3342ed03ccba77eeafccdbb28d275227aef22b990b5d1c4"
+    },
+    "compat/wifi/native_wifi_category_probe_v134.c": {
+      "source": "tools/native_wifi_category_probe_v134.c",
+      "sha256": "1e39c44b14e466c3afe91d252bc4c8d74253d0f4d996dca44d0193d94dc80851"
+    },
+    "compat/wifi/native_wifi_hal_probe.c": {
+      "source": "tools/native_wifi_hal_probe.c",
+      "sha256": "ddfffb4382dd28f9fa54cfee4fc73ba997b179c99863941c8439a576e453ad2e"
+    },
+    "compat/wifi/nl80211_probe.c": {
+      "source": "tools/nl80211_probe.c",
+      "sha256": "27944699ddebf6e1f5aa4a3d3af6e691ed89ea87b157dd4e92a0855887f61267"
+    },
+    "compat/bluetooth/bluetooth_vendor_v136.cpp": {
+      "source": "tools/bluetooth_vendor_v136.cpp",
+      "sha256": "b97011db3cacffdb92f7be78569613135fea10d9a1008963dfd57ad4fda8960f"
+    },
+    "compat/bluetooth/bluetooth_bridge_v136.cpp": {
+      "source": "tools/bluetooth_bridge_v136.cpp",
+      "sha256": "d99fc819f4b4a4f3d6a0ae2fe1030c01102d1644ce18575b707f9812a3b00d38"
+    },
+    "compat/bluetooth/bluetooth_initialize_v136.cpp": {
+      "source": "tools/bluetooth_initialize_v136.cpp",
+      "sha256": "7733038143294da48e254d26973753b862ab51a765ecb76ece7ec33eaa9cb52b"
+    },
+    "compat/bluetooth/bluetooth_identity_v136.cpp": {
+      "source": "tools/bluetooth_identity_v136.cpp",
+      "sha256": "25a412136fce6a0eb938927b4a358f0de01297531bb4e7eafc0087e19e83d3da"
+    },
+    "compat/bluetooth/native_bt_hdi_publisher_v136.cpp": {
+      "source": "tools/native_bt_hdi_publisher_v136.cpp",
+      "sha256": "6b155cb4c812f907e52ea6a2f373bb25bcdbe675612d06f475a43820bf1c88f6"
+    },
+    "compat/bluetooth/native_bt_host_check_v137.c": {
+      "source": "tools/native_bt_host_check_v137.c",
+      "sha256": "d5262f24684c24e64e37b918ca37b0329a936a0b7b2053f5663f51fc97e8c78a"
+    },
+    "compat/bluetooth/native_bt_current_v139.cpp": {
+      "source": "tools/native_bt_current_v139.cpp",
+      "sha256": "ba662f90f74d43f950e97d7f211b95d831f07ff996994c9478199a2c66c48e0c"
+    },
+    "compat/battery/native_battery_hdi_publisher_v131.cpp": {
+      "source": "tools/native_battery_hdi_publisher_v131.cpp",
+      "sha256": "e80fb2371e04f6c0a98b1ef763e760a58653bf74628249c7ab21d9057ba59d71"
+    },
+    "compat/battery/native_battery_probe_v131.cpp": {
+      "source": "tools/native_battery_probe_v131.cpp",
+      "sha256": "313ab70ba9832535fedf85a72404b5f9b0603aeff7bcb1be15749c7fce800d03"
+    },
+    "compat/battery/native_battery_capi_v131.c": {
+      "source": "tools/native_battery_capi_v131.c",
+      "sha256": "95e1bc85c6976939117034041689d15dae6b4c912ca7f9ce574722392dee700e"
+    },
+    "compat/bootcontrol/bootcontrol_readonly.c": {
+      "source": "tools/bootcontrol_readonly_v135.c",
+      "sha256": "a9311254b5b968c9d7af45dc82d66d9461ccff6a4a0149e773b3ab4d04f7de4e"
+    },
+    "compat/bootstrap/init_entry.c": {
+      "source": "tools/vendor_payload_entry_v118.c",
+      "sha256": "c91a57cafbaca13348cc6fc284667a7591803ffeaa9635fe870995af2c536505"
+    },
+    "compat/bootstrap/hmos_probe_v121.c": {
+      "source": "tools/hmos_probe_v121.c",
+      "sha256": "65539128d8e04322319aeafcc521393da6969e67770aafb92807aed928ff2378"
+    },
+    "compat/bootstrap/probe_command_v116.inc": {
+      "source": "tools/probe_command_v116.inc",
+      "sha256": "67765167aed48b1d6ec1f8fb968dfabd93509151166e3528853d4e9111ffc1e5"
+    },
+    "compat/bootstrap/probe_serial_v121.inc": {
+      "source": "tools/probe_serial_v121.inc",
+      "sha256": "824d4dc8ad906d9af169a9f7af96c56c115c7c79a596d67fe1ccde4e351c9086"
+    },
+    "compat/bootstrap/probe_graphics_v118.inc": {
+      "source": "tools/probe_graphics_v118.inc",
+      "sha256": "b9dead627b0f02f6b3f55850005e848d8e8c291b41f72ece9bb6c9bc3c5eb18c"
+    },
+    "tests/bootstrap/test_probe_serial_v121.c": {
+      "source": "tools/test_probe_serial_v121.c",
+      "sha256": "5a5ea67850cc3643aced16ea4af56a0fc4c396ec9dc5e2037215390112e5098c"
+    },
+    "compat/services/native_screenlock_request.cpp": {
+      "source": "tools/native_screenlock_request_v5.cpp",
+      "sha256": "1acd7e62e8109bc9a9aff77ffcbf29defc13394fadf06d523d5b89a282cb3a6b"
+    },
+    "compat/services/native_input_dispatch.c": {
+      "source": "tools/native_debug_dispatch_v2.c",
+      "sha256": "e30018ce9572af7650620e8df49d5f1b045814cb8b9a69c36ec4c2a459ab42e8"
+    },
+    "compat/services/native_bundle_cli.c": {
+      "source": "tools/native_bundle_system_cli.c",
+      "sha256": "9e144911ea61786b395136bbcc7f24b8fa45eadac77de084b4e684dc66d21ae8"
+    },
+    "compat/services/native_render_launcher.c": {
+      "source": "tools/native_render_launcher.c",
+      "sha256": "8a524429a30f3043bd8e2445bc8b29521a45752f8d930ececbf5aa86e3d2385e"
+    },
+    "compat/services/native_brightness_launcher.c": {
+      "source": "tools/native_brightness_launcher.c",
+      "sha256": "5fb203286b2c20168e1e986b259bc5e5dfbc4619b0b4b6a8ac2f821321b7742b"
+    },
+    "compat/services/native_sa_check.cpp": {
+      "source": "tools/native_sa_check.cpp",
+      "sha256": "c5dd467a2d9d69f553d52e0de41fd835e131f043f82ec5b770a1e04ff3fefb2b"
+    },
+    "compat/services/native_sa_dump.cpp": {
+      "source": "tools/native_sa_dump.cpp",
+      "sha256": "bf668f30665a0ea5d5791ed99f5eace33034e80b38edccd867749849aa947dfc"
+    },
+    "compat/services/native_rs_commit_sync.c": {
+      "source": "tools/native_rs_commit_sync.c",
+      "sha256": "3530f49f669cb2a6571013689a801c07d8ae6a875102909d10f334604f87ee24"
+    },
+    "compat/services/bootanimation_launcher.c": {
+      "source": "tools/bootanimation_native_launcher_compat.c",
+      "sha256": "3726ee8bd719ee55134b555b24da3b0292b831887d2de5cac59b7258c0a4f33d"
+    },
+    "compat/services/bootanimation_vulkan_adapter.cpp": {
+      "source": "tools/bootanimation_vulkan_adapter.cpp",
+      "sha256": "9bcec6b4381177241ee84b4c0b50d0b277489ab624da35ee2c7eea2eaaf86814"
+    },
+    "compat/services/surface_post.cpp": {
+      "source": "tools/native_surface_post_v2.cpp",
+      "sha256": "6dd51168c88ad41dec3d5a575885ff4616af838554bd8239c788e54d24f17fa2"
+    },
+    "compat/services/sheng_hardware_display.cpp": {
+      "source": "tools/sheng_hardware_display.cpp",
+      "sha256": "1c3595a181157fc790089679bec1317e71edce2d36ba6e0554c7de667a5d7c08"
+    },
+    "compat/services/hardware_observe.c": {
+      "source": "tools/hardware_observe.c",
+      "sha256": "fc8288be00ab1a1bf171690de12092b5759533289953bece803b3cb4bd2ebce8"
+    },
+    "compat/services/drm_probe.c": {
+      "source": "tools/drm_probe.c",
+      "sha256": "c3322395a40add8317f23f7f8eff2cd97268ca8b36436408ab81e5c29a3f378e"
+    },
+    "compat/services/capture_scanout.c": {
+      "source": "tools/capture_scanout.c",
+      "sha256": "7478f22bf30d26a697b08293dd6c42a251d5604c5b0999deb510650ae31a95ad"
+    },
+    "compat/services/native_image_alloc_probe.c": {
+      "source": "tools/native_image_alloc_probe.c",
+      "sha256": "26853d9f3d51252db77506ffbe6a988d5c6d43586ebda8dd30c4d7ae39c2da51"
+    },
+    "compat/services/sheng_display_scanout.cpp": {
+      "source": "tools/sheng_display_scanout.cpp",
+      "sha256": "851c27415dd404a928d30de55a22bbd2ab692da6e7656d129fd6bd37fd64dedd"
+    },
+    "compat/services/sheng_hdi_query.cpp": {
+      "source": "tools/sheng_hdi_query.cpp",
+      "sha256": "fb4e0c8fc9504cc584ce9311d88308a28ea70a2b03373140423ba2a0509eb1c2"
+    },
+    "compat/services/sheng_hdi_smq.cpp": {
+      "source": "tools/sheng_hdi_smq.cpp",
+      "sha256": "870170a2aa2bdbf6a9a9237ed1cad855aa6f13c3541e73b89dd0d0aab406467d"
+    },
+    "compat/services/sheng_hdi_scanout.cpp": {
+      "source": "tools/sheng_hdi_scanout.cpp",
+      "sha256": "a07b80c9b96df8a34b71359403363fd0cc778122fadf0f0db3af21db74112d16"
+    },
+    "compat/services/sheng_kms_diagnostic.cpp": {
+      "source": "tools/sheng_kms_diagnostic.cpp",
+      "sha256": "3c6698668e711db624ef390124693a21039288e11ed5bb15ce4cd6833966afec"
+    },
+    "compat/services/native_buffer_import_observer.S": {
+      "source": "tools/native_buffer_import_observer.S",
+      "sha256": "397cdcbd8d84a5d43bb40d77b218ea246dc3803bd284444326d95fbe85f0b07d"
+    },
+    "runtime/audio/audio/scripts/load-official303-audio-card.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-audio-card.sh",
+      "sha256": "ad8aea789e09bc3b854a66d22d16500e97d64338a45a954c285feda3b3550c90"
+    },
+    "runtime/audio/audio/scripts/load-official303-audio-transport.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-audio-transport.sh",
+      "sha256": "91f0df7dd89c0a08f008ded3660d349a8fa9aaf01a8e875acd05145e149d6622"
+    },
+    "runtime/audio/audio/scripts/load-official303-audio_pkt_dlkm.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-audio_pkt_dlkm.sh",
+      "sha256": "fbea23958ffdfff69e4ea8b932640e679adc64d5e1669248523e1553c970268d"
+    },
+    "runtime/audio/audio/scripts/load-official303-bt_fm_slim.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-bt_fm_slim.sh",
+      "sha256": "e5dfb99ceb71f67f1af7291f769ec9bab2b0e853d3093be5c505b5c0b6fac591"
+    },
+    "runtime/audio/audio/scripts/load-official303-qcom_q6v5_pas.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-qcom_q6v5_pas.sh",
+      "sha256": "11ae239c05d867bdff4ab991303e4fa927093f59d83ad5d81bcca430d541e25c"
+    },
+    "runtime/audio/audio/scripts/load-official303-qrtr-smd.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-qrtr-smd.sh",
+      "sha256": "a2daed902b58d6c81e1cbc5ecb5a5225b3308497f1393cc8461119d50abb6ffd"
+    },
+    "runtime/audio/audio/scripts/load-official303-slim-qcom-ngd-ctrl.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-slim-qcom-ngd-ctrl.sh",
+      "sha256": "7f569da75bc7974d3b1719fc679b5fbb4cb92f15d2b332d3e6e47db1413fdbe5"
+    },
+    "runtime/audio/audio/scripts/load-official303-smp2p.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-smp2p.sh",
+      "sha256": "948a64268d3463642abbcec8c158277f171ace4db40d980643494f9047328ae1"
+    },
+    "runtime/audio/audio/scripts/load-official303-wcd938x_slave_dlkm.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/load-official303-wcd938x_slave_dlkm.sh",
+      "sha256": "d1607d8f632c422ca90bac5247b52d165f5342ec81ffab6c8a270c9c7fbea6b5"
+    },
+    "runtime/audio/audio/scripts/stage-audio-firmware.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/stage-audio-firmware.sh",
+      "sha256": "b1093f5ed6ce827d5957554aaccd7baf81fcf58cbb985ec9865a90cff7772a9e"
+    },
+    "runtime/audio/audio/scripts/stage-audio-nodes.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/stage-audio-nodes.sh",
+      "sha256": "3992982a5068a5117689071d2baee279090550c74de10e8abc7fd513cf3fae60"
+    },
+    "runtime/audio/audio/scripts/stage-audio-supplement.sh": {
+      "source": "v146-ramdisk:sheng-audio-v1/audio/scripts/stage-audio-supplement.sh",
+      "sha256": "e8377c09f269bfdf641e374a64cf25402bdf51babafe3c9d8975d46fd888c3e0"
+    },
+    "runtime/compat/bluetooth-v136/bluetooth_service_v136.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/bluetooth-v136/bluetooth_service_v136.json",
+      "sha256": "405e661390f7ba5f1338eb437035458fa6e886175becdc92f292d1e45ee90b89"
+    },
+    "runtime/compat/bluetooth-v136/init-bluetooth-v136.cfg": {
+      "source": "v146-ramdisk:sheng-compat-v118/bluetooth-v136/init-bluetooth-v136.cfg",
+      "sha256": "aa486f25247529a1fecaa80284e839772f4609dd350f8cc9552f9e8b259fcc36"
+    },
+    "runtime/compat/bluetooth-v136/load-official303-btpower.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/bluetooth-v136/load-official303-btpower.sh",
+      "sha256": "cf07d4619bf64b93013fd58a94834a405eb2301a67744b94dd775f945fbe89c9"
+    },
+    "runtime/compat/bluetooth-v136/load-official303-msm_geni_serial.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/bluetooth-v136/load-official303-msm_geni_serial.sh",
+      "sha256": "6ef311234b11c7d31963647223136ef274e92c26f039910b61ddf1081cea94bb"
+    },
+    "runtime/compat/bluetooth-v136/softbus_server.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/bluetooth-v136/softbus_server.json",
+      "sha256": "ec66ea2b5973445f302e342db82b980f3b9ead6d22f53c51eadc05a87666e084"
+    },
+    "runtime/compat/bluetooth-v136/start-bluetooth-v136.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/bluetooth-v136/start-bluetooth-v136.sh",
+      "sha256": "219705913aa0ee291a8d69e35513d9c3e45e69c7874bbef967ea007060c7dd7f"
+    },
+    "runtime/compat/graphics/appdata-sandbox-isolated.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/appdata-sandbox-isolated.json.gz",
+      "sha256": "0199560a89c4f6a8ea3606fc990627ae84daef6760462d5cb0c8862371563505"
+    },
+    "runtime/compat/graphics/appdata-sandbox.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/appdata-sandbox.json.gz",
+      "sha256": "efaa00c5e6cda288f33b698920b3e988247e66fcec6b5abad539cc4e51945e5a"
+    },
+    "runtime/compat/graphics/apply-account-hmac.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-account-hmac.sh",
+      "sha256": "1286af75d40f023e2856bf83241c0496282163b8f2d2888f0e10e4475dd7b96a"
+    },
+    "runtime/compat/graphics/apply-app-sandbox.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-app-sandbox.sh",
+      "sha256": "1dfca11dd27192efc1f1517655c7dedf7bf25b66f285ff2441c9d8dac7ad03ec"
+    },
+    "runtime/compat/graphics/apply-audio-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-audio-v116.sh",
+      "sha256": "68bc52c72c559ae69b66e2b90ee4fb112ff74e671b10170176ec3ec42827227c"
+    },
+    "runtime/compat/graphics/apply-audio-wait-v1.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-audio-wait-v1.sh",
+      "sha256": "0706e65a54e8ab246503694818a1e91b213c5aa4f4abb5bcf832dbacebc623e5"
+    },
+    "runtime/compat/graphics/apply-cli-wait-v1.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-cli-wait-v1.sh",
+      "sha256": "daebe654e8b338126d25e7a0500d6ba20236de3ae3729c2cd3ec3d550d087f89"
+    },
+    "runtime/compat/graphics/apply-compat-paths.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-compat-paths.sh",
+      "sha256": "ef53595feb081e60e11525a87f07969a263b1d3b3df5b486ff1c5d28c52118ef"
+    },
+    "runtime/compat/graphics/apply-db-key-v2.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-db-key-v2.sh",
+      "sha256": "ffea0d69424612a8dfdb83403a1f675a542b121fecc62acd3aae04376a2ec5ce"
+    },
+    "runtime/compat/graphics/apply-framework-dev.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-framework-dev.sh",
+      "sha256": "4e750c1c209232ffa0f90733404c6a1b25969ca38186ea72b9e0d823872b7193"
+    },
+    "runtime/compat/graphics/apply-hardware-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-hardware-v116.sh",
+      "sha256": "d160f691fa26d6b1e4763dd3254534cf1fa754c87a5e9abceb529d809536f828"
+    },
+    "runtime/compat/graphics/apply-memmgr-v2.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-memmgr-v2.sh",
+      "sha256": "556d72ffb8127a9c22691fc008620567b13755db598132a610f786fec1fcea7c"
+    },
+    "runtime/compat/graphics/apply-msdp-local-v1.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-msdp-local-v1.sh",
+      "sha256": "68f7bd14d2d226d9ce94a2daea558221f9d5136b41434a98e154cf616b1afd74"
+    },
+    "runtime/compat/graphics/apply-preload.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-preload.sh",
+      "sha256": "e91d2afd1cc664fdc31d5ce3f32b69c418923c1514bbfa288952baea537b7b74"
+    },
+    "runtime/compat/graphics/apply-render-usage.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-render-usage.sh",
+      "sha256": "9ac1ff2a9daf6f89f4581c2f204a798f3ef5744083a548c4a90158d53bfbf35d"
+    },
+    "runtime/compat/graphics/apply-rosen-handle.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-rosen-handle.sh",
+      "sha256": "b3eada18083f458317469738808d708dadd42c8e7feaee0801e62e1b194d9b16"
+    },
+    "runtime/compat/graphics/apply-rs-commit-sync-v1.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-rs-commit-sync-v1.sh",
+      "sha256": "cb012197d121c82aecac84fecc99a8b2761a589bb998cd50f66987e98d165200"
+    },
+    "runtime/compat/graphics/apply-runtime-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-runtime-v116.sh",
+      "sha256": "fbc5d533a6848f1b0c323180f5ae73399bb0b973b401b3319753ae1582406201"
+    },
+    "runtime/compat/graphics/apply-storage-local-v1.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-storage-local-v1.sh",
+      "sha256": "e3a99957db36447321748dd6c603580025a44d2361c99a0ff32963d1a84bd51b"
+    },
+    "runtime/compat/graphics/apply-time-v1.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-time-v1.sh",
+      "sha256": "59924f5ac59c3ba65df3b504f40b27e3fa726f4472868e044b912c413527fc59"
+    },
+    "runtime/compat/graphics/apply-touch.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-touch.sh",
+      "sha256": "ae1539305b71cc84e2b4104e44890cf261411fed6afc3fc9d461d6b69292a23e"
+    },
+    "runtime/compat/graphics/apply-useriam.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/apply-useriam.sh",
+      "sha256": "e7535a668bcec38b41c9464649e96d0eef1eb69b0d1216875f90a3d8ac47618d"
+    },
+    "runtime/compat/graphics/device_manager.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/device_manager.json",
+      "sha256": "fb5674ac2c8428fb743b8b0be424327126300f1ca7df59a83a41d5dd7f1d252e"
+    },
+    "runtime/compat/graphics/deviceinfoservice.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/deviceinfoservice.json",
+      "sha256": "1606ab78640fca7e9702b6645d87e1748b14dd83c3a94a6ff9564442dcf75453"
+    },
+    "runtime/compat/graphics/download_server.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/download_server.json",
+      "sha256": "92f3327af5105a156620256b1f9251753d70b7b3078f76acf7afaef258567629"
+    },
+    "runtime/compat/graphics/foundation-app-core.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/foundation-app-core.json",
+      "sha256": "e6e3704f8b32b0bbfb3df07cd2a63e102bf8bbf88a4c580a963f902d57d4c5b1"
+    },
+    "runtime/compat/graphics/foundation-screen-only.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/foundation-screen-only.json",
+      "sha256": "e54ce67c38abe9e19d0fc00f2ceab1383787c20ab15f7392e7d9b81bc55dd5d4"
+    },
+    "runtime/compat/graphics/framework-dev-patch.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/framework-dev-patch.json",
+      "sha256": "2305de965ab8ee203aaf167b4b1402099eade6707241d4dc94dc0bcb9ff90c84"
+    },
+    "runtime/compat/graphics/hw_defaults-v141.para": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/hw_defaults-v141.para",
+      "sha256": "3fa79d36281510333d96de8ff23844e40229b1d227ada18ca0eff2fbf24a9dc2"
+    },
+    "runtime/compat/graphics/i18n_service.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/i18n_service.json",
+      "sha256": "8f4afc28b097b24716508ad95c645e848a005ac798b61e14ccd45d5ee76bc98f"
+    },
+    "runtime/compat/graphics/init-compat-scan.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-compat-scan.json",
+      "sha256": "2ae812ada7ac59e47c2c582c78997a44ff23106ec666198cef40ab574e8510a7"
+    },
+    "runtime/compat/graphics/init-desktop-services.cfg": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-desktop-services.cfg",
+      "sha256": "3726614226783e19b634ecf13f082b4aa6639fde9cbcb9eff26e9289dbd943b5"
+    },
+    "runtime/compat/graphics/init-hardware-v116.cfg": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-hardware-v116.cfg",
+      "sha256": "25bd27a13dd929d9c10028eb0262e08a49e3b1cc853e350b5c5b1957dafe813d"
+    },
+    "runtime/compat/graphics/init-platform-v116.cfg": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-platform-v116.cfg",
+      "sha256": "2fef38725b92ae82f4b3863e5618f1683a198866eebfdb5e518a2c593225765b"
+    },
+    "runtime/compat/graphics/init-userdata-ext4.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-userdata-ext4.sh",
+      "sha256": "2ba17ec94a08d58b43cf9af85ada0cbc32df0343ff85a962d55052a64c9d3b97"
+    },
+    "runtime/compat/graphics/init-wifi-v116.cfg": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-wifi-v116.cfg",
+      "sha256": "b01f396940e3548d9960cf183fee3ec731ca85c747874b17337207d63f613b93"
+    },
+    "runtime/compat/graphics/installs-debug-start.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/installs-debug-start.json",
+      "sha256": "ad258700b8547aec4c7dc20162b5992f6a41730535db4fb7fa750c6c38093a61"
+    },
+    "runtime/compat/graphics/ld-musl-aarch64.path": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/ld-musl-aarch64.path",
+      "sha256": "059b99797678c579bac1e71f3a03879bd95e8af40847afd6dd982080f6c03e1e"
+    },
+    "runtime/compat/graphics/ld-musl-namespace-aarch64-New.ini": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/ld-musl-namespace-aarch64-New.ini",
+      "sha256": "13adb04dacedf72f728e22c750d3b66b75e8acaad2b8357785e67a09bc045390"
+    },
+    "runtime/compat/graphics/ld-musl-namespace-aarch64-flex.ini": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/ld-musl-namespace-aarch64-flex.ini",
+      "sha256": "07effc1d98a33562a9ab6089ffd6513657a28d8e9d1b264cb8e9936f9278af22"
+    },
+    "runtime/compat/graphics/ld-musl-namespace-aarch64-test.ini": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/ld-musl-namespace-aarch64-test.ini",
+      "sha256": "d56df107ad2311d436c1c07e34a4cf4414a9624b1f821395f5cfdc06188b6624"
+    },
+    "runtime/compat/graphics/ld-musl-namespace-aarch64.ini": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/ld-musl-namespace-aarch64.ini",
+      "sha256": "4d32e2b5f8ecd00ad504d8d9039430d75ae3a18f7446752b4cac632559ea4831"
+    },
+    "runtime/compat/graphics/load-official303-cnss2.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/load-official303-cnss2.sh",
+      "sha256": "7a14f9ceddf8c6a600675c337a8aa38d5bf2480ebf267dcf3fbed4db42f3bd0f"
+    },
+    "runtime/compat/graphics/load-official303-qca_cld3_kiwi_v2.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/load-official303-qca_cld3_kiwi_v2.sh",
+      "sha256": "caf8f67fdb1a1eaa9c86ed460cc97d281b94c2853a9e59526c3c0a873603449a"
+    },
+    "runtime/compat/graphics/load-official303-qrtr-mhi.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/load-official303-qrtr-mhi.sh",
+      "sha256": "cfc9b24a9aba38f304d3dba832c6b3679f5b2e242862fbcecad6a7c4493f1375"
+    },
+    "runtime/compat/graphics/locationhub-state.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/locationhub-state.json",
+      "sha256": "9a6f670f9e9653e3887259db4c7dbe04c75fa50e7a0a8591c27fc451c8b42c47"
+    },
+    "runtime/compat/graphics/mark-boot-success-v135.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/mark-boot-success-v135.sh",
+      "sha256": "69d47e7af36cae3a4a621615d1570dacb1a95eb21403f1c84983522af76f51c4"
+    },
+    "runtime/compat/graphics/msdp-input-only.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/msdp-input-only.json",
+      "sha256": "1a952b7325ef996a63426986d90913982b61eacd99064e02cd64ca2c419a6c2d"
+    },
+    "runtime/compat/graphics/oobe_page_offline.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/oobe_page_offline.json",
+      "sha256": "16bdf2f41dec2eb06a90bc0b2f20167272abe5e165ae77d4d514785a20bcf1b8"
+    },
+    "runtime/compat/graphics/pasteboard-service-eager.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/pasteboard-service-eager.json",
+      "sha256": "111381ad23af0e9d7b09663e62384b8f5a69a22d7b61c6010fb69e874497eec4"
+    },
+    "runtime/compat/graphics/powermgr.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/powermgr.json",
+      "sha256": "9819fc85d02c838e03aae4dc70258572f70a481ee5eadb715aaf1d3aa84de8aa"
+    },
+    "runtime/compat/graphics/service_router.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/service_router.json",
+      "sha256": "d5b28711846bfb4d1ae77f20f095e8fab1ce401235acca5ec0dc5d3aa154bb68"
+    },
+    "runtime/compat/graphics/sheng-turnip.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/sheng-turnip.json",
+      "sha256": "72253461d435ee1366075d53c0de84b16e11f9bb8b2bcbd8e9d063ab137431cd"
+    },
+    "runtime/compat/graphics/stage-wifi-ram.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/stage-wifi-ram.sh",
+      "sha256": "00f8bd5e0dfad8e640af515ae908f88c77c7397817eb8cd9093b6bcb584f7a73"
+    },
+    "runtime/compat/graphics/start-audio-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/start-audio-v116.sh",
+      "sha256": "5e8bf6f2e7b076aa039c3be29de5515dc466fcee9ce04c07ffd746d793939369"
+    },
+    "runtime/compat/graphics/start-graphics-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/start-graphics-v116.sh",
+      "sha256": "3c707af23e1594d6f08a83cbf0e899fba458002c9cbae60a0f357dd52c8e4d52"
+    },
+    "runtime/compat/graphics/start-native-desktop-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/start-native-desktop-v116.sh",
+      "sha256": "80193add9993cbd797d7cf7acc38b02d52efe9f9571b147dd479e280b3782de8"
+    },
+    "runtime/compat/graphics/start-wifi-v116.sh": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/start-wifi-v116.sh",
+      "sha256": "2aec5130f654a01da19cc4a4182fa0a755f0385f77928ef00654a2bbce85cb5d"
+    },
+    "runtime/compat/graphics/useriam-core.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/useriam-core.json",
+      "sha256": "d227d82ff25bf9e54e9d83d4857174c7d32730d489445f7df21cf5a70e9479dc"
+    },
+    "runtime/compat/graphics/vulkan-compat-search.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/vulkan-compat-search.json",
+      "sha256": "380cd96f7f33d534d1899fef7dd979dce258d8459d276eea1996b221c96950c5"
+    },
+    "runtime/compat/graphics/wifi-manager-eager.json": {
+      "source": "v146-ramdisk:sheng-compat-v118/graphics/wifi-manager-eager.json",
+      "sha256": "7d04f53be760110934430f6e113890a057886dcfefb157fee9c71c844040611a"
+    },
+    "runtime/compat/hmos-init-debug.cfg": {
+      "source": "v146-ramdisk:sheng-compat-v118/hmos-init-debug.cfg",
+      "sha256": "369af218bd02a5e561e4559c07db3c039d9372f4ff0be5ac07bddc749b8258fc"
+    },
+    "patches/donor/libaudio_policy_client.z.so.json": {
+      "source": "v145-ramdisk:sheng-compat-v118/graphics/libaudio_policy_client.z.so",
+      "sha256": "8121ed7fbc3e786c181a0675d4f70e00a053ff978dfe644d014758372a566687"
+    },
+    "patches/donor/libcode_sign_utils.z.so.json": {
+      "source": "v145-ramdisk:sheng-compat-v118/graphics/libcode_sign_utils.z.so",
+      "sha256": "fb3e5199334a990fa496129bccb6f23f8e2e7dc3b9d87abf3f516b2df32b0953"
+    },
+    "patches/donor/libsensor_client.z.so.json": {
+      "source": "v145-ramdisk:sheng-compat-v118/graphics/libsensor_client.z.so",
+      "sha256": "2fe9c808ce973cc71619c144d94c4c1dc7fcf64d1b2120c443b831702bb8fe96"
+    },
+    "patches/donor/libsps_privacy_indicator_service_intf.z.so.json": {
+      "source": "v145-ramdisk:sheng-compat-v118/graphics/libsps_privacy_indicator_service_intf.z.so",
+      "sha256": "ad823e0eecff569c2cfa31ef86e7ba3303fa51db7989008a14f4edb55d5ce545"
+    },
+    "patches/donor/libwifi_sdk.z.so.json": {
+      "source": "v145-ramdisk:sheng-compat-v118/graphics/libwifi_sdk.z.so",
+      "sha256": "a4632de7870e00d41ade3010382250f9415ac45365bed50beef1f4e575330ed4"
+    },
+    "evidence/graphics/bootanimation-context-v2-manifest.json": {
+      "source": "compat/sheng-graphics/bootanimation-context-v2/manifest.json",
+      "sha256": "da50a461ef8d3be809eb2a1fe1f39f1528d6b3364ceb8f8b06a6847ac3b07065"
+    },
+    "evidence/graphics/bootanimation-eof-v1-manifest.json": {
+      "source": "compat/sheng-graphics/bootanimation-eof-v1/manifest.json",
+      "sha256": "d8e0d7553b6c0c6081b6862fef67d23c409dd3eb84b99453d25652b45997cd73"
+    },
+    "evidence/graphics/bootanimation-eof-v1-patch.json": {
+      "source": "compat/sheng-graphics/bootanimation-eof-v1/patch.json",
+      "sha256": "a545d6a923856980e6c5dcf7083680d956e7e0294653b4c6aba6f4d7e7097cd2"
+    },
+    "evidence/graphics/render-callback-sync-v1-manifest.json": {
+      "source": "compat/sheng-graphics/render-callback-sync-v1/manifest.json",
+      "sha256": "34d3d1cd95936d7a1a6a0bbdde21184a9c657b8e77dd36016f654cca339c0932"
+    },
+    "evidence/graphics/rs-commit-sync-v1-manifest.json": {
+      "source": "compat/sheng-graphics/rs-commit-sync-v1/manifest.json",
+      "sha256": "5e555cc545b4aa944f33307ae2f04a09af6021d9f2fce71505937594d8558d16"
+    },
+    "tools/vendor_ramdisk_edit.py": {
+      "source": "tools/vendor_ramdisk_edit.py",
+      "sha256": "7cec410a6723898bef0d4bd7f384b96340562454f7db0ecb0fac5e61c71a33f1"
+    },
+    "tools/apply_guarded_elf_patch.py": {
+      "source": "tools/apply_guarded_elf_patch.py",
+      "sha256": "ac6d1b615a02855d3e03ff275e5055a98440e9d951d95b9a0964e8557ee26ce4"
+    },
+    "output/Common.ps1": {
+      "source": "output/Common.ps1",
+      "sha256": "25a4cc3691113b23906602cb7a4ff0e7f2ad8d9c53df029f9c5a7654d2a17310"
+    },
+    "output/Probe-Protocol.ps1": {
+      "source": "output/Probe-Protocol.ps1",
+      "sha256": "aba1180f495ab46df95b45a1fd1474cbe8fcad2cfb2d5c935bdfeffba3aa1b65"
+    },
+    "output/Invoke-ProbeCommand.ps1": {
+      "source": "output/Invoke-ProbeCommand.ps1",
+      "sha256": "7401c38e4646f73bb5a555dd4a145e91176d06e7929cf9807215ea60686a44bb"
+    },
+    "output/Send-ProbeFileStream.ps1": {
+      "source": "output/Send-ProbeFileStream.ps1",
+      "sha256": "b78862e350928a84b82546dc61a4a346813f068c341ff0fb79dd62fe1edf4741"
+    },
+    "output/Receive-ProbeArtifact.ps1": {
+      "source": "output/Receive-ProbeArtifact.ps1",
+      "sha256": "aa12d8f44f98bb4bf7a8fb1bc81bd813bb8ddb994611ed6dfa8380742b7f152c"
+    },
+    "output/Get-NativeScreenshot.ps1": {
+      "source": "output/Get-NativeScreenshot.ps1",
+      "sha256": "dd2ab7ea8a27c9392e23ba6b8e41400e6da677a2f6434994b4da7535bb9aa504"
+    },
+    "output/Get-SceneBoardState.ps1": {
+      "source": "output/Get-SceneBoardState.ps1",
+      "sha256": "af11b665333c3c4c2c404522aa8dda527a1b8240e59e8ea9062cfe88d65d6698"
+    },
+    "output/Invoke-NativeBundle.ps1": {
+      "source": "output/Invoke-NativeBundle.ps1",
+      "sha256": "7d0f0f4b5a5cc7adcda1e731d1f4a44bf7ee592a422223f1dcc54764c3b73bca"
+    },
+    "output/Invoke-NativeInput.ps1": {
+      "source": "output/Invoke-NativeInput.ps1",
+      "sha256": "88712a6b1f0aec816721023234427c62eea62c718732b9a50082c0474f3f6b05"
+    },
+    "output/Collect-PersistentLogs.ps1": {
+      "source": "output/Collect-PersistentLogs.ps1",
+      "sha256": "cf024869a0035e2ed8f50102cfa7607c7a366f7fdc428b7d658fa852a8f7815c"
+    },
+    "output/Capture-Serial.ps1": {
+      "source": "output/Capture-Serial.ps1",
+      "sha256": "e45b635a5276892bd5d448a1d7e21b329820f62c3855f6f1d701a0bed9b55463"
+    },
+    "output/00-Backup-Recovery.ps1": {
+      "source": "output/00-Backup-Recovery.ps1",
+      "sha256": "79b63ec6e79ce53b46be1a9357de46878bfea2dc1ca09b67830505fdf858caf9"
+    },
+    "output/03-Restore-BootChain.ps1": {
+      "source": "output/03-Restore-BootChain.ps1",
+      "sha256": "acae2c71446f0f4521d6bbf5ea8c23da1f13b748616a652b1de327bfa66ed9c6"
+    },
+    "output/Return-To-Recovery.ps1": {
+      "source": "output/Return-To-Recovery.ps1",
+      "sha256": "528a077aba49d72ab9d7342ac29f7ea6f54cc8bd0d28bcf392cd6e4866a799a5"
+    },
+    "analysis/screen-power-v145-verification.json": {
+      "source": "analysis/screen-power-v145-verification.json",
+      "sha256": "0dce5e3baed6c6fed0d57112c9248d10b6c5ad9e8fb062a374bc199f42ea7f58"
+    },
+    "analysis/audio-lifecycle-v142-verification.json": {
+      "source": "analysis/audio-lifecycle-v142-verification.json",
+      "sha256": "9d9e21f66fe7133cdfbb1896e53313c3ee11aadb0c2aa79be36681b0bbb19d3c"
+    },
+    "analysis/web-bootsound-v143-verification.json": {
+      "source": "analysis/web-bootsound-v143-verification.json",
+      "sha256": "5f29c1428dc44ba9003a4fcbcff829682797748beb77d6b952cda226f2484c43"
+    },
+    "analysis/wifi-category-v134-verification.json": {
+      "source": "analysis/wifi-category-v134-verification.json",
+      "sha256": "d88c23bb80a42cbd26497b442cc90a8db15a87e65c8c993084d04fd7eccf242f"
+    },
+    "analysis/bluetooth-v139-verification.json": {
+      "source": "analysis/bluetooth-v139-verification.json",
+      "sha256": "787f4ce4a3d92f928cf17d0eb752b80bc357d89fbe5b51decb4cb55a0bb03fef"
+    },
+    "analysis/battery-v131-verification.json": {
+      "source": "analysis/battery-v131-verification.json",
+      "sha256": "aafe74100c7d4ebb59d23bfb5d44caefefb2bdd8b97302aaca0d85b3512efbd6"
+    },
+    "analysis/storage-local-v119-verification.json": {
+      "source": "analysis/storage-local-v119-verification.json",
+      "sha256": "1424131539dd522a98f9d7fa75b8457e7deace611c314ffdb1c1f7702e3d3a38"
+    },
+    "analysis/usb-session-v121-verification.json": {
+      "source": "analysis/usb-session-v121-verification.json",
+      "sha256": "3a95cdb020f9fbd8320f936147b941b0d8583609edb3e37959c2479cc4e1fe47"
+    },
+    "analysis/bootcontrol-v135-verification.json": {
+      "source": "analysis/bootcontrol-v135-verification.json",
+      "sha256": "df3722d63a1a13d810e31818bf960c5dd8b293a30eccdc435251520f77a5d686"
+    },
+    "analysis/alpha-metadata-v130-verification.json": {
+      "source": "analysis/alpha-metadata-v130-verification.json",
+      "sha256": "a3cac64aedaa997bf50145e19a19998d04ced275d2feaceb404ab03863cfebd6"
+    },
+    "analysis/nearlink-v141-verification.json": {
+      "source": "analysis/nearlink-v141-verification.json",
+      "sha256": "1f9dc059eb380dac0c5c795e3609dbc588066e35416ab6692cecc1a55b5e6e22"
+    },
+    "analysis/softbus-v140-verification.json": {
+      "source": "analysis/softbus-v140-verification.json",
+      "sha256": "cf5c3256b8bb299d5bebc6b44b119196c795089f0c88f5a3d6aa77490c226fed"
+    },
+    "README.md": {
+      "source": "README.md",
+      "sha256": "120c115a925445eab1f0899e7c869696b8677362e67db1338f5f7f494a2515eb"
+    },
+    "README.en.md": {
+      "source": "README.en.md",
+      "sha256": "28105959ec594f6ce208855776ba860d9222fa83d6b444a579f12569f985d23b"
+    },
+    ".gitignore": {
+      "source": ".gitignore",
+      "sha256": "3d71c591c97d1bec46c69f0069552fc7c9a2bad2ca15bf572f720f8fa940639d"
+    },
+    ".gitattributes": {
+      "source": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "docs/PROVENANCE.md": {
+      "source": "docs/PROVENANCE.md",
+      "sha256": "4121b7f43e520c5afc1927e99eeb87aea81d33bb3a2be921c91fb98b53700fde"
+    },
+    "docs/VERIFICATION.md": {
+      "source": "docs/VERIFICATION.md",
+      "sha256": "dd50d4ed332c6db3f49eed1e9795ed36ee2d8bdcd0474f7771381eddb109e690"
+    },
+    "compat/battery/include/battery/v2_0/battery_callback_proxy.h": {
+      "source": "current-only maintenance",
+      "sha256": "5a7872ee36ce354909eb5a29e551ded3c896b862ad0f9b802e987d637ccec37c"
+    },
+    "compat/battery/include/battery/v2_0/battery_callback_service.h": {
+      "source": "current-only maintenance",
+      "sha256": "f61e62e8d9e35ad0019b49ed3548ccf58065810386d97bb3d80716d78407dd25"
+    },
+    "compat/battery/include/battery/v2_0/battery_callback_stub.h": {
+      "source": "current-only maintenance",
+      "sha256": "4087754bf00249d0316ad673e794a1978f20b41260bc92a1d8d8a16c7a7a4e88"
+    },
+    "compat/battery/include/battery/v2_0/battery_interface_proxy.h": {
+      "source": "current-only maintenance",
+      "sha256": "df137d119d5f2fdb848648072aa7f3b223906e4d831cc53a729bdac78f45fe0a"
+    },
+    "compat/battery/include/battery/v2_0/battery_interface_service.h": {
+      "source": "current-only maintenance",
+      "sha256": "ff8bfa8b9ae96c0161b494ba067e8b4c60965e02ac0bd3681b13c324ca140770"
+    },
+    "compat/battery/include/battery/v2_0/battery_interface_stub.h": {
+      "source": "current-only maintenance",
+      "sha256": "5cf4a34b299ae935e281dfcc205d4821c839f70f955f417326aac3675b594f09"
+    },
+    "compat/battery/include/battery/v2_0/ibattery_callback.h": {
+      "source": "current-only maintenance",
+      "sha256": "e880d0185ff608982d9eb5e41aad0c9327fcbd4da9cedb655ecb6f4fe58fb7d8"
+    },
+    "compat/battery/include/battery/v2_0/ibattery_interface.h": {
+      "source": "current-only maintenance",
+      "sha256": "2c4a98c0121bffe82b0112356255474932ebd39aa94ee7ceb1fd294b6ac8c01c"
+    },
+    "compat/battery/include/battery/v2_0/types.h": {
+      "source": "current-only maintenance",
+      "sha256": "04821bd573ba562b297c11d49eb258701ede06e54a2523ed491e01f5af051fcf"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_callback_proxy.h": {
+      "source": "current-only maintenance",
+      "sha256": "1302a3dd4466dd458e076407507afa3ba3231a3a8335ec6938f8f50fcb8a9660"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_callback_service.h": {
+      "source": "current-only maintenance",
+      "sha256": "da8fa34a507ce22cc417ef0dbcf6ef21378e4840d66ecae0fbd18f36db2a52be"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_callback_stub.h": {
+      "source": "current-only maintenance",
+      "sha256": "17aab55ed1f38c831d13dcd5ff05a42fbb802c25eb46bbc418ffd05d1e8728ae"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_interface_proxy.h": {
+      "source": "current-only maintenance",
+      "sha256": "36a6e9e639fc227ef3b3446e8c14c10de384a71d2d202642a27c48ee2351ba95"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_interface_service.h": {
+      "source": "current-only maintenance",
+      "sha256": "a760d4acedfcadf447cca92ac9a40c41cd79d2636e57db6d083b811972aced39"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_interface_stub.h": {
+      "source": "current-only maintenance",
+      "sha256": "2a47bcd3599a46188ef401461ac401e605a7d52bb9cb2847891f9f3de102b116"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/hci_types.h": {
+      "source": "current-only maintenance",
+      "sha256": "aabad239254a77881c45391ec4b2fab9fda8b93d008a64665fedfa632ada21a8"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/ihci_callback.h": {
+      "source": "current-only maintenance",
+      "sha256": "86efc42ac85d04d57599f9f9dea5fbe38d77d89a6d7a40313367122e25016e4b"
+    },
+    "compat/bluetooth/include/bluetooth/hci/v1_0/ihci_interface.h": {
+      "source": "current-only maintenance",
+      "sha256": "b228657ec662cbf520b145904c444483dea5337928ffe9d9c475a2e5423e5ea1"
+    },
+    "compat/wifi/include/linux/nl80211.h": {
+      "source": "current-only maintenance",
+      "sha256": "9cd87441340c00ce11d04b6009d504ba83764f6e5a170de013420dcef566fa40"
+    },
+    "docs/BUILDING.md": {
+      "source": "current-only maintenance",
+      "sha256": "eb5adbb8266cfa578f48a87967daa6386a361faa9a72a1a19a46352ee63e2887"
+    },
+    "docs/PACKAGING.md": {
+      "source": "current-only maintenance",
+      "sha256": "c486fe5397f95191db62a756f06fbce14e75a7c3fcb189a58ae634de694955c1"
+    },
+    "docs/SOURCE_MAP.md": {
+      "source": "current-only maintenance",
+      "sha256": "237a408833d4c1bd84bbfcbea1eb4dd223ec2f6788fff7fca6897fa4c8e48e71"
+    },
+    "tools/build_current.py": {
+      "source": "current-only maintenance",
+      "sha256": "44c20bf8bd1ff338562f9ea87bcf1729a8245cc8f5d22a9ecc62a98e051f9a1c"
+    },
+    "tools/build_useriam.py": {
+      "source": "current-only maintenance",
+      "sha256": "02fc4f2454edd2961cb19732e1b4a07fe4946a8bd8a2daf5dce4efd3d1afccaf"
+    },
+    "tools/refresh_manifest.py": {
+      "source": "current-only maintenance",
+      "sha256": "1863f37d694a9a4bb777b5b79c80e3b5efb3e40ac4b1e7ddb0aa9232dfd63932"
+    },
+    "tools/verify_sources.py": {
+      "source": "current-only maintenance",
+      "sha256": "dab42249fe880e769c9917ddb267b376fdc4f0f937317540c30f127763c31bab"
+    },
+    "RELEASE.json": {
+      "source": "current-only maintenance",
+      "sha256": "21465db3e7aed0073e2ca0e50ce09623a66c6c594ff62983fdfd76f7e4ee28f5"
+    },
+    "analysis/current-source-build-verification.json": {
+      "source": "current-only maintenance",
+      "sha256": "3b1b232d01ba55944459befb197394a364dd61a108d80d0b267afbf767210fd5"
+    },
+    "output/Invoke-ProbeDiagnostic.ps1": {
+      "source": "output/Invoke-ProbeDiagnostic.ps1",
+      "sha256": "497166c3f8e9841f863159270f2d756dc2d921c04034f31ccef67326bf03fcc9"
+    },
+    "output/Send-ProbeCommand.ps1": {
+      "source": "output/Send-ProbeCommand.ps1",
+      "sha256": "9a682d58c506d3f76c472ead33294a62eabfda6e7dfcdcab1aef0ae22e6595c5"
+    },
+    "analysis/rebuilt-source-v146-verification.json": {
+      "source": "v146 rebuilt-runtime acceptance",
+      "sha256": "1f001affbbf2b9943adb831e3da420350ec67d6e07eef5d537609423d6d4d70b"
+    },
+    "output/Flash-Current.ps1": {
+      "source": "current v146 verified-image flash entry",
+      "sha256": "cd77e2a28fa31f15d389137dc9a1ed4807e3085e7b2b2640a9bcacc51f5141ae"
+    }
+  },
+  "source_origin_hash_semantics": "SHA-256 of the current published source file after selection and maintenance edits.",
+  "runtime_hash_semantics": "SHA-256 of the accepted v146 runtime text; current published file hashes are also recorded in source_origins.",
+  "base_functional_implementation": "v145 selected components, rebuilt and accepted as v146"
+}

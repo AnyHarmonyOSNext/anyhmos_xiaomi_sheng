@@ -1,1 +1,0 @@
-1.0 { global: SksGenerateRandom; SksGenerateKey; SksKeyExist; SksInit; SksUpdate; SksFinish; SksAbort; SksEncrypt; SksDecrypt; local: *; };

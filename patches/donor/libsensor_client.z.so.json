@@ -1,0 +1,13 @@
+{
+  "name": "libsensor_client.z.so",
+  "input_sha256": "b99fefc405501762340adbbc6aaabf314e421ebcaa54f73879b368c415912bef",
+  "output_sha256": "10831009fabed206ab5badca696cb5d0fa61e94aafb2f03a9c13c40cf6781af8",
+  "changes": [
+    {
+      "offset": 136561,
+      "before": "3e",
+      "after": "16"
+    }
+  ],
+  "basis": "Final v145 deployed payload compared with its original donor input"
+}

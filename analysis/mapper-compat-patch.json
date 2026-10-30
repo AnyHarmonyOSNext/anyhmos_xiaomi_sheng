@@ -1,9 +1,0 @@
-{
-  "input_sha256": "21e6760749c58abcd27d47b1c00c994b80fc441b76bd33f110b2a09709e34bcd",
-  "output_sha256": "ec496acb23a761eaf1a66e106437d0290cac465f18d6c876ea6a353f1c4553bc",
-  "offset": 11931,
-  "before": "2f76656e646f722f6c696236342f706173737468726f75676800",
-  "after": "2f636f6d7061742f6c696236342f686469000000000000000000",
-  "vendor_modified": false,
-  "purpose": "Keep original HDI version selection; mirror vendor passthrough names in /compat; regular mapper copies resolve the compatible linear VDI"
-}

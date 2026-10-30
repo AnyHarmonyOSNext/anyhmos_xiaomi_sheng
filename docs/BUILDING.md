@@ -1,56 +1,58 @@
-# 构建边界 / Build boundaries
+# 当前源码构建 / Building the selected sources
 
-本包是研发源码快照，不是完整 ROM 或一键构建环境。This is a development source snapshot, not a full ROM or turnkey build environment.
+源码已按功能收敛，构建直接使用最终文件，不再从 v1、v2 逐轮生成后续源码。当前仍是研发源码，并非完整 ROM 或从零一键刷机工具。
+
+The tree keeps the selected implementation of each component. It does not include proprietary inputs, full upstream repositories or flashable images. v146 device acceptance is documented separately; this is not a claim of byte-for-byte reproducibility for every component.
 
 ## 外部输入 / External inputs
 
-| 输入 / Input | 用途与限制 / Purpose and limits |
+- sheng 官方 OS3.0.303.0.WNXCNXM 的匹配内核配置、模块和固件，以及项目使用的 MatePad Air HarmonyOS donor 链接库；自行准备，不随仓库分发。
+- Harmony native SDK `6.0.0.47`、AArch64 Linux GCC/strip，以及需要的 Android Bionic/C++ 链接环境。
+- `external/upstream-sources.json` 记录的上游源码版本；原有许可位于 `external/licenses/`。
+- libdrm 静态库、匹配的生成接口头文件、PAL/OpenSSL 等组件输入。部分接口头已收录。
+
+Within the prepared `super`, only `vendor_dlkm` remains stock Xiaomi. Boot image updates require the matching development baseline. Recovery follows the established procedure of restoring this device's own backed-up boot/vendor_boot/init_boot trio first.
+
+## 构建入口 / Build entry points
+
+在 WSL 使用 `tools/build_current.py`。它只编译显式选定的目标，不自动刷写或连接设备。
+
+```sh
+python3 tools/build_current.py --list
+python3 tools/build_current.py composer allocator display-wake --dry-run
+python3 tools/build_current.py composer allocator display-wake
+python3 tools/build_current.py audio-vdi audio-loader audio-manager
+python3 tools/build_current.py bootstrap init-entry touch touch-launcher wifi-category
+```
+
+默认编译输出为 `work/current-build/`，构建命令和产物哈希写入其 `build-report.json`。`--dry-run` 可先检查依赖路径。当前脚本覆盖常用适配目标；未提供目标的源文件仍需按原接口与工具链自行构建，不可据此声称完整 ROM 已能一键重建。
+
+| 环境变量 / Variable | 默认位置 / Default |
 | --- | --- |
-| 小米 sheng 官方 OS3.0.303.0.WNXCNXM Android 16 基线 | 匹配的分区、模块、配置与固件。Original matching partitions, modules, configuration and firmware; obtain independently. |
-| 项目使用的 MatePad Air HarmonyOS NEXT donor | 原系统用户态、原 HDI/框架与链接输入。Proprietary userspace and link-time inputs; not redistributed. The marketing name alone is insufficient to reproduce a build: check each recipe's input hashes. |
-| 匹配的 boot/init_boot/vendor_boot 基线 | 大多数镜像脚本按前一版镜像增量构建并严格检查 SHA-256。Most image builders require a specific earlier image; a v145 script does not build v143 from nothing. |
-| HarmonyOS native SDK | 当前开发布局为 SDK `6.0.0.47`；需要 AArch64 OHOS Clang、链接器、头文件等。SDK binaries are not bundled. |
-| Android common 内核与工具链 | Commit `6f2f96be86b93de6ed58a2c46b456fb49734c382`，匹配 303 配置；历史 IPC 构建记录使用 Android clang r450784e / 14.0.7。Review symbol-version and CFI requirements before reproducing a kernel/module build. |
-| 公共上游源码 | 精确版本见 `external/upstream-sources.json`。Unmodified upstream repositories are represented by commit pins; local changes and added files are exported separately. |
-| 运行环境 | 主机脚本为 Windows PowerShell，原生/内核构建主要在 WSL Linux；Python 3、Git、C/C++ 构建依赖按对应脚本准备。 |
-| 其他工具 | `magiskboot`、ADB/fastboot、libdrm/Mesa 等按脚本准备。Proprietary extracts and executable tools are excluded from the source package. |
+| `SHENG_DEPS` | `/root/hmos-work/graphics-deps` |
+| `SHENG_SDK` | `/root/hmos-work/sdk-6.0.0.47/installed/native` |
+| `SHENG_UPSTREAM` | `$SHENG_DEPS/source` |
+| `SHENG_DONOR_LINK` | 仓库 `work/donor-hdi-link` |
+| `SHENG_STAGE` | `$SHENG_DEPS/stage` |
+| `SHENG_BIONIC_LINK` | 仓库 `work/audio-bionic-v1/lib64` |
+| `SHENG_PAL_INCLUDE` | `/root/hmos-reference/pal-sm8550-a13/inc` |
+| `SHENG_ANDROID_CPP_HEADERS` | `/root/hmos-work/clang-prebuilt/clang-r450784e/include/c++/v1` |
+| `SHENG_BT_VENDOR_LINK` | 仓库 `work/donor-bluetooth-v136/vendor/lib64` |
 
-## 开发布局 / Development layout
+`compat/ipc/Makefile` 对应当前模块，应在匹配内核源码和配置下构建；`external/patches/hmos-work--gki-sheng-exports.patch` 与对应 overlay 配套。保留 CFI、符号版本与产品/输入哈希校验。
 
-主要 WSL 路径为 `/root/hmos-work` 和 `/root/hmos-reference`。部分历史脚本的 Windows/WSL 工作区路径已在发布副本中替换为 `C:/SHENG_WORKSPACE` 或 `/mnt/c/SHENG_WORKSPACE`，设备序列号变为 `YOUR_DEVICE_SERIAL`。这些是占位值，运行前必须配置。
+Mesa 补丁以记录的 upstream HEAD 为基础，EGL 的 `platform_ohos.c` 使用已部署 v126 源码；Turnip `tu_image.cc` 与 v128 源码快照已比对一致。应用 overlay 后，按 Mesa 自身的构建流程配置 Turnip/Zink。原 v144 EGL 实验不再保留。
 
-The historical WSL layout uses `/root/hmos-work` and `/root/hmos-reference`. Publication removes private host paths and serial numbers from the copied sources. Configure these assumptions before running a script. The live development workspace is not rewritten by this export.
+UserIAM 使用 `tools/build_useriam.py`，需自行准备 target-compatible OpenSSL 头、4.0/4.1 donor stub 和 HDF host 库。`SHENG_USERIAM_VENDOR_LIBS`、`SHENG_USERIAM_HOST_LIBS`、`SHENG_OPENSSL_INCLUDE` 可指定路径。`compat/useriam/software-backend.patch` 描述当前软件后端所需的上游差异，需审查应用到匹配来源；其 4.0 后端和 4.1 adapter 共同组成当前实现，不应互相删减。
 
-`external/custom/sheng-graphics-port/` 对应 WSL 的 `graphics-deps/sheng-graphics-port/`；其余 `external/custom/<name>/` 对应工作根目录下同名工程。`external/patches/<name>.patch` 应用于记录的上游 HEAD；`external/overlays/<name>/` 是同一版本下的新增源码。不能把某次实验的整个 Mesa diff 与其他版本补丁盲目叠加。
+## 配置与补丁 / Runtime and patches
 
-Restore custom sources to the expected development layout, check out exact upstream commits, then review/apply the selected patches and overlays. The Mesa worktree diff is a development snapshot that includes experimental changes; it is not an accepted universal runtime patch.
+`runtime/` 保留当前 v146 脚本与配置，`patches/donor/` 是由最终已部署库和原始 donor 输入生成的合并修补配方。它们保留全文件输入/输出 SHA-256 和逐段 before/after 校验，可用 `tools/apply_guarded_elf_patch.py` 生成副本。原库不分发。
 
-## v145 的实际构建链 / Actual v145 build chain
+Some runtime scripts intentionally apply dependent stages during startup. Those stages are part of the current boot path, not independently selectable old versions. Runtime checksum constants identify the accepted binaries; newly rebuilt outputs may differ and require independent packaging checks and device validation. Do not blindly copy build output into a ramdisk or remove guards to force a mismatch through.
 
-1. 准备上述 SDK、上游头文件、libdrm 静态库和 donor 链接库，并核对对应哈希。Prepare the external SDK, headers, libdrm and donor linking inputs.
-2. 在 WSL 审查/运行 `tools/build_screen_power_v145.py`，生成兼容 composer。Review/run this script in WSL to compile the OFF latch fix.
-3. 正确顺序唤醒程序来自 `tools/native_display_wake_v2.cpp`。其编译产物需自行重建到脚本要求的位置；源码包不携带无扩展名 ELF。Rebuild the helper required by the image recipe; its binary is deliberately absent.
-4. 在具备 `vendor_ramdisk_edit.py` 所需工具的 Windows 环境审查/运行 `tools/build_vendor_screen_power_v145.py`。它以已有、精确匹配的 v143 镜像为输入，仅替换 composer、唤醒 helper 和 manifest，校验其他 ramdisk 条目、DTB、bootconfig 与容器往返。The v143 baseline image must already exist.
-5. 产物成功构建并不等于功能通过。v145 已上机且短按熄屏获用户实测确认；深睡和长期待机仍需另验。v145 screen-off has user acceptance; deep sleep and long-term standby still require separate validation.
+## 调试与检查 / Debugging and checks
 
-具体命令参数和输入以脚本为准。不要为“跑通脚本”删除哈希、分区、机型或槽位检查。Use each recipe's actual arguments and preserve its input/product/slot checks.
+COM probe 不是 ADB。用 `output/Invoke-ProbeCommand.ps1`、文件传输和截图脚本操作；串口请求必须串行。单请求上限约 60 秒，超时完整回复不等于失联。已有测试机数据不应按旧流程清除。
 
-## 调试 / Debugging
-
-COM 串口运行的是开发 probe 协议，不是 ADB shell。`output/Invoke-ProbeCommand.ps1` 将 UTF-8 shell 命令编码为带请求 ID 的串口消息；`Send-ProbeFileStream.ps1` / `Receive-ProbeArtifact.ps1` 提供文件传输，`Get-NativeScreenshot.ps1` 使用系统截图服务。
-
-The serial probe is a privileged development facility on the unlocked test device. It is not a production security boundary. Use the host wrappers after reviewing their behavior. Commands execute in a different outer root than the Harmony userspace: `/hmos-root` is the chroot root; paths such as input devices may need the `/hmos-root` prefix.
-
-- COM 操作必须串行，前一个进程真正退出后再发下一条。Serialize requests; do not overlap host sessions.
-- 每条脚本约 60 秒硬上限；采集窗口应留余量，不要用 90 秒前台采集。Keep captures below the command timeout.
-- `CMD END exit=-1 signal=9` 是执行被终止的完整回复，不等于失联；工具已修正负数退出码解析。Distinguish termination from missing replies.
-- 系统截图与物理屏幕状态要分开验证。Validate physical panel state independently of captured UI.
-- 镜像刷写、userdata 初始化、全局服务 stop/start 和历史 Recovery 工具都需要先审查。No host tool is an invitation to run every historical experiment.
-
-## 分区与恢复 / Partitions and recovery
-
-后续仅更新 `vendor_boot` 的流程要求已经安装匹配开发基线。首次配置仍涉及匹配 boot、最小 init_boot、super 动态分区和 userdata。请依据本机已保存的备份恢复；这个发布包不包含任何设备专属备份。
-
-The current test setup updates `vendor_boot` only after the baseline is established. For a device stuck in fastboot or unable to reach Recovery, the project's established procedure restores its own saved boot/vendor_boot/init_boot trio first. No unknown temporary boot image is supplied here. This is a project recovery convention, not a guarantee for every device or firmware.
-
-源码快照的导出与哈希校验见 [PACKAGING.md](PACKAGING.md)。Source snapshot export and integrity checks are documented separately.
+`tools/verify_sources.py` 校验当前源码清单、语法、链接和本地依赖；`tools/refresh_manifest.py` 只更新哈希清单，不打包、不上传。功能验收仍以 [VERIFICATION.md](VERIFICATION.md) 和双语 README 为准。

@@ -25,4 +25,4 @@ foreach ($name in @('boot','init_boot','vendor_boot')) {
     Require-Success (Invoke-DeviceTool $Adb @('-s', $device, 'shell', "rm -f $tmp"))
 }
 [pscustomobject]@{ Serial = $device; Slot = $Slot; Created = (Get-Date).ToString('o'); Files = $files } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $dest 'backup-manifest.json') -Encoding UTF8
-Write-Host "Backup complete: $dest. Reboot to bootloader, then run 01-Flash-Probe.ps1."
+Write-Host "Backup complete: $dest. Review the matching image and backup hashes before any flash operation."

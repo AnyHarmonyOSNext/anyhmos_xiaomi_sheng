@@ -35,3 +35,15 @@ Container roundtrip and unchanged-entry checks passed; the flashed partition mat
 模块分项可用不意味着每个新版都完成全部回归。蓝牙配对、蓝牙音频、硬解、WebView、144Hz、TEE、相机和全面稳定性均不能标为完成。发生新的故障应保留旧验收的版本/场景范围，同时单独记录新问题，不能把历史成功外推成当前全通过。
 
 Historical success is tied to its version and scenario. Use the main README's detailed matrix for open items. A diagnostic pattern, screenshot, service registration, return code or advertised capability must not be substituted for the corresponding user-visible acceptance test.
+
+## 2026-10-31 源码整理检查 / Source cleanup checks
+
+当前直接构建入口的 37 个目标已在准备好的 WSL 环境编译通过，UserIAM 4.0 后端、4.1 adapter 与驱动也已编译通过。Mesa/内核补丁可应用于记录的 upstream HEAD；串口 PTY 回归测试和 17 个 PowerShell 脚本的语法检查通过。构建产物不随源码提交。详见 `analysis/current-source-build-verification.json`。
+
+All 37 direct build targets and the UserIAM backend/adapter/driver compiled in the prepared WSL environment. Selected Mesa/kernel patches passed application checks against the pinned upstream revisions; the serial PTY fixture and syntax checks for 17 PowerShell scripts passed. Full Mesa/kernel builds were not repeated. The subsequent rebuilt-runtime device test is described below.
+
+## v146 重编译真机验收 / Rebuilt-runtime device acceptance
+
+在本轮 37 个直接目标和 UserIAM 构建后，34 个运行文件装入 v146。设备三个启动分区先完整备份；仅在 TWRP 中写 vendor_boot_a，并核对整分区读回 SHA256。重启约 171.73 秒完成，音频、Wi-Fi、蓝牙启动 exit=0；桌面解锁通过并生成原生系统截图。用户确认既有应正常的功能均正常并授权发布。未完成项目仍按原边界标注，没有声称新增硬解、WebView、144Hz 或安全能力。
+
+After compilation, 34 runtime files were packaged as v146. The device boot trio was backed up; only vendor_boot_a was written, and its complete readback matched. Reboot startup completed in about 171.73 seconds; audio/Wi-Fi/Bluetooth startup exited successfully, desktop unlock passed and a native system screenshot was captured. The user accepted the previously expected working features and authorized publication. Previously unfinished features remain open. See `analysis/rebuilt-source-v146-verification.json`.

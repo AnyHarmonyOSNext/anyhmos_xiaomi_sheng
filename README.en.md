@@ -1,29 +1,26 @@
-# Xiaomi Pad 6S Pro 12.4 · HarmonyOS NEXT port development sources
+# Xiaomi Pad 6S Pro 12.4 · HarmonyOS NEXT
 
-[简体中文](README.md) · [Build notes](docs/BUILDING.md) · [Provenance and licenses](docs/PROVENANCE.md) · [Verification](docs/VERIFICATION.md)
+[简体中文](README.md) · [Building](docs/BUILDING.md) · [Source map](docs/SOURCE_MAP.md) · [Verification](docs/VERIFICATION.md) · [Provenance](docs/PROVENANCE.md)
 
-An experimental port of the HarmonyOS NEXT userspace to the Xiaomi Pad 6S Pro 12.4, codename **sheng**, using a separate compatibility layer for the device hardware. Within the current `super`, only `vendor_dlkm` remains stock Xiaomi. A real HarmonyOS desktop, touch input, selected applications, Wi-Fi and speaker playback have been demonstrated. Power management, WebView, performance and peripheral support remain incomplete.
+An experimental HarmonyOS NEXT port for the Xiaomi Pad 6S Pro 12.4 (**sheng**). A compatibility layer connects the Harmony userspace to the device hardware, and a real Harmony desktop is running. Within the current `super`, only `vendor_dlkm` remains stock Xiaomi.
 
-**Snapshot: October 30, 2026, Asia/Shanghai.** This repository contains source files, patches, configurations and build records. It does not include a flashable full ROM, proprietary Huawei system sources, stock images, firmware binaries, user data or account tokens. Historical directories include failed and reverted experiments; they are not cumulative installation instructions.
+**Current accepted build: v146, October 31, 2026.** Each component retains its most complete implementation included in the usable baseline, plus required dependencies. Older implementations, duplicates, failed experiments and chronological build chains have been removed from the current tree.
 
-## Current versions
+## What was actually tested
 
-| Version | Role | What is established |
-| --- | --- | --- |
-| v118 | Payload layout baseline | Main compatibility payload moved into `vendor_boot`; `init_boot` retains a minimal entry point. |
-| v143 | Reference baseline before the power work | Desktop boot, video speaker playback and boot sound have separate device checks. WebView remains broken. |
-| v144 | Isolated EGL/WebView experiment | Resize/first-swap failures were reproduced and partly fixed in native fixtures. Real web pages remain white; no persistent v144 release was flashed. |
-| **v145** | **Current persistent version; screen-off confirmed by the user** | Image readback matches, and the device boots to the desktop. Correct wake-call ordering and suppression of late frames while OFF have been observed. **The user's latest physical test confirms screen-off now works.** |
+The selected tree compiled 37 direct targets and the UserIAM backend, adapter and driver in WSL. A v146 test image incorporated 34 rebuilt runtime files. The device was backed up, `vendor_boot_a` was written from TWRP, the complete partition readback matched its SHA-256, and the device was rebooted. The rebuilt minimal init is byte-identical to the existing entry. Kernel and Mesa artifacts were retained from the matching validated baseline; full kernel/Mesa builds were not repeated.
 
-These are development round numbers. Not every round was flashed, validated or suitable for daily use. v145 image SHA-256: `bf39eaa2f45386d09621a9a4cfbbd4725e673cb046fb777d277a40eea70e6895`; v143: `74ee88b754f0d62fbd44df964a925d8ca8aaca3592e18ae01aae7ef46ebc4d58`. Neither image is included in this source package.
+Automatic startup completed at approximately **171.73 seconds**. Logs cover desktop unlocking, a native system capture and Wi-Fi/audio/Bluetooth startup. The user confirmed that **the previously expected working features remain normal**, then authorized publication. This does not establish fixes for previously unfinished features, exhaustive performance testing or long-term stability.
+
+Test-image SHA-256: `6bdb19aa74a42de27ba32e6e23fcf87f1944acd23be604a8f99785400453b901`. Images, proprietary system libraries, firmware, apps, user data and private raw logs are excluded. See `analysis/rebuilt-source-v146-verification.json`.
 
 ## Detailed support status
 
-A feature validated in one round is not a claim that every scenario works. Unless stated otherwise, earlier feature checks have not all been repeated on v145.
+“Working” is limited to the listed scenarios. Overall v146 acceptance does not replace an exhaustive independent regression of every feature.
 
 | Feature | Status | Verified behavior | Remaining work / limits |
 | --- | --- | --- | --- |
-| Boot, desktop and windows | Working, stability incomplete | Native init/services, SceneBoard and the actual desktop run. Multiple native captures and reboots reached the desktop. The latest v145 bootstrap completed in about 172 seconds. | Slow boot, service/application waits and historical freezes/reboots remain concerns. No sustained stress qualification. |
+| Boot, desktop and windows | Working, stability incomplete | Native init/services, SceneBoard and the actual desktop run. Multiple native captures and reboots reached the desktop. The latest v146 bootstrap completed in about 172 seconds. | Slow boot, service/application waits and historical freezes/reboots remain concerns. No sustained stress qualification. |
 | Physical display | Working | Dual-DSI / dual-plane scanout and full UI output; the early top-strip-only fault was addressed. | Historical bars, white screens and wake issues are not considered permanently eliminated. Full display lifecycle testing remains. |
 | GPU and graphics interfaces | Partial | Mesa/Turnip/Zink and Harmony graphics integration have produced real desktop/application frames and pixel comparisons. | Not full stock GPU parity. Formats, synchronization, WebView and performance remain incomplete. |
 | Refresh rate | 120Hz baseline verified | Kernel mode reports `3048×2032 @ 120Hz`; the native GPU governor is retained. | **144Hz is unfinished.** Scanout at 120Hz does not prove sustained application rendering at 120fps or low touch-to-photon latency. Added GPU frequency policies were reverted. |
@@ -40,7 +37,7 @@ A feature validated in one round is not a claim that every scenario works. Unles
 | Video/image decoding | Partial software path | Real native/third-party video frames; targeted YUV/RGB metadata, crop and alpha fixes; native NDK HEIC pixel comparisons. | **Hardware video decoding is unfinished.** Some applications/formats still fail or stutter. One playing video is not full media support. |
 | Input method | Working, compatibility incomplete | The user confirmed a real keyboard appears and accepts a WLAN password. | All applications, web fields, languages and sustained use are not qualified. |
 | Third-party and preload apps | Partial | Installation of 14 preload packages was checked. Real account/storage unlocking moved selected apps beyond the “application data is being decrypted” gate; apps including Douyin can show actual content. | Arbitrary HAP compatibility is not promised. Splash stalls, first-run flows, crashes, login and WebView dependencies remain. Application packages are not included. |
-| Userdata mount | Working | The whole physical `userdata` partition mounts as `/data`, replacing the earlier image-file approach. The setup wizard is preserved. | Fresh-device formatting, upgrades and rollback need separate procedures. Historical initialization tools may erase data and require review. |
+| Userdata mount | Working | The whole physical `userdata` partition mounts as `/data`, replacing the earlier image-file approach. The setup wizard is preserved. | Fresh-device formatting, upgrades and rollback need separate procedures. Fresh initialization may erase data and requires review. |
 | Battery and charge status | Real readings verified | Original battery HDI, SA3302 and public NDK API compared with sysfs; the status bar no longer reports a constant 100%. A matched 94% and plugged type were checked. | Physical unplug callbacks, thermal policy, fast-charge negotiation, battery life and standby drain lack independent acceptance tests. |
 | Time | Partial | Network synchronization of real UTC time has been observed. | Offline RTC initialization, timezone/12–24-hour presentation and inconsistent clocks in some UI locations remain open. |
 | USB debug channel | Usable, residual issues | Device tty reopening and host batch parsing fixes; multiple cold/normal reboots returned complete command responses. | Role changes and in-flight requests may still lose communication. This is not standard ADB. A COM port enumerating does not prove requests work. Commands have an approximately 60-second execution limit. |
@@ -48,33 +45,31 @@ A feature validated in one round is not a claim that every scenario works. Unles
 | TEE, HUKS and security | Incomplete | Software/no-TEE compatibility research and selected integration sources exist. | **No stock-equivalent trusted security.** Lock credentials, hardware-backed keys, DRM/protected content, payment/authentication and security integrity are not certified or promised. |
 | WebView, web pages and login | **Not fixed** | Specific renderer namespace and native-window 1×1 size regressions were diagnosed; isolated EGL fixtures show improvements. | Real pages still render white or fail to open; Douyin login remains broken. v144 is not an accepted solution. |
 | Camera, microphone, sensors and other peripherals | Incomplete / unverified | Selected interface, startup and diagnostic sources exist. | No complete camera imaging, microphone capture, full sensor, stylus or keyboard-accessory acceptance tests. Phone feature lists do not automatically apply to this tablet. |
-| Distributed features | Incomplete | Optional initialization stalls were avoided for local responsiveness; research is retained. | SoftBus/DeviceManager, identity/security prerequisites and cross-device functionality remain incomplete. Avoiding a wait does not implement distributed features. |
+| Distributed features | Incomplete | Optional initialization stalls were avoided for local responsiveness; the current local fallback is retained. | SoftBus/DeviceManager, identity/security prerequisites and cross-device functionality remain incomplete. Avoiding a wait does not implement distributed features. |
 
-## Boot partition changes
+## Changes to the three boot partitions
 
-| Partition | Changes |
+| Partition | Current changes |
 | --- | --- |
-| `boot` | Replaces the kernel with a 5.15.178 GKI build matching sheng's official 303 configuration and symbol versions, adding the kernel exports required by the Harmony IPC module. |
-| `init_boot` | Replaces the startup entry with the minimal v118 PID1 program, which establishes required paths and hands control to the startup program in `vendor_boot`. |
-| `vendor_boot` | Adds the main `/sheng-compat-v118/` and audio `/sheng-audio-v1/` payloads to the ramdisk, containing startup programs, adaptation libraries, modules and configuration. Display, touch, wireless, audio and framework fixes load persistently from here; v145 updates display power handling and the wake helper. |
+| `boot` | A 5.15.178 GKI kernel matching sheng's official 303 configuration and symbol versions, with exports required by Harmony IPC. |
+| `init_boot` | A minimal PID1 entry establishes paths and hands control to the program in `vendor_boot`. The entry rebuilt in this round is byte-identical to the existing one. |
+| `vendor_boot` | Ramdisk payloads under `/sheng-compat-v118/` and `/sheng-audio-v1/` persistently load startup, display, input, wireless, audio and framework adaptations. v146 contains the rebuilt runtime files and matching integrity configuration. |
 
-## Source map
+## Current sources
 
-- `compat/`: display, touch, audio, wireless, framework, power and kernel adaptation sources/configurations, including historical versions for review.
-- `tools/`: builds, original-binary patch recipes, image verification and diagnostic/development tools.
-- `external/custom/`: custom graphics, IPC, UserIAM and other sources recovered from the WSL work area.
-- `external/patches/` and `external/overlays/`: tracked differences and additional sources relative to recorded public upstream revisions.
-- `external/upstream-sources.json` and `external/licenses/`: upstream URLs, exact commits and original license texts.
-- `analysis/`: selected patches, configuration and build-verification reports, without private raw device logs.
-- `output/*.ps1`: host-side script source, without images, device backups or platform-tool binaries.
-- `docs/`: build boundaries, component index and validation notes. `SOURCE-MANIFEST.json` records packaged file sizes and hashes.
+- `compat/`: selected component sources, interface headers and shared dependencies.
+- `runtime/`: startup scripts and configuration matching accepted v146, with compatible runtime filenames.
+- `patches/donor/`: donor-library recipes with whole-file SHA-256 and before/after byte guards.
+- `external/`: pinned upstream revisions, required Mesa/kernel patches, overlays and licenses.
+- `tools/`: direct builds and source-inventory utilities; `output/*.ps1`: host debugging, backup and recovery tools.
+- `tests/`, `analysis/` and `evidence/`: required tests and sanitized verification records.
 
-The user-accepted screen-off fix starts at `tools/build_screen_power_v145.py`, `tools/native_display_wake_v2.cpp` and `tools/build_vendor_screen_power_v145.py`. WebView v144, reverted GPU policies and speculative DSC experiments remain historical/experimental material. Their presence is not an instruction to enable them.
+Selected implementations are display/power v145, buffer v130, Turnip v128, EGL v126, touch service-v2, audio v142, Wi-Fi generation v134, Bluetooth v139 plus the v141 capability correction, battery v131, database/memory management v2 and USB probe v121. They form one current baseline. Both UserIAM 4.0 backend and 4.1 adapter are required ABI layers. Older numbers in runtime filenames do not mean multiple historical implementations are retained. See `SOURCE-SELECTION.json`, `SOURCE-MANIFEST.json` and `SHA256SUMS` for selection and hashes.
 
-## Building and reporting issues
+## Building and use
 
-Read [BUILDING.md](docs/BUILDING.md) first. This is a **development source snapshot**, not yet a one-command reproducible full-ROM build. Prepare proprietary stock/donor inputs, SDKs, toolchains and baseline images independently and lawfully. Historical scripts retain development layout assumptions, expected input hashes and paths requiring configuration.
+Read [BUILDING.md](docs/BUILDING.md), configure matching SDK, upstream, libdrm, PAL, OpenSSL and donor-link inputs, then inspect targets with `tools/build_current.py --list`. UserIAM builds through `tools/build_useriam.py`. This remains a development source tree rather than a one-command full-ROM build from a clean environment.
 
-Debug each stage: `raw events → MMI → system services → DMS/RenderService → HDI/VDI → DRM/backlight`. A system screenshot proves composed content, not physical screen-off. Negotiated link speed is not measured network throughput. A successful return value is not proof of audible sound or visible output.
+The COM probe is not standard ADB. Use the command, transfer and screenshot scripts under `output/`, with serial requests executed sequentially. Preserve this device's own boot-partition trio and verify image hashes before flashing. Other-device images or test results are not interchangeable.
 
-Issue reports should include version, reproduction steps, expected/actual behavior and sanitized logs. Do not upload Wi-Fi passwords, tokens, user data, stock images or extracted proprietary libraries. Attribution and derivation, especially [AnyHarmonyOS](https://github.com/YiKongk/AnyHarmonyOS), are documented in [PROVENANCE.md](docs/PROVENANCE.md). This is not an official Xiaomi, Huawei or upstream-project port.
+Report versions, reproduction steps and sanitized logs; exclude credentials, tokens and private data. Attribution, including [AnyHarmonyOS](https://github.com/YiKongk/AnyHarmonyOS), is described in [PROVENANCE.md](docs/PROVENANCE.md). This is not an official Xiaomi, Huawei or upstream-project port.

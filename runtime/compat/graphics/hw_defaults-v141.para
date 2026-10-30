@@ -1,0 +1,381 @@
+# 2026-06-26 10:08:07.0
+bgtask.support_task_keeping=true
+# 2026-07-01 20:09:59.0
+const.ai.nnrt_deivce=K1010
+# 2026-06-26 10:08:07.0
+const.aod.color_aod_type=1407
+# 2026-06-26 10:08:07.0
+const.aod.hardware_config=1
+# 2026-07-10 13:56:45.0
+const.app_comp.auto_start_enable=true
+# 2026-06-26 10:08:07.0
+const.app_eco.support_linux=false
+# 2026-06-26 10:08:07.0
+const.appsecurityprivacy.superprivacy.feature_enabled=1
+# 2026-06-26 10:08:07.0
+const.appsecurityprivacy.superprivacy.paddle_existed=0
+# 2026-06-26 10:08:07.0
+const.appsecurityprivacy.superprivacy.supported_sensors=1
+# 2026-07-21 21:00:38.0
+const.ark.startup_duration=5000
+# 2026-07-21 21:00:38.0
+const.arkui.pagetransitionfreeze=true
+# 2026-06-26 10:08:07.0
+const.audio.safe_media_volume=10
+# 2026-06-26 10:08:07.0
+const.binfmt.state=binfmt
+# 2026-06-26 10:08:07.0
+const.bluetooth.a2dp_lowLatency=false
+# 2026-06-26 10:08:07.0
+const.bluetooth.a2dp_offload.supported=false
+# 2026-06-26 10:08:07.0
+const.bluetooth.antijam_call_enable=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.asymmetry_call_enable=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.bt_codec_priority=SBC
+# 2026-06-26 10:08:07.0
+const.bluetooth.headset_absvolume=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.l2hc2Mbps_enable=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.l2hcV3_enable=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.supports_bluetooth_high_pwr=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.supports_hitws=true
+# 2026-06-26 10:08:07.0
+const.bluetooth.uhd2_enable=true
+# 2026-06-26 10:08:07.0
+const.build.product=WKI
+# 2026-06-26 10:08:07.0
+const.camera.compatible_policy_camera.enable=true
+# 2026-06-26 10:08:07.0
+const.camera.externalISP=true
+# 2026-09-09 16:44:46.0
+const.camera.support_logical_camera_screen_status=0,0
+# 2026-06-26 10:08:07.0
+const.display.brightness.default=102
+# 2026-06-26 10:08:07.0
+const.display.brightness.max=255
+# 2026-06-26 10:08:07.0
+const.display.brightness.min=1
+# 2026-06-26 10:08:07.0
+const.display.colorfade_support=false
+# 2026-06-26 10:08:07.0
+const.display.disable.tonemapping.interpolation=0
+# 2026-06-26 10:08:07.0
+const.display.enable_arsr_pre=false
+# 2026-06-26 10:08:07.0
+const.display.hdr_picture_support=true
+# 2026-06-26 10:08:07.0
+const.display.xcomponent_edr_support=true
+# 2026-06-26 10:08:07.0
+const.distributed_collaboration.support_harmony_ring_auth=false
+# 2026-06-26 10:08:07.0
+const.distributed_collaboration.support_one_touch=true
+# 2026-06-26 10:08:07.0
+const.dynamic.zygote32=1
+# 2026-06-26 10:08:07.0
+const.edu_space.education_spaces_enabled=true
+# 2026-06-26 10:08:07.0
+const.exagear.state=zygote32_binfmt
+# 2026-07-23 17:19:14.0
+const.form.hover_dynamic_effect.enable=true
+# 2026-06-26 10:08:07.0
+const.graphic.HveFilterEnable=true
+# 2026-06-26 10:08:07.0
+const.graphic.effect_style=1
+# 2026-07-27 13:49:56.0
+const.graphic.spatial_recon.spatial_image_support=true
+# 2026-06-26 10:08:07.0
+const.hds.immersive_material_level=1
+# 2026-06-26 10:08:07.0
+const.hipreview.param_document_compare_feature=true
+# 2026-07-06 16:09:20.0
+const.hiwrite.support_handwriting_space=true
+# 2026-06-26 10:08:07.0
+const.keyMouse.handEye.enabled=true
+# 2026-06-26 10:08:07.0
+const.location.gps.support=false
+# 2026-06-26 10:08:07.0
+const.location.support_geofence=false
+# 2026-06-26 10:08:07.0
+const.low_battery.power_off_control=1_0_60
+# 2026-07-21 21:00:38.0
+const.mediacontrol.recentplay.dynamicload=true
+# 2026-07-21 21:00:38.0
+const.meetime.device_level=2
+# 2026-09-07 17:05:00.0
+const.mspes.app_ctrl=false
+# 2026-07-27 13:56:59.0
+const.mspes.camera_watermark=false
+# 2026-07-27 13:56:59.0
+const.mspes.hide_cert_page=false
+# 2026-09-07 17:05:00.0
+const.mspes.settings_ctrl=false
+# 2026-09-07 17:05:00.0
+const.mspes.sysinfo_api_ctrl=false
+# 2026-07-27 13:56:59.0
+const.mspes.sysinfo_api_void2d=const.product.os.dist.apiname
+# 2026-09-07 17:05:00.0
+const.mspes.watermark=false
+# 2026-06-26 10:08:07.0
+const.multimedia.audio.ai_voice_noise_suppression_supported=false
+# 2026-06-26 10:08:07.0
+const.multimedia.audio.audiovivid_spk_enable=true
+# 2026-06-26 10:08:07.0
+const.multimedia.audio.latency_offset=5
+# 2026-06-26 10:08:07.0
+const.multimedia.audio.show_audiozoom_switch=false
+# 2026-06-26 10:08:07.0
+const.multimedia.audio_setPriority=4
+# 2026-06-26 10:08:07.0
+const.multimedia.audiovolume.speaker_index=true
+# 2026-06-26 10:08:07.0
+const.multimedia.enable_camera_rotation_compensation=true
+# 2026-06-26 10:08:07.0
+const.nearlink.audio=1
+# 2026-06-26 10:08:07.0
+const.nearlink.audio.binauralrecord=true
+# 2026-06-26 10:08:07.0
+const.nearlink.ble_max_power=13
+# 2026-06-26 10:08:07.0
+const.nearlink.dis.appearance_id=770
+# 2026-06-26 10:08:07.0
+const.nearlink.dynamic_power=true
+# 2026-06-26 10:08:07.0
+const.nearlink.enable=false
+# 2026-06-26 10:08:07.0
+const.nearlink.find_capability=2
+# 2026-06-26 10:08:07.0
+const.nearlink.restore_ble_max_power=13
+# 2026-06-26 10:08:07.0
+const.nearlink.restore_sle_max_power=13
+# 2026-06-26 10:08:07.0
+const.nearlink.sle_max_power=18
+# 2026-06-26 10:08:07.0
+const.nearlink.support.5G=2
+# 2026-06-26 10:08:07.0
+const.nearlink.support.exact_find=true
+# 2026-06-26 10:08:07.0
+const.nearlink.support.full_scenario_range=true
+# 2026-06-26 10:08:07.0
+const.nearlink.support.highPower=2
+# 2026-06-26 10:08:07.0
+const.nearlink.support.off_find=true
+# 2026-06-26 10:08:07.0
+const.nearlink.support.off_ring=true
+# 2026-06-26 10:08:07.0
+const.pad.pad_smart_power_save_enable=true
+# 2026-07-21 21:00:38.0
+const.pasteboard.local_data_aging_time=5
+# 2026-06-26 10:08:07.0
+const.photo.ai_autoclip.enable=true
+# 2026-06-26 10:08:07.0
+const.photo.ai_background.enable=false
+# 2026-06-26 10:08:07.0
+const.photo.ai_expand.enable=true
+# 2026-07-28 20:28:37.0
+const.photo.editor.hdr_photo.enable=true
+# 2026-07-14 21:32:30.0
+const.photo.grid_scale.enable=false
+# 2026-07-21 21:00:38.0
+const.photo.removeBlur.enable=true
+# 2026-07-21 21:00:21.0
+const.photos.cold_boot_preload.enable=true
+# 2026-07-17 09:12:38.0
+const.photos.editor_lite_visual_effect.enable=true
+# 2026-06-26 10:08:07.0
+const.photos.support_face_beauty=true
+# 2026-06-26 10:08:07.0
+const.powerkey.down_duration=3000
+# 2026-06-26 10:08:07.0
+const.privacyindicator.tui_enabled=0
+# 2026-06-26 10:08:07.0
+const.product.brand=HUAWEI
+# 2026-06-26 10:08:07.0
+const.product.cover_mode=1
+# 2026-06-26 10:08:07.0
+const.product.device_authentication=HWWKI
+# 2026-06-26 10:08:07.0
+const.product.device_radius=12
+# 2026-06-26 10:08:07.0
+const.product.devicetype=tablet
+# 2026-07-27 13:56:59.0
+const.product.dfx.fans.stage=1
+# 2026-09-17 19:57:42.0
+const.product.dfx.hiviewx_force_on=false
+# 2026-06-26 10:08:07.0
+const.product.esd_enable=1
+# 2026-06-26 10:08:07.0
+const.product.firstapiversion=9
+# 2026-06-26 10:08:07.0
+const.product.hardwareversion=SH1WKILM
+# 2026-09-07 17:05:00.0
+const.product.hide=false
+# 2026-07-27 13:56:59.0
+const.product.hide.matchers=7.0.0;6.1.0
+# 2026-07-27 13:56:59.0
+const.product.hide.replacements=6.0.0;6.0.0
+# 2026-07-27 13:56:59.0
+const.product.hide.settings=;;;;;;;hide;hide;hide
+# 2026-06-26 10:08:07.0
+const.product.manufacturer=HUAWEI
+# 2026-06-26 10:08:07.0
+const.product.model=WKI
+# 2026-08-11 17:30:15.0
+const.product.performance_mode_enable=true
+# 2026-06-26 10:08:07.0
+const.projectmenu.chargelevel.max=75
+# 2026-06-26 10:08:07.0
+const.projectmenu.chargelevel.min=55
+# 2026-06-26 10:08:07.0
+const.recent.recent_session_max_all_app=10
+# 2026-06-26 10:08:07.0
+const.resourceschedule.memmgr.eswapSize=5120
+# 2026-06-26 10:08:07.0
+const.resourceschedule.memmgr.zram.disksize=12288
+# 2026-07-14 21:32:30.0
+const.scanservice.lite_animation.enable=true
+# 2026-06-26 10:08:07.0
+const.sceneboard.control_center.animation_blur_policy=0
+# 2026-06-26 10:08:07.0
+const.sceneboard.screenlock.art_signature_config=0
+# 2026-07-17 09:17:19.0
+const.sceneboard.screenlock.lighten_disabled_under_hds=1
+# 2026-07-14 21:32:30.0
+const.sceneboard.unlock.desktop_foregroundblur_enable=false
+# 2026-06-26 10:08:07.0
+const.screenrecorder.resolution=2
+# 2026-06-26 10:08:07.0
+const.screenshot.scrollshot_max_height=25000
+# 2026-06-26 10:08:07.0
+const.security.device_security_level=4
+# 2026-06-26 10:08:07.0
+const.settings.enable_circular_cursor=false
+# 2026-06-26 10:08:07.0
+const.settings.magic_cursor_enable=false
+# 2026-09-07 17:05:00.0
+const.settings.processor_info_show=
+# 2026-08-31 16:59:01.0
+const.settings.refresh_rate_seenable=false
+# 2026-06-26 10:08:07.0
+const.software.model=WKI
+# 2026-06-26 10:08:07.0
+const.startup.prelink.enable=true
+# 2026-06-26 10:08:07.0
+const.sys.performance_class=1
+# 2026-09-09 15:31:26.0
+const.system.sensor_correction_enable=1
+# 2026-07-21 21:00:38.0
+const.systemui.notification_count=50
+# 2026-06-26 10:08:07.0
+const.systemui.volume_key_top_padding=55
+# 2026-06-26 10:08:07.0
+const.telephony.efl_forbidden=true
+# 2026-06-26 10:08:07.0
+const.theme.cammover.enabled=false
+# 2026-06-26 10:08:07.0
+const.theme.editor.clock=1
+# 2026-06-26 10:08:07.0
+const.theme.editor.light_animation.enabled=true
+# 2026-07-14 21:32:30.0
+const.theme.engine.light_up_effect.enabled=false
+# 2026-06-26 10:08:07.0
+const.useriam.face_auth_light_compensation_interval=5
+# 2026-06-26 10:08:07.0
+const.useriam.face_auth_light_compensation_upper_limit=80
+# 2026-06-26 10:08:07.0
+const.useriam.face_auth_max_face_number_per_user=5
+# 2026-06-26 10:08:07.0
+const.vibrator.support_vibrator=false
+# 2026-06-26 10:08:07.0
+const.wifi.country_code.conf=30
+# 2026-06-26 10:08:07.0
+const.wifi.hw_multilink_enable=true
+# 2026-06-26 10:08:07.0
+const.wifi.support_sapcoexist=true
+# 2026-06-26 10:08:07.0
+const.window.device.enable_snapshot_rotation=true
+# 2026-06-26 10:08:07.0
+const.window.device.rotate_policy=0
+# 2026-07-21 21:00:38.0
+const.window.max_session_limit_all_ability=256
+# 2026-06-26 10:08:07.0
+const.window.phy_screen_rotate=0,90
+# 2026-06-26 10:08:07.0
+const.window.phyrotation.offset=90
+# 2026-06-26 10:08:07.0
+const.window.supportMidScene=true
+# 2026-06-26 10:08:07.0
+cosnt.bluetooth.hd_call.enable=true
+# 2026-06-26 10:08:07.0
+hw_sc.hmos_font.enabled=true
+# 2026-07-14 21:32:30.0
+persist.ace.image.releasemanageobject.enabled=true
+# 2026-07-14 21:32:30.0
+persist.ace.yuv.decode.enabled=true
+# 2026-06-26 10:08:07.0
+persist.bms.supportIsolationMode=true
+# 2026-06-26 10:08:07.0
+persist.device_collaboration_service.extscreen.flsink=true
+# 2026-06-26 10:08:07.0
+persist.device_collaboration_service.flsink=true
+# 2026-06-26 10:08:07.0
+persist.hmos_fusion_mgr.ag_delay_milliseconds=15000
+# 2026-06-26 10:08:07.0
+persist.multimedia.serveraheadreadtime=10000000
+# 2026-06-26 10:08:07.0
+persist.multiscreen.appmirror_enable=true
+# 2026-06-26 10:08:07.0
+persist.resourceschedule.enable_warm_start_process=true
+# 2026-06-26 10:08:07.0
+persist.sceneboard.desktop.simple_mode=false
+# 2026-06-26 10:08:07.0
+persist.sys.default_ime=com.huawei.hmos.inputmethod/InputService
+# 2026-06-26 10:08:07.0
+persist.sys.fms.support.liveForm=3
+# 2026-06-26 10:08:07.0
+persist.sys.graphic.GpuApitype=2
+# 2026-06-26 10:08:07.0
+persist.sys.graphic.scrgb.enabled=false
+# 2026-06-26 10:08:07.0
+persist.systemui.live2=true
+# 2026-06-26 10:08:07.0
+persist.systemui.rotationPersistentConfig=Enable
+
+ro.config.beta_sec_ctrl=false
+const.comp.product_version=Product-WKI 207.0.0(0000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+const.comp.hl.product_base_version=WKI-LGRP7-CHN 7.0.0.109(SP6)
+
+const.comp.hl.product_base_version.real=WKI-LGRP7-CHN 207.0.0.109(SP6)
+
+const.app_comp.image.preset_type=2
+
+const.app_comp.image.preset_enable=true
+
+const.app_comp.image.preset_version=PAGSI-LGRP1-CHN 104.5.5.105DH(SP16)
+
+const.app_comp.image.privacy_version=1402
+
+const.app_comp.appmarket.privacy_version=1203
+
+const.app_comp.hap.privacy_version=1102
+
+const.logsystem.versiontype=commercial
+
+const.app_eco.hmos_intf_hash=4.3.001

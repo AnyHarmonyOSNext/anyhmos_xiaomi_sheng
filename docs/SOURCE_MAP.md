@@ -1,26 +1,28 @@
-# 模块与版本入口 / Component and version map
+# 当前功能源码 / Current component sources
 
-目录版本是试验快照，不是全部应加载的插件。Directories preserve development rounds; existence does not imply acceptance or enablement.
+每个功能只保留当前已验证基线中最完善的实现。选择依据是实际刷入的 v146 载荷和分项验收，不是版本号最大。旧试验、旧实现、逐版构建链已从当前仓库树删除。完整逐文件来源见 `SOURCE-SELECTION.json`。
 
-| 模块 / Component | 源码/配方入口 / Entry points | 状态说明 / Notes |
+One selected implementation is retained per component, together with the shared code, generated interfaces and upstream patches it needs. Incomplete features remain incomplete; the rebuilt-runtime v146 acceptance is documented in docs/VERIFICATION.md.
+
+| 功能 / Component | 当前源码 / Current sources | 选取依据 / Selection |
 | --- | --- | --- |
-| 内核导出与 IPC | `compat/kernel-sheng-exports/`, `compat/sheng-hmos-ipc/`, `external/custom/sheng-hmos-ipc*`, `analysis/gki-sheng-exports.patch`, `tools/prepare_sheng_ipc.py` | 从记录的 Android common 与 AnyHarmonyOS 输入适配；保留上游 SPDX。Some old embedded READMEs describe candidate status at the time, not today's full project status. |
-| 图形原生端口 | `external/custom/sheng-graphics-port/`, `compat/sheng-graphics/`, `tools/build_framepacing_v1.py` | 120Hz 基线；历史 GPU 调频不作为当前默认。 |
-| 当前熄屏修复 | `compat/sheng-power/screen-v145/`, `tools/build_screen_power_v145.py`, `tools/native_display_wake_v2.cpp`, `tools/build_vendor_screen_power_v145.py` | 已持久刷入，用户实测确认熄屏正常；深睡/长期循环待验。Flashed; screen-off accepted by the user, extended standby tests pending. |
-| WebView | `compat/sheng-framework/web-namespace-v143/`, `compat/sheng-graphics/egl-*-v144/`, `tools/build_egl_*v144.py` | renderer namespace 已改，真实网页仍白屏；v144 为实验。 |
-| 媒体/allocator | `tools/build_*v127.py` 至 `tools/build_*v130.py`、对应图形目录 | 软件路径、YUV/RGB metadata/alpha/crop；不等于硬解。 |
-| 触控 | `compat/sheng-touch/`, `tools/build_input_latency_monitor.py` | THP→MMI；采样/全链路延迟仍需测。 |
-| 输入与框架延迟 | `compat/sheng-framework/msdp-local-v1/`, `tools/prepare_msdp_local_v1.py` | 避免可选分布式初始化阻塞本地调用；没有实现跨设备功能。 |
-| 存储与账户 | `compat/sheng-framework/storage-local-v1/`, `account-hmac-v1/`, `useriam-v1/`, `external/custom/sheng-useriam-port/` | 真实账户/存储解锁接入；不提供原厂 TEE 安全等价性。 |
-| 音频 | `compat/sheng-audio/pal-bridge-v1/`, `pal-lifecycle-v1/`, `lifecycle-v142/`, `tools/build_audio_lifecycle_v142.py` | PAL/AGM 原后端，扬声器播放/暂停恢复已验，完整音频路由未验。 |
-| 电池 | `compat/sheng-power/battery-v131/`, `tools/native_battery_*v131.*`, `tools/build_vendor_battery_v131.py` | 原 HDI、服务与公开 NDK 对照验证。 |
-| Wi-Fi | `compat/sheng-wireless/`, `tools/*wifi*v134*` | 连接与 Wi-Fi 6 显示已验，Wi-Fi 7 实链/稳定性未验。 |
-| 蓝牙 | `compat/sheng-bluetooth/`, `tools/*bluetooth*v136*` 至 `*v139*`, `tools/build_vendor_nearlink_v141.py` | 原硬件路径和设置扫描/开关已有验证，配对/蓝牙音频待验。 |
-| 启动布局 | `tools/vendor_payload_entry_v118.c`, `tools/build_vendor_migration_v118.py`, `tools/vendor_ramdisk_edit.py` | 最小 init_boot + vendor_boot 载荷。 |
-| 启动成功门槛 | `compat/sheng-bootcontrol/v135/`, `tools/mark-boot-success-v135.sh` | 真实桌面/解锁门槛后使用原 HAL，不是完整 OTA。 |
-| USB probe | `tools/hmos_probe_v121.c`、所包含的 `.inc`、`output/Probe-Protocol.ps1` | 部分 include 保留旧版本名；按源码 include 关系构建，不按文件名猜运行版本。 |
-| 启动流程 | `compat/sheng-startup/`, `compat/sheng-framework/web-namespace-v143/start-native-desktop-v116.sh` | 文件名 v116 延续使用不表示当前镜像是 v116。 |
+| 内核接口 / Kernel | `compat/kernel/`, `external/overlays/hmos-work--gki-sheng-exports/` | 匹配 303 配置的 GKI 与类型化 IPC 导出。 |
+| Binder / AccessToken | `compat/ipc/` | 实际使用的 v16 类型化导出实现；删除旧 kprobe 解析实现。 |
+| 显示、亮度、熄屏 / Display, brightness, screen power | `compat/display/composer_vdi.cpp`, `native_display_wake.cpp` | v145 compositor，已含亮度/帧节奏和 OFF latch；唤醒 helper v2。 |
+| Buffer / 媒体元数据 | `compat/display/buffer_vdi.cpp` | v130，包含此前 crop/YUV/RGB 与全局 alpha 支持。 |
+| GPU / EGL | `external/patches/source--mesa3d.patch`, `external/overlays/source--mesa3d/` | Turnip v128，已部署 EGL v126；删除 v144 EGL 实验和额外 GPU 调频。 |
+| 触控 / Touch | `compat/touch/` | service-v2 bridge、原坐标解析/过滤及 launcher。 |
+| 音频 / Audio | `compat/audio/` | v142 VDI、PAL server/client/lifecycle、服务发布及 PD mapper；各司其职，非重复音频实现。 |
+| Wi-Fi | `compat/wifi/`, `runtime/compat/graphics/*wifi*` | 当前连接路径与 v134 真实协议代际适配。 |
+| 蓝牙 / Bluetooth | `compat/bluetooth/`, `runtime/compat/bluetooth-v136/` | v139 当前检查接口、仍需要的 v136 后端，以及 v141 能力纠正。接口文件名延续原运行路径。 |
+| 电池 / Battery | `compat/battery/` | v131 真电量 HDI 发布与对照读取。 |
+| 账户与数据 / Account and database | `compat/framework/account/`, `database/` | account HMAC 和 storage launcher、database v2；无旧 database v1。 |
+| UserIAM | `compat/useriam/` | 当前软件 4.0 backend + 4.1 ABI adapter；两层都被当前代码调用，不能把 4.0 误删为旧试验。 |
+| 服务等待与内存 / Service waits and memory | `compat/framework/memmgr/`, `runtime/compat/graphics/apply-memmgr-v2.sh`, `apply-msdp-local-v1.sh` | 最新实际加载的修补脚本与汇编；不再需要旧版脚本生成新版。 |
+| 启动、按键与桌面 / Startup and desktop | `compat/bootstrap/`, `compat/services/`, `runtime/` | v118 最小入口、v121 USB probe、v143 启动声音逻辑及当前锁屏 helper v5。 |
+| BootControl | `compat/bootcontrol/`, `runtime/compat/graphics/mark-boot-success-v135.sh` | 原 HAL 与桌面验收门槛。 |
+| 调试 / Host tools | `output/*.ps1`, `tests/` | 当前串口/传输/截图、三启动分区备份恢复及当前有意义的协议/分配器测试。 |
 
-`tools/archive/`、旧版本目录、DSC/GPU 策略等保留供审查和复现失败，不应自动启用。没有包含原厂二进制或编译产物；某些历史构建报告里的文件路径只描述当时本地输入，不代表发布包附有该文件。
+`runtime/` 中脚本和配置从 v146 ramdisk 的最终内容提取，文件名保留被 init 和启动程序引用的名称。文件名中的 v116/v136 等不表示仓库同时维护多套旧实现。原厂库、固件、应用、编译产物和完整镜像不在仓库内。
 
-Historical reports may name binaries that are intentionally excluded. A module having source code is not evidence that it is deployed, supported, secure or functionally complete.
+Runtime names are preserved for compatibility with the accepted image. Interface generations, shared helpers and staged patches needed by the current system are dependencies, not alternate historical implementations. Removed experiments remain recoverable from Git history; the current tree contains the selected sources only.

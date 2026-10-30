@@ -1,7 +1,0 @@
-{
-  "bytes": 9339152,
-  "sha256": "5064973ec0fc7300fbbab9da5b7b1967fe18f5594315a32a7eac8ce82299be6e",
-  "gzip_bytes": 1821051,
-  "gzip_sha256": "a634b6260150eda3b89da651e0075f2f2af7c3f139393ce57cbc996893cb7b8f",
-  "changes": "Separate bounded 1D BLOB memory import; RGB/YUV image validation preserved; BLOB image usage and dedicated images rejected; page backing verified"
-}

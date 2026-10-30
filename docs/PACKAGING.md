@@ -1,41 +1,20 @@
-# 源码整理与校验 / Source packaging
+# 当前源码清单 / Current source inventory
 
-`tools/export_release_sources_wsl.py` 与 `tools/package_source_release.py` 可重新生成这一类源码快照。它们不刷机、不连接串口，也不会自动初始化 Git、提交或上传。
+本仓库只保留各功能当前选定的实现及其依赖。旧版源码、失败实验、逐版镜像脚本和重复报告已从当前文件树删除。`SOURCE-SELECTION.json` 记录组件版本、逐文件来源及最终 runtime 对照；旧稿可通过 Git 历史追溯。
 
-The exporters prepare reviewable files without accessing the device or uploading to GitHub. They preserve the development originals and refuse to replace an existing output directory or ZIP.
+This is a current-only source tree. Shared code and required ABI layers are retained. It is not a full ROM or an automatically proven stable system.
 
-## 操作顺序 / Workflow
+维护源码后运行：
 
-1. 在 WSL 运行导出脚本，指定一个尚不存在的输出目录。它从现有开发环境收集自定义源码、上游提交、差异、新增文件与许可；具体路径见脚本。Run the WSL exporter against the actual development checkouts first.
-2. 在 PowerShell 设置 `SHENG_REDACT_DEVICE_SERIAL`，值为本地测试机的真实序列号，仅用于从发布副本移除它。可选的 `SHENG_REDACT_STOCK_IMAGES` 指向本地官方包的 `images` 目录，以替换历史配方中的个人输入路径。不要把实际值写进提交。Set these variables locally; do not commit their values.
-3. 从源码根目录运行下例，修改参数为实际路径。Use a fresh destination and archive name for every export.
-
-```powershell
-python tools/package_source_release.py `
-  --wsl-export work/wsl-source-export `
-  --destination release/sheng-source-snapshot `
-  --archive output/releases/sheng-source-snapshot.zip `
-  --report analysis/source-publication-review.json
+```sh
+python3 tools/refresh_manifest.py
+python3 tools/verify_sources.py
 ```
 
-## 收录范围 / Contents
+- `SOURCE-MANIFEST.json`：文件路径、字节数和 SHA-256，排除自身及 `SHA256SUMS`。
+- `SHA256SUMS`：文件与 manifest 的校验值。
+- `RELEASE.json`：当前选取策略和功能基线。
 
-收录 `tools`、`compat` 的文本源码与配置、文档、WSL 导出，以及 `output` 根目录的 PowerShell 源码。`analysis` 只收选定的补丁、配置、构建与验证报告。历史试验同样保留，不能由此推断它们都应启用。
+上述命令不生成 ZIP、不上传 GitHub，也不触碰设备。编译产物、原厂库、固件、设备备份、账号令牌和私人日志不应提交。个人路径、序列号与网络标识已在发布副本脱敏；构建前配置本地依赖。
 
-Images, executable tools, shared libraries, kernel modules, firmware, SDKs, app packages, userdata, private raw logs and screenshots are excluded. Source recipes can still refer to these independently supplied inputs; a referenced filename does not mean the binary is included.
-
-个人 Windows/WSL 工作区路径、测试序列号、文本形式的私网 IPv4/MAC 会替换成占位值；JSON 的 Unicode 转义路径也会处理。发布后的路径和示例网络值需要自行配置。源文件的 SHA-256 以**发布副本实际字节**为准，不是原始开发文件的哈希。
-
-Redaction applies to the copy only. Existing SPDX/copyright notices are retained. This automated pass is a bounded publication check, not proof that every possible sensitive or licensing issue has been identified; review the final file list and provenance before public publication.
-
-## 产物 / Artifacts
-
-- `SOURCE-MANIFEST.json`：每个载荷文件的路径、字节数、SHA-256；排除清单自身和 `SHA256SUMS`，避免递归。
-- `SHA256SUMS`：载荷与 `SOURCE-MANIFEST.json` 的 SHA-256。
-- ZIP 同目录的 `.zip.sha256`：压缩包本身的哈希。
-- `RELEASE.json`：版本、收录范围与发布边界。
-- `--report` 文件：本地脱敏计数、扫描结果、ZIP/哈希检查结果，不自动收入公开包。
-
-The packager checks UTF-8/text content, high-confidence credential patterns, redaction rules, README/docs navigation, file hashes, ZIP CRCs, file coverage and extracted bytes. `.gitattributes` preserves bytes across Git checkouts so the manifest can be verified without line-ending conversions.
-
-源码包并不附完整 ROM、所有上游仓库或可直接刷写的镜像。构建要求见 [BUILDING.md](BUILDING.md)，来源和授权边界见 [PROVENANCE.md](PROVENANCE.md)。
+See [BUILDING.md](BUILDING.md) for external inputs and [PROVENANCE.md](PROVENANCE.md) for attribution and licensing boundaries.

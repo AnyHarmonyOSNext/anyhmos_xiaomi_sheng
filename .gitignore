@@ -15,6 +15,7 @@ node_modules/
 *.dtb
 *.so
 *.so.*
+!/patches/donor/*.json
 *.ko
 *.o
 *.a

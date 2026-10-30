@@ -1,7 +1,0 @@
-{
-  "sha256": "710da4b95cde01d3c3d33b5b5523bb1a89bb8b2102047baa79763bf740751805",
-  "bytes": 9337008,
-  "gzip_bytes": 1819810,
-  "gzip_sha256": "fe2b0fee185ce4231048f6138ab67330a43521ee24415b3a0013cd9b9d90dfd6",
-  "status": "diagnostic only; same bind validation retained, added stderr fields"
-}

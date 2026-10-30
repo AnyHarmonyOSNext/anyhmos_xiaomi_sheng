@@ -1,0 +1,13 @@
+{
+  "name": "libsps_privacy_indicator_service_intf.z.so",
+  "input_sha256": "93718bf0c2bf1647c528c8a09135da291fa807ab35025eeb0ccb6d4d8aa162c2",
+  "output_sha256": "b193f5ab4919893a90d28ada02c000fccefeb16548f81315175f69802d5af9de",
+  "changes": [
+    {
+      "offset": 104409,
+      "before": "12",
+      "after": "16"
+    }
+  ],
+  "basis": "Final v145 deployed payload compared with its original donor input"
+}

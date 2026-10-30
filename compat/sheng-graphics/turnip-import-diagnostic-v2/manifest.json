@@ -1,7 +1,0 @@
-{
-  "bytes": 9338480,
-  "sha256": "8f56c9ade5ff0b729af5b2f52a964d4764ecba0996fa90808617a5a12c5ab5e7",
-  "gzip_bytes": 1820655,
-  "gzip_sha256": "2295e99f4e7a9ac65dd98c68485877b76b059308314cd2dc6783d2d00256f247",
-  "changes": "handle details only; original validation and results unchanged"
-}

@@ -1,7 +1,0 @@
-{
-  "bytes": 9338288,
-  "sha256": "40aa9df124c2665530f3f781e417522a352832d4df9502d411bc174782e8ad1e",
-  "gzip_bytes": 1820693,
-  "gzip_sha256": "3314b5bb5fad6882c04d28cc51aaaaa6e20a116adf70d244704054cf83d913af",
-  "changes": "read-only result and heap accounting logs; original import validation retained"
-}

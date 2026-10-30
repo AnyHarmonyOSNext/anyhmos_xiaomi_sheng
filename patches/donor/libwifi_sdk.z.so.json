@@ -1,0 +1,23 @@
+{
+  "name": "libwifi_sdk.z.so",
+  "input_sha256": "06765b1a54ac5c861baf5902f9081bb7da93a3b6765ae53085e150d3d7a00368",
+  "output_sha256": "114c6591f782a2f310d016361dd608bf4691e4a0f691d8a7ce2e9e558aac6820",
+  "changes": [
+    {
+      "offset": 317161,
+      "before": "12",
+      "after": "16"
+    },
+    {
+      "offset": 317700,
+      "before": "2fc8",
+      "after": "1b00"
+    },
+    {
+      "offset": 317703,
+      "before": "94",
+      "after": "14"
+    }
+  ],
+  "basis": "Final v145 deployed payload compared with its original donor input"
+}

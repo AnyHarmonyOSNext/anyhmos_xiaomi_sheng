@@ -1,5 +1,0 @@
-{
-  "bytes": 12464,
-  "sha256": "d26a76439732fa38bb99ef83c03ef14765ee3af7e9a785cafb352d98a5e1bb37",
-  "scope": "actual Rosen usage/pNext and BindImageMemory2, original SurfaceBuffer handle fixture; no scanout claim"
-}

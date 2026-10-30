@@ -1,0 +1,18 @@
+{
+  "name": "libcode_sign_utils.z.so",
+  "input_sha256": "bbd86eec0b55323d61f6f27a7e3c132f7e7fbcdf3820f723d2db7dee40b0b4a9",
+  "output_sha256": "4ca57938aa23ed1dd4fd585bd411f12ab9a8540f804afe4c30383fff17071364",
+  "changes": [
+    {
+      "offset": 77040,
+      "before": "2860",
+      "after": "0800"
+    },
+    {
+      "offset": 77043,
+      "before": "12",
+      "after": "52"
+    }
+  ],
+  "basis": "Final v145 deployed payload compared with its original donor input"
+}

@@ -15,9 +15,9 @@ This is a mixed-provenance development snapshot. Existing copyright and SPDX not
 | BusyBox | GPL 工具参考和构建说明保留，预编译 BusyBox 不打包。 |
 | 原厂 Xiaomi / HarmonyOS donor | 仅作为本地合法取得的闭源输入；提取系统库、固件、应用、完整镜像和 SDK 不随本包再分发。 |
 
-`external/upstream-sources.json` 记录了导出时实际读到的 origin、HEAD、dirty 标志和差异规模。`external/patches/` 保存 tracked diff，`external/overlays/` 保存符合源码规则的 untracked 文件；`external/licenses/` 保留所采集的上游根目录许可原文。不是所有上游源码全文都在本包中。
+`external/upstream-sources.json` 保留原导出时的上游 origin、HEAD 和工作区状态，仅用于来源追踪，不代表保留了当时所有修改。当前只收录实际需要的 Mesa/内核 patch 与 overlay；自定义适配源码已按功能放入 `compat/`。Mesa EGL 差异选取实际部署的 v126，实现选择见 `SOURCE-SELECTION.json`。`external/licenses/` 保留相应上游许可原文；未修改的完整上游仓库需另行取得。
 
-The upstream manifest records the actual origin, HEAD and worktree status read during export. Tracked diffs and untracked source overlays accompany the pinned revisions. Root license notices were collected separately. Full unchanged upstream repositories, toolchains and proprietary inputs are not bundled.
+The upstream manifest records origins, revisions and worktree status at the original export for provenance; it is not an inventory of every change retained here. Only the selected Mesa/kernel patches and required overlays remain. Custom adaptation sources now live under `compat/`. The Mesa EGL patch uses deployed v126 code. Consult `SOURCE-SELECTION.json` for current choices. Upstream license notices are retained separately; full unchanged upstream repositories are external inputs.
 
 `compat/` 中存在从原系统提取后修改的配置及针对原库的补丁配方。它们不等于原系统的完整开放源码，也不意味着可以重新授权原厂二进制。发布源码快照与提供可再分发完整固件是两件不同的工作。
 

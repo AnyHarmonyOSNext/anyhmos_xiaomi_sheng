@@ -1,5 +1,0 @@
-{
-  "bytes": 12496,
-  "sha256": "faf47b9107d21a3bb1d391c8a675f1db5bb451eca3c14fb2af5f38b35cb3c451",
-  "scope": "real DMA heap + original SurfaceBuffer fixture + fullsize Vulkan bind; not allocator IPC or physical scanout"
-}
