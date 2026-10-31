@@ -1729,11 +1729,11 @@
     },
     "README.md": {
       "source": "README.md",
-      "sha256": "6a793972d30c2a3cdb2d2a502c1bda90d6d7ac5feef6c6abde37d19bf2f8c0a4"
+      "sha256": "e054d7c431bf00b4d4a4d7f8b1bb2e315b332040d194391f40eb0778c11af6a1"
     },
     "README.en.md": {
       "source": "README.en.md",
-      "sha256": "eaeb778ed8eeb154f3977357184af296189ce2eac19ed4243bf775b798dce75c"
+      "sha256": "198b1136e75c50ec56ad2b76d8bca347080f00630fd72bb413f9c3cae7cb02be"
     },
     ".gitignore": {
       "source": ".gitignore",
