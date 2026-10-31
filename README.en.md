@@ -4,6 +4,8 @@
 
 A HarmonyOS NEXT port for the Xiaomi Pad 6S Pro 12.4 (**sheng**). A compatibility layer connects HarmonyOS to the tablet's display, touch input, audio and wireless hardware. The system can reach the HarmonyOS desktop and run selected system and third-party applications.
 
+Other models can also refer to some of the code and ideas; the idea is to package Huawei's system, vendor, sys_prod, and your own device's vendor_dlkm into super and flash it, then extract your device's boot, vendor_boot, init_boot, change the mount points, set up the USB serial, and fix the boot based on the logs. My approach doesn’t touch the super partition; the repaired source code interface is placed in vendor_boot, released into memory at boot, and mounted to /compat.
+
 This repository contains the component sources currently in use, startup configuration and build tools. Several features still need work; the table below describes their current status.
 
 ## Feature status
