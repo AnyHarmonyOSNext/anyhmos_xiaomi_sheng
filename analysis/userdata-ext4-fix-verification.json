@@ -1,0 +1,32 @@
+{
+  "change": "Accept normally formatted ext4 userdata without a fixed UUID or marker",
+  "status": "offline_checks_passed_device_test_pending",
+  "base_vendor_boot_sha256": "6bdb19aa74a42de27ba32e6e23fcf87f1944acd23be604a8f99785400453b901",
+  "vendor_boot": {
+    "file": "vendor_boot_hmos_userdata_ext4.img",
+    "bytes": 100663296,
+    "sha256": "6fd2ed9de8442a8c1301d8e8c3835a1bdf83ca145f25375491ba56e84b9fc615"
+  },
+  "changed_ramdisk_entries": [
+    "sheng-compat-v118/MANIFEST.json",
+    "sheng-compat-v118/graphics/init-userdata-ext4.sh",
+    "sheng-compat-v118/hmos-probe"
+  ],
+  "bootstrap_sha256": "156f6ee5f33190ccb27581925b34c108fcb4df903aaf5b6868661248f0863013",
+  "mount_script_sha256": "3c2fceed4383a256a30416a90a4fc912d0ca757eb478596a170fc25c24c2072f",
+  "cpio_roundtrip_verified": true,
+  "unrelated_entries_unchanged": true,
+  "dtb_unchanged": true,
+  "bootconfig_unchanged": true,
+  "original_vendor_modules_unchanged": true,
+  "init_boot_unchanged": true,
+  "boot_unchanged": true,
+  "device_flashed": false,
+  "device_boot_verified": false,
+  "tests": {
+    "disposable_loop_cases_passed": 11,
+    "native_storage_check": true,
+    "aarch64_bootstrap_build": true
+  },
+  "remaining_requirement": "userdata must contain a mountable ext4 filesystem; never formatted automatically"
+}

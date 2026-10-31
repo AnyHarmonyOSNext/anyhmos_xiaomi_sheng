@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT
  * sheng HMOS autonomous compatibility bootstrap with diagnostic collector.
- * System changes are RAM overlays; framework data uses the existing ext4 file.
+ * System changes are RAM overlays; framework data uses the ext4 userdata partition.
  * Vendor logical partitions remain read-only and are never covered.
  */
 #define _GNU_SOURCE
@@ -25,6 +25,7 @@
 #include <asm/ptrace.h>
 #endif
 #include <sys/stat.h>
+#include <sys/vfs.h>
 #include <sys/mount.h>
 #include <sys/ioctl.h>
 #include <sys/syscall.h>
@@ -148,11 +149,18 @@ static void persistent(void) {
     if(logfd<0)return;
     allwrite(logfd,history,used);disk_bytes=used;note("PERSISTENT_LOG=%s",logpath);fsync(logfd);
 }
+static int userdata_is_mounted(const char *device,const char *target) {
+    /* Accept any normally formatted ext4 userdata, including a fresh UUID.
+     * Never mistake the early RAM placeholder for persistent device storage. */
+    struct stat partition,data;
+    struct statfs fs;
+    return stat(device,&partition)==0&&S_ISBLK(partition.st_mode)&&
+       stat(target,&data)==0&&data.st_dev==partition.st_rdev&&
+       statfs(target,&fs)==0&&fs.f_type==0xef53;
+}
 static void runtime_persistent(void) {
-    if(logfd>=0||traced_pid<=0)return;
-    char marker[128];
-    if(readfile("/hmos-root/data/.sheng-userdata-layout",marker,sizeof(marker))<=0||
-       strcmp(marker,"sheng-userdata-direct-v1\n57275cef-3a0e-427c-a22e-66ca7e80b893\n851324555264\n"))return;
+    if(logfd>=0||traced_pid<=0||
+       !userdata_is_mounted("/dev/block/by-name/userdata","/hmos-root/data"))return;
     char id[64];if(readfile("/proc/sys/kernel/random/boot_id",id,sizeof(id))<=0)return;
     id[strcspn(id,"\r\n")]=0;
     snprintf(logpath,sizeof(logpath),"/hmos-root/data/local/tmp/probe-%s.log",id);
@@ -487,7 +495,7 @@ static int hmos_root(void) {
      * Native init and its RAM filesystem use the normal boot umask. */
     umask(0022);
     /* System upper layers are RAM-backed; physical userdata supplies /data.
-     * Logical devices remain read-only; userdata was provisioned in Recovery. */
+     * Logical devices remain read-only; userdata is formatted as ext4 in Recovery. */
     if(ram_mount("/hmos-ram","mode=0755,size=2048m")<0)return -1;
     if(ram_overlay("/hmos/system","/hmos-root","root")<0)return -1;
     struct stat root_mode;if(stat("/hmos-root",&root_mode)<0)return -1;note("HMOS RAM root mode=%o uid=%u gid=%u",(unsigned)(root_mode.st_mode&07777),(unsigned)root_mode.st_uid,(unsigned)root_mode.st_gid);if((root_mode.st_mode&0777)!=0755){errno=EACCES;return -1;}
@@ -503,7 +511,7 @@ static int hmos_root(void) {
     if(mkdirs("/hmos-root/dev/block/by-name")<0||mkdirs("/hmos-root/dev/block/mapper")<0||mkdirs("/hmos-root/dev/socket")<0||mkdirs("/hmos-root/dev/unix/socket")<0||mkdirs("/hmos-root/dev/pts")<0)return -1;
     if(mount("devpts","/hmos-root/dev/pts","devpts",0,"mode=0620,ptmxmode=0666")<0)return -1;
     if(symlink("pts/ptmx","/hmos-root/dev/ptmx")<0&&errno!=EEXIST)return -1;
-    /* Mount only the explicitly provisioned whole userdata partition. */
+    /* Mount the whole ext4 userdata partition; no special UUID is required. */
     if(graphics_run_script("/graphics/init-userdata-ext4.sh")<0)return -1;
     const char *state_dirs[]={"/hmos-root/dev/__parameters__","/hmos-root/data/service/el0/startup/init","/hmos-root/data/service/el1/startup/parameters","/hmos-root/data/local/tmp","/hmos-root/data/service/el1/public","/hmos-root/data/app/el1","/hmos-root/data/storage/el1","/hmos-root/data/storage/el2","/hmos-root/data/service/el1/public/for-all-app","/hmos-root/data/service/el1/startup","/hmos-root/data/data"};
     for(unsigned i=0;i<sizeof(state_dirs)/sizeof(state_dirs[0]);i++)if(mkdirs(state_dirs[i])<0)return -1;

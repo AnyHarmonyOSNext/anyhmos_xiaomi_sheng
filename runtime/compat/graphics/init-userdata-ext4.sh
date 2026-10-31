@@ -3,36 +3,37 @@ set -eu
 B=/busybox
 R=/hmos-root
 U=/dev/block/by-name/userdata
-ID=57275cef-3a0e-427c-a22e-66ca7e80b893
-SECTORS=1662743272
-BYTES=851324555264
+fail() { echo "HMOS_USERDATA_ERROR: $*" >&2; exit 61; }
 $B test -b "$U"
 real=$($B readlink -f "$U")
 name=${real##*/}
 $B grep -qx PARTNAME=userdata "/sys/class/block/$name/uevent"
-$B test "$($B cat "/sys/class/block/$name/size")" = "$SECTORS"
+sectors=$($B cat "/sys/class/block/$name/size")
+case "$sectors" in ''|*[!0-9]*) fail 'invalid partition size';; esac
+$B test "$sectors" -gt 0
 nums=$($B cat "/sys/class/block/$name/dev")
 # Reject any pre-existing mount of this partition in the bootstrap namespace.
 if $B awk -v dev="$nums" '$3==dev {found=1} END {exit !found}' /proc/self/mountinfo; then
  echo HMOS_USERDATA_ALREADY_MOUNTED; exit 60
 fi
-identity=$($B blkid "$U")
-echo "$identity" | $B grep -Fq "UUID=\"$ID\""
-echo "$identity" | $B grep -Fq 'TYPE="ext4"'
+identity=$($B blkid "$U") || fail 'no filesystem detected; format userdata as ext4 in Recovery'
+echo "$identity" | $B grep -Eq '(^|[[:space:]])TYPE="ext4"([[:space:]]|$)' ||
+ fail 'userdata must be ext4; automatic formatting is disabled'
+# Formatting normally creates a new UUID. Neither an old UUID nor a project
+# marker is required: the partition identity and the actual mount are checked.
 $B umount "$R/data"
-$B mount -t ext4 -o ro,nosuid,nodev,noatime "$U" "$R/data"
-expected=$(printf 'sheng-userdata-direct-v1\n%s\n%s' "$ID" "$BYTES")
-if [ "$($B cat "$R/data/.sheng-userdata-layout")" != "$expected" ]; then
+$B mount -t ext4 -o rw,nosuid,nodev,noatime "$U" "$R/data" || fail 'ext4 mount failed'
+if ! $B awk -v dev="$nums" -v target="$R/data" \
+ '$3==dev && $5==target && $6 ~ /(^|,)rw(,|$)/ {for(i=7;i<=NF;i++) if($i=="-" && $(i+1)=="ext4") found=1} END {exit !found}' /proc/self/mountinfo; then
  $B umount "$R/data"
- echo HMOS_USERDATA_PROVISIONING_MARKER_MISMATCH; exit 61
+ fail 'mounted filesystem does not match userdata'
 fi
-$B mount -o remount,rw,nosuid,nodev,noatime "$R/data"
 $B chown 0:0 "$R/data"
 $B chmod 0771 "$R/data"
 $B mknod "$R/dev/block/userdata" b "${nums%:*}" "${nums#*:}"
 $B chmod 0600 "$R/dev/block/userdata"
 $B ln -s /dev/block/userdata "$R/dev/block/by-name/userdata"
-echo HMOS_DIRECT_USERDATA_EXT4_READY_UUID_$ID
+echo "HMOS_DIRECT_USERDATA_EXT4_READY device=$real sectors=$sectors"
 $B grep " $R/data " /proc/mounts
 $B df -k "$R/data"
 

@@ -293,7 +293,7 @@
     {
       "path": "runtime/compat/graphics/init-userdata-ext4.sh",
       "ramdisk_entry": "sheng-compat-v118/graphics/init-userdata-ext4.sh",
-      "sha256": "2ba17ec94a08d58b43cf9af85ada0cbc32df0343ff85a962d55052a64c9d3b97"
+      "sha256": "3c2fceed4383a256a30416a90a4fc912d0ca757eb478596a170fc25c24c2072f"
     },
     {
       "path": "runtime/compat/graphics/init-wifi-v116.cfg",
@@ -1148,8 +1148,8 @@
       "sha256": "c91a57cafbaca13348cc6fc284667a7591803ffeaa9635fe870995af2c536505"
     },
     "compat/bootstrap/hmos_probe_v121.c": {
-      "source": "tools/hmos_probe_v121.c",
-      "sha256": "65539128d8e04322319aeafcc521393da6969e67770aafb92807aed928ff2378"
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "e62294311d04cfd0b45afc7ffd67d5222ec01ddff18dd454a3eed97324a4053f"
     },
     "compat/bootstrap/probe_command_v116.inc": {
       "source": "tools/probe_command_v116.inc",
@@ -1464,8 +1464,8 @@
       "sha256": "2fef38725b92ae82f4b3863e5618f1683a198866eebfdb5e518a2c593225765b"
     },
     "runtime/compat/graphics/init-userdata-ext4.sh": {
-      "source": "v146-ramdisk:sheng-compat-v118/graphics/init-userdata-ext4.sh",
-      "sha256": "2ba17ec94a08d58b43cf9af85ada0cbc32df0343ff85a962d55052a64c9d3b97"
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "3c2fceed4383a256a30416a90a4fc912d0ca757eb478596a170fc25c24c2072f"
     },
     "runtime/compat/graphics/init-wifi-v116.cfg": {
       "source": "v146-ramdisk:sheng-compat-v118/graphics/init-wifi-v116.cfg",
@@ -1729,11 +1729,11 @@
     },
     "README.md": {
       "source": "README.md",
-      "sha256": "64abe4c954f2eecf9dff5fc208fd7ac96a77ac92bebdf5ac0b88a888017ad71b"
+      "sha256": "6a793972d30c2a3cdb2d2a502c1bda90d6d7ac5feef6c6abde37d19bf2f8c0a4"
     },
     "README.en.md": {
       "source": "README.en.md",
-      "sha256": "336c802c5f6f8ce339fbca9d36210c1a2a2a3de1caa555fd277ef1101b33ed5e"
+      "sha256": "eaeb778ed8eeb154f3977357184af296189ce2eac19ed4243bf775b798dce75c"
     },
     ".gitignore": {
       "source": ".gitignore",
@@ -1748,8 +1748,8 @@
       "sha256": "4121b7f43e520c5afc1927e99eeb87aea81d33bb3a2be921c91fb98b53700fde"
     },
     "docs/VERIFICATION.md": {
-      "source": "docs/VERIFICATION.md",
-      "sha256": "dd50d4ed332c6db3f49eed1e9795ed36ee2d8bdcd0474f7771381eddb109e690"
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "4b99c32f8c4c4474fbbd3ddb8083cd4b0143f81315052a126b6e1870ba4df354"
     },
     "compat/battery/include/battery/v2_0/battery_callback_proxy.h": {
       "source": "current-only maintenance",
@@ -1828,16 +1828,16 @@
       "sha256": "9cd87441340c00ce11d04b6009d504ba83764f6e5a170de013420dcef566fa40"
     },
     "docs/BUILDING.md": {
-      "source": "current-only maintenance",
-      "sha256": "eb5adbb8266cfa578f48a87967daa6386a361faa9a72a1a19a46352ee63e2887"
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "b169d9702a9634eb70f8e2cdd18d908bb9b279456dad27f04c5690675822a4e5"
     },
     "docs/PACKAGING.md": {
       "source": "current-only maintenance",
       "sha256": "c486fe5397f95191db62a756f06fbce14e75a7c3fcb189a58ae634de694955c1"
     },
     "docs/SOURCE_MAP.md": {
-      "source": "current-only maintenance",
-      "sha256": "237a408833d4c1bd84bbfcbea1eb4dd223ec2f6788fff7fca6897fa4c8e48e71"
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "de9d2a696d4e5b23d307a301242b031dcd821a80bd1ee1854c38bb49d316beb9"
     },
     "tools/build_current.py": {
       "source": "current-only maintenance",
@@ -1876,11 +1876,31 @@
       "sha256": "1f001affbbf2b9943adb831e3da420350ec67d6e07eef5d537609423d6d4d70b"
     },
     "output/Flash-Current.ps1": {
-      "source": "current v146 verified-image flash entry",
-      "sha256": "cd77e2a28fa31f15d389137dc9a1ed4807e3085e7b2b2640a9bcacc51f5141ae"
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "9cb880d6b554eedaa4925592a4ca6d7b3fa920285c0d8ec12a0ab2562c02ea4a"
+    },
+    "tests/test_userdata_mount.py": {
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "78c66a8a5498b49c2645e340841266a1cbd5b0c2812f2ac8644ed1f8bb0a1713"
+    },
+    "docs/USERDATA.md": {
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "619b4f535b3721194936daff6dc38577bea936d4d94223d9296c5d530d7b5f57"
+    },
+    "analysis/userdata-ext4-fix-verification.json": {
+      "source": "userdata ext4 compatibility maintenance",
+      "sha256": "34e1818e3bf7f7dd27fd7bc962e66a7bf7ce3bc379f5e548c1dc82b087e763dc"
     }
   },
   "source_origin_hash_semantics": "SHA-256 of the current published source file after selection and maintenance edits.",
-  "runtime_hash_semantics": "SHA-256 of the accepted v146 runtime text; current published file hashes are also recorded in source_origins.",
-  "base_functional_implementation": "v145 selected components, rebuilt and accepted as v146"
+  "runtime_hash_semantics": "SHA-256 of current runtime text. Base image acceptance and later unflashed changes are distinguished in maintenance_changes.",
+  "base_functional_implementation": "v145 selected components, rebuilt and accepted as v146",
+  "maintenance_changes": [
+    {
+      "change": "Normal ext4 userdata mounting and persistent-log identity checks",
+      "date": "2026-10-31",
+      "validation": "isolated loop-image tests and package checks; device test pending",
+      "report": "analysis/userdata-ext4-fix-verification.json"
+    }
+  ]
 }

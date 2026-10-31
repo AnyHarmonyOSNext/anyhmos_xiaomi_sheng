@@ -13,6 +13,8 @@ The tree keeps the selected implementation of each component. It does not includ
 
 Within the prepared `super`, only `vendor_dlkm` remains stock Xiaomi. Boot image updates require the matching development baseline. Recovery follows the established procedure of restoring this device's own backed-up boot/vendor_boot/init_boot trio first.
 
+全新安装的数据分区要求及最新挂载修复见 [USERDATA.md](USERDATA.md)。普通 ext4 格式化即可准备文件系统；不需要专用 UUID 或标记，启动程序不会自动格式化。The updated mount logic accepts normally formatted ext4 and never formats automatically; the corresponding image still needs device testing.
+
 ## 构建入口 / Build entry points
 
 在 WSL 使用 `tools/build_current.py`。它只编译显式选定的目标，不自动刷写或连接设备。

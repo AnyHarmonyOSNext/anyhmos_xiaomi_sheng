@@ -2,6 +2,8 @@
 
 每个功能只保留当前已验证基线中最完善的实现。选择依据是实际刷入的 v146 载荷和分项验收，不是版本号最大。旧试验、旧实现、逐版构建链已从当前仓库树删除。完整逐文件来源见 `SOURCE-SELECTION.json`。
 
+数据分区挂载与持久日志检查已在该基线上修正，支持正常格式化的 ext4；此修复已通过离线测试，尚待真机刷入。参见 [USERDATA.md](USERDATA.md)。
+
 One selected implementation is retained per component, together with the shared code, generated interfaces and upstream patches it needs. Incomplete features remain incomplete; the rebuilt-runtime v146 acceptance is documented in docs/VERIFICATION.md.
 
 | 功能 / Component | 当前源码 / Current sources | 选取依据 / Selection |

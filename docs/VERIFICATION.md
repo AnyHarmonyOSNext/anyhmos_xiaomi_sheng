@@ -4,6 +4,12 @@
 
 The following summarizes local device tests. Private raw logs, app telemetry, network identifiers and screenshots are excluded. Build reports and hashes identify artifacts; they do not independently establish hardware functionality.
 
+## 普通 ext4 挂载修复 / Normal ext4 mount fix
+
+移除数据分区挂载和持久日志中的固定 UUID、固定容量与布局标记限制。11 个隔离 loop 镜像用例通过，覆盖随机 UUID、无标记、原 UUID、已有文件保留、错误分区名、重复挂载及空白/非 ext4 分区；实际执行 ext4 挂载和原 C 存储身份检查。AArch64 bootstrap 编译通过，vendor_boot 解包往返及无关条目检查通过。此次未连接或刷写平板，不能将此前的桌面验收作为本次修复的真机结果。报告见 [userdata-ext4-fix-verification.json](../analysis/userdata-ext4-fix-verification.json)。
+
+The fixed UUID, capacity and layout-marker prerequisites were removed from mounting and persistent logging. Eleven disposable loop-image cases passed, including real mounts and the original C storage identity check. The AArch64 bootstrap compiled and vendor_boot package checks passed. The tablet was not accessed or flashed for this change; previous desktop acceptance does not validate the new image on hardware.
+
 | 项目 / Item | 证据与结论 / Evidence and conclusion |
 | --- | --- |
 | 桌面 / Desktop | 多轮原生截图与用户操作确认；v145 自动启动约 172.10s 完成，原 BootControl 门槛后成功。Native desktop captures across rounds; v145 startup completed and passed its original boot-success gates. |

@@ -25,7 +25,7 @@ This repository contains the component sources currently in use, startup configu
 | Video and images | Some software decoding paths work. Selected system and third-party applications display video and images. | Hardware video decoding is unfinished. Some applications and formats still fail or stutter. |
 | Keyboard | The keyboard appears and accepts input, including Wi-Fi passwords. | More applications, web input fields and languages need testing. |
 | Third-party and preload applications | Preload installation is integrated. Some startup blocks showing “application data is being decrypted” have been fixed; applications including Douyin can open and display content. | Some applications remain on their splash screen or crash. Login and features that depend on web pages still have problems. |
-| User data | The entire userdata partition mounts directly as `/data`. The first-run setup wizard is retained. | Upgrade, rollback and fresh-device initialization procedures need further work. |
+| User data | The entire userdata partition mounts directly as `/data`, retaining the setup wizard. The updated code accepts normally formatted ext4 without a specific UUID or a manually created marker. | The updated mount logic has passed isolated image tests; a fresh installation on the tablet remains to be tested. Upgrade and rollback procedures need further work. |
 | Battery and charging status | Real battery and charging readings are available. The system no longer shows a constant 100%. | Charging-state changes, thermal behavior, fast charging, battery life and standby drain need testing. |
 | Time synchronization | Network time synchronization works. | Offline time, time zones and time displayed in some parts of the interface remain inconsistent. |
 | USB debugging | Tools provide command execution, file transfer and screenshots. | Communication can still stop after rebooting or USB state changes. Connection reliability needs improvement. |
@@ -66,6 +66,8 @@ python3 tools/build_current.py --list
 UserIAM components are built with `tools/build_useriam.py`. The repository provides build steps for the compatibility layer and related components. A complete ROM also requires separately prepared system images, firmware and applications, which are not distributed here.
 
 Use the tools under `output/` for the system's USB debug connection, running commands sequentially. Before flashing, back up this device's three boot partitions and check the device model and image checksums. See the [testing documentation](docs/VERIFICATION.md) for test coverage and records.
+
+For a fresh installation, format userdata as ext4 in Recovery first. The bootstrap mounts the whole partition and creates the required directories. No special UUID or initialization file is needed, and it never formats automatically. Erasing the partition without creating a filesystem is insufficient. See the [userdata instructions](docs/USERDATA.md).
 
 ## Reporting issues and credits
 
