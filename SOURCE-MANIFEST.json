@@ -1004,8 +1004,8 @@
     },
     {
       "path": "docs/PROMAX-SP12-BUILD.md",
-      "bytes": 4749,
-      "sha256": "460901c66fef3917a79c2308e64d69947576f24a914e1780074138a00d0a1f2e"
+      "bytes": 5443,
+      "sha256": "16edb14da5b343ad476970e3468f451a181d0a2d81bf90c5e08fc956fa0c13bc"
     },
     {
       "path": "docs/PROVENANCE.md",
@@ -1959,8 +1959,8 @@
     },
     {
       "path": "tools/build_promax_ramdisk.py",
-      "bytes": 15365,
-      "sha256": "711c123d1f263af44e3fa4246a61748edcf112c7251e1c9e64c223b5d10d679b"
+      "bytes": 15573,
+      "sha256": "c25cc9028f00d602c67e984a126006c099b18490c08ab4836e41dc62b02553e5"
     },
     {
       "path": "tools/build_useriam.py",

@@ -143,12 +143,17 @@ $B chmod 0700 "$S"
 $B chmod 0600 "$S"/*.img
 cd "$S"
 $B sha256sum -c /graphics/promax/seed-images.sha256
-# Nodes are created in the early RAM /dev, before native system services start.
-i=0
-while [ "$i" -lt 16 ]; do
- [ -b /dev/loop$i ] || $B mknod /dev/loop$i b 7 "$i"
- i=$((i+1))
+# Read actual sysfs numbers: loop.max_part changes the minor-number stride.
+for sysdir in /sys/class/block/loop[0-9]*; do
+ name=${sysdir##*/}
+ case "${name#loop}" in ''|*[!0-9]*) continue;; esac
+ [ -r "$sysdir/dev" ] || continue
+ nums=$($B cat "$sysdir/dev")
+ $B rm -f "/dev/$name"
+ $B mknod "/dev/$name" b "${nums%:*}" "${nums#*:}"
+ $B chmod 0600 "/dev/$name"
 done
+$B test -b /dev/loop0
 for name in preload chip_prod anco_hmos cust version; do
  lower=/hmos/promax-$name
  $B mkdir -p "$lower" "$R/$name"
