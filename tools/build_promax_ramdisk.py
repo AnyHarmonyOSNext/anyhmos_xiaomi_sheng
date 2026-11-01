@@ -10,6 +10,7 @@ parser.add_argument('--donor',type=pathlib.Path,required=True)
 parser.add_argument('--original',type=pathlib.Path,required=True)
 parser.add_argument('--tools',type=pathlib.Path,required=True)
 parser.add_argument('--recipe-dir',type=pathlib.Path,default=REPO/'patches/donor/gem-w00-111-sp12')
+parser.add_argument('--regional-resources',dest='experimental_regional_resources',action=argparse.BooleanOptionalAction,default=True,help='Select verified GEM-W00 China resource layers; use --no-regional-resources for baseline comparison')
 args=parser.parse_args()
 sys.path.insert(0,str(args.tools/'python-libs'))
 sys.path.insert(0,str(REPO/'tools'))
@@ -25,6 +26,13 @@ container=base.read_bytes();page=struct.unpack_from('<I',container,12)[0];header
 (WORK/'base.lz4').write_bytes(container[ramdisk_offset:ramdisk_offset+ramdisk_size])
 subprocess.run([vr.MAGISKBOOT,'decompress',str(WORK/'base.lz4'),str(WORK/'base.cpio')],check=True,capture_output=True)
 def extract_guard(path,previous=False):
+ if not previous:
+  part=path.split('/')[1]
+  records=json.loads((ROOT/'metadata'/f'{part}-files.json').read_text())
+  relative=path if part=='system' else '/'+path.split('/',2)[2]
+  record=next((x for x in records if x['path']==relative),None)
+  if record is None or record['type']!='FILE':
+   raise ValueError('Guard input must be an indexed regular donor file: '+path)
  destination=ROOT/('metadata/old-guard-inputs' if previous else 'metadata/guard-inputs')/path.lstrip('/')
  destination.parent.mkdir(parents=True,exist_ok=True)
  partition=path.split('/')[1]
@@ -34,7 +42,7 @@ def extract_guard(path,previous=False):
  result=subprocess.run(command,check=True,capture_output=True);destination.write_bytes(result.stdout)
 for recipe_path in args.recipe_dir.glob('*.json'):
  extract_guard(json.loads(recipe_path.read_text())['path'])
-for path in ['/system/lib64/libaccountmgr.z.so','/system/lib64/chipset-sdk/libhukssdk.z.so','/system/lib64/chipset-sdk-sp/libcrypto_openssl.z.so','/sys_prod/etc/param/hw_defaults.para','/system/etc/sandbox/appdata-sandbox.json','/system/etc/sandbox/appdata-sandbox-isolated.json','/system/etc/init/task_manager_service.cfg','/system/profile/task_manager_service.json','/system/etc/param/const.ohos.para']:
+for path in ['/system/lib64/libaccountmgr.z.so','/system/lib64/chipset-sdk/libhukssdk.z.so','/system/lib64/chipset-sdk-sp/libcrypto_openssl.z.so','/sys_prod/etc/param/hw_defaults.para','/system/etc/sandbox/appdata-sandbox.json','/system/etc/sandbox/appdata-sandbox-isolated.json','/system/etc/init/task_manager_service.cfg','/system/profile/task_manager_service.json']:
  extract_guard(path)
 for name in ['appdata-sandbox.json','appdata-sandbox-isolated.json']:
  extract_guard('/system/etc/sandbox/'+name,previous=True)
@@ -124,7 +132,8 @@ preload=text('apply-preload.sh').replace('/preload/WKI-W10/all/cn','/preload/GEM
 region='/sys_prod/variant/region_comm/china'
 file_index=json.loads((ROOT/'metadata/sys_prod-files.json').read_text())
 assert any(x['path']=='/variant/region_comm/china/resource/themes/icon' and x['type']=='DIR' for x in file_index)
-preload+='\n$B printf "\\n# sheng: GEM-W00 regional resource policy\\n/sys_prod/variant/region_comm/china\\n" >> "$R/compat/etc/cust/baselayer.cfg"\n'
+if args.experimental_regional_resources:
+ preload+='\n$B printf "\\n# sheng: GEM-W00 regional resource policy\\n/sys_prod/variant/region_comm/china\\n" >> "$R/compat/etc/cust/baselayer.cfg"\n'
 setfile(G+'apply-preload.sh',preload,0o100755)
 # Apply the small original sandbox delta to the new donor, retaining its fields.
 sandbox=text('apply-app-sandbox.sh');sandbox_report=[]
@@ -171,13 +180,13 @@ desktop['jobs'].append({'name':'param:sheng-promax-task','condition':'sheng.debu
 setfile(G+'init-desktop-services.cfg',json.dumps(desktop,indent=2)+'\n')
 task_service_report={'service':'task_manager_service','sa':65984,'donor_cfg_sha256':sha(task_cfg_path.read_bytes()),'donor_profile_sha256':sha(task_profile_path.read_bytes()),'staged_profile_sha256':sha(task_profile_bytes),'startup_gate':'sheng.debug.start.screen -> prepare directories -> sheng.debug.start.promaxtask','donor_permissions_preserved':True,'hardware_sysfs_jobs_imported':False,'runtime_validated':False}
 # OEMINFO is absent on sheng. Select the exact donor software/region layers.
-cust_source=(ROOT/'metadata/guard-inputs/system/etc/param/const.ohos.para').read_bytes()
 cust_parameters={'const.cust.devmodel':'GEM-W00','const.cust.vendor':'all','const.cust.region':'cn','const.cust.home_region':'cn'}
-for key in cust_parameters:
- assert not re.search(rb'^'+re.escape(key.encode())+rb'=',cust_source,re.M)
-cust_output=cust_source+b'\n# sheng: verified GEM-W00 all/cn donor software layers\n'+''.join(k+'='+v+'\n' for k,v in cust_parameters.items()).encode()
-setfile(G+'promax/const.ohos.para',cust_output)
-cust_report={'path':'/system/etc/param/const.ohos.para','input_sha256':sha(cust_source),'output_sha256':sha(cust_output),'parameters':cust_parameters,'explicit_regional_policy_layer':region,'hardware_identity_parameters_changed':False,'dynamic_icon_runtime_validated':False}
+cust_path='/system/etc/param/sheng_promax_cust.para'
+assert not any(x['path']==cust_path for x in json.loads((ROOT/'metadata/system-files.json').read_text()))
+cust_output=b'# sheng: verified GEM-W00 all/cn donor software layers\n'+''.join(k+'='+v+'\n' for k,v in cust_parameters.items()).encode()
+if args.experimental_regional_resources:
+ setfile(G+'promax/sheng_promax_cust.para',cust_output)
+cust_report={'enabled':args.experimental_regional_resources,'path':cust_path,'new_file':True,'output_sha256':sha(cust_output),'parameters':cust_parameters,'explicit_regional_policy_layer':region if args.experimental_regional_resources else None,'hardware_identity_parameters_changed':False,'dynamic_icon_runtime_validated':False,'existing_theme_cache_may_require_reapply':True}
 # Additional filesystems are carried inside freshly created ext4 userdata.
 seed_names=['preload','chip_prod','anco_hmos','cust','version'];seed_lines=[]
 for name in seed_names:
@@ -228,7 +237,8 @@ echo PROMAX_CONTAINER_FILES_PRESENT_RUNTIME_NOT_VALIDATED
 setfile(G+'promax/mount-seed-images.sh',mount,0o100755)
 userdata=text('init-userdata-ext4.sh')+'\n$B sh /graphics/promax/mount-seed-images.sh\n';setfile(G+'init-userdata-ext4.sh',userdata,0o100755)
 userdata+=f'echo "{sha(task_profile_path.read_bytes())}  $R/system/profile/task_manager_service.json" | $B sha256sum -c -\n$B cp /graphics/promax/task_manager_service.json "$R/system/profile/task_manager_service.json"\necho "{sha(task_profile_bytes)}  $R/system/profile/task_manager_service.json" | $B sha256sum -c -\n'
-userdata+=f'echo "{sha(cust_source)}  $R/system/etc/param/const.ohos.para" | $B sha256sum -c -\n$B cp /graphics/promax/const.ohos.para "$R/system/etc/param/const.ohos.para"\necho "{sha(cust_output)}  $R/system/etc/param/const.ohos.para" | $B sha256sum -c -\n'
+if args.experimental_regional_resources:
+ userdata+=f'$B test ! -e "$R{cust_path}"\n$B cp /graphics/promax/sheng_promax_cust.para "$R{cust_path}"\necho "{sha(cust_output)}  $R{cust_path}" | $B sha256sum -c -\n'
 setfile(G+'init-userdata-ext4.sh',userdata,0o100755)
 # Recompute the payload inventory, including every new guarded component.
 manifest=json.loads(old[P+'MANIFEST.json'][1]);members=set(manifest)
