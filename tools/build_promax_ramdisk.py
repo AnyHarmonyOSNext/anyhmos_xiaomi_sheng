@@ -34,7 +34,7 @@ def extract_guard(path,previous=False):
  result=subprocess.run(command,check=True,capture_output=True);destination.write_bytes(result.stdout)
 for recipe_path in args.recipe_dir.glob('*.json'):
  extract_guard(json.loads(recipe_path.read_text())['path'])
-for path in ['/system/lib64/libaccountmgr.z.so','/system/lib64/chipset-sdk/libhukssdk.z.so','/system/lib64/chipset-sdk-sp/libcrypto_openssl.z.so','/sys_prod/etc/param/hw_defaults.para','/system/etc/sandbox/appdata-sandbox.json','/system/etc/sandbox/appdata-sandbox-isolated.json','/system/etc/init/task_manager_service.cfg','/system/profile/task_manager_service.json']:
+for path in ['/system/lib64/libaccountmgr.z.so','/system/lib64/chipset-sdk/libhukssdk.z.so','/system/lib64/chipset-sdk-sp/libcrypto_openssl.z.so','/sys_prod/etc/param/hw_defaults.para','/system/etc/sandbox/appdata-sandbox.json','/system/etc/sandbox/appdata-sandbox-isolated.json','/system/etc/init/task_manager_service.cfg','/system/profile/task_manager_service.json','/system/etc/param/const.ohos.para']:
  extract_guard(path)
 for name in ['appdata-sandbox.json','appdata-sandbox-isolated.json']:
  extract_guard('/system/etc/sandbox/'+name,previous=True)
@@ -46,6 +46,20 @@ def setfile(name,data,mode=0o100644):
  fields[1]=mode;fields[6]=len(data);new[name]=(fields,data)
 def text(name):return old[G+name][1].decode()
 def sha(b):return hashlib.sha256(b).hexdigest()
+# Equivalent to the source literal fix: recognize both helper-verified unlock paths.
+# Keep byte length, every instruction, and every other desktop/boot-id gate intact.
+bootlib=P+'bootcontrol-v135/libsheng_bootcontrol_guarded_v135.so'
+guard=old[bootlib][1];assert sha(guard)=='92db6e9f567ba53854d5dd84b2143ce6f65fca9b9b7555d5b5fc39a4b8dc5430'
+old_marker=b'SCREENLOCK_VERIFIED after=0 callback=0';new_marker=b'SCREENLOCK_VERIFIED after=0 '
+assert guard.count(old_marker)==1
+marker_offset=guard.index(old_marker);replacement=new_marker+bytes(len(old_marker)-len(new_marker))
+section=ELFFile(io.BytesIO(guard)).get_section_by_name('.rodata')
+assert section is not None and section['sh_offset']<=marker_offset and marker_offset+len(old_marker)<=section['sh_offset']+section['sh_size']
+fixed_guard=guard[:marker_offset]+replacement+guard[marker_offset+len(old_marker):]
+setfile(bootlib,fixed_guard)
+checksums=old[P+'bootcontrol-v135/SHA256SUMS'][1].decode().replace(sha(guard),sha(fixed_guard));setfile(P+'bootcontrol-v135/SHA256SUMS',checksums)
+setfile(G+'mark-boot-success-v135.sh',(REPO/'runtime/compat/graphics/mark-boot-success-v135.sh').read_bytes(),0o100755)
+bootcontrol_report={'input_sha256':sha(guard),'output_sha256':sha(fixed_guard),'offset':marker_offset,'before':old_marker.hex(),'after':replacement.hex(),'instructions_unchanged':True,'other_native_gates_unchanged':True,'exact_unlock_variants_checked_by_launcher':True}
 recipes={}
 for path in sorted(args.recipe_dir.glob('*.json')):
  recipe=json.loads(path.read_text());source=ROOT/'metadata/guard-inputs'/recipe['path'].lstrip('/');blob=source.read_bytes();assert sha(blob)==recipe['input_sha256'];patched=bytearray(blob)
@@ -104,7 +118,14 @@ setfile(G+'apply-account-hmac.sh',hmac,0o100755)
 cap=(ROOT/'metadata/guard-inputs/sys_prod/etc/param/hw_defaults.para').read_bytes();assert cap.count(b'const.nearlink.enable=true')==1
 newcap=cap.replace(b'const.nearlink.enable=true',b'const.nearlink.enable=false');setfile(G+'hw_defaults-v141.para',newcap)
 hardware=text('apply-hardware-v116.sh');hardware=hardware.replace('47e94ce212bf301531e1e0f6480f9b4c566296a557e8fc03b44d958ed81fe8a2',sha(cap)).replace('3fa79d36281510333d96de8ff23844e40229b1d227ada18ca0eff2fbf24a9dc2',sha(newcap));setfile(G+'apply-hardware-v116.sh',hardware,0o100755)
-preload=text('apply-preload.sh').replace('/preload/WKI-W10/all/cn','/preload/GEM-W00/all/cn');setfile(G+'apply-preload.sh',preload,0o100755)
+preload=text('apply-preload.sh').replace('/preload/WKI-W10/all/cn','/preload/GEM-W00/all/cn')
+# Region resources are inherited from GEM-W00 parent_cust.cfg on the donor.
+# Make this layer explicit because sheng cannot supply Huawei OEMINFO at boot.
+region='/sys_prod/variant/region_comm/china'
+file_index=json.loads((ROOT/'metadata/sys_prod-files.json').read_text())
+assert any(x['path']=='/variant/region_comm/china/resource/themes/icon' and x['type']=='DIR' for x in file_index)
+preload+='\n$B printf "\\n# sheng: GEM-W00 regional resource policy\\n/sys_prod/variant/region_comm/china\\n" >> "$R/compat/etc/cust/baselayer.cfg"\n'
+setfile(G+'apply-preload.sh',preload,0o100755)
 # Apply the small original sandbox delta to the new donor, retaining its fields.
 sandbox=text('apply-app-sandbox.sh');sandbox_report=[]
 for name in ['appdata-sandbox.json','appdata-sandbox-isolated.json']:
@@ -149,6 +170,14 @@ prepare=next(j['cmds'] for j in task_cfg['jobs'] if j['name']=='post-fs-data')
 desktop['jobs'].append({'name':'param:sheng-promax-task','condition':'sheng.debug.start.screen=true','cmds':prepare+['setparam sheng.debug.start.promaxtask true']})
 setfile(G+'init-desktop-services.cfg',json.dumps(desktop,indent=2)+'\n')
 task_service_report={'service':'task_manager_service','sa':65984,'donor_cfg_sha256':sha(task_cfg_path.read_bytes()),'donor_profile_sha256':sha(task_profile_path.read_bytes()),'staged_profile_sha256':sha(task_profile_bytes),'startup_gate':'sheng.debug.start.screen -> prepare directories -> sheng.debug.start.promaxtask','donor_permissions_preserved':True,'hardware_sysfs_jobs_imported':False,'runtime_validated':False}
+# OEMINFO is absent on sheng. Select the exact donor software/region layers.
+cust_source=(ROOT/'metadata/guard-inputs/system/etc/param/const.ohos.para').read_bytes()
+cust_parameters={'const.cust.devmodel':'GEM-W00','const.cust.vendor':'all','const.cust.region':'cn','const.cust.home_region':'cn'}
+for key in cust_parameters:
+ assert not re.search(rb'^'+re.escape(key.encode())+rb'=',cust_source,re.M)
+cust_output=cust_source+b'\n# sheng: verified GEM-W00 all/cn donor software layers\n'+''.join(k+'='+v+'\n' for k,v in cust_parameters.items()).encode()
+setfile(G+'promax/const.ohos.para',cust_output)
+cust_report={'path':'/system/etc/param/const.ohos.para','input_sha256':sha(cust_source),'output_sha256':sha(cust_output),'parameters':cust_parameters,'explicit_regional_policy_layer':region,'hardware_identity_parameters_changed':False,'dynamic_icon_runtime_validated':False}
 # Additional filesystems are carried inside freshly created ext4 userdata.
 seed_names=['preload','chip_prod','anco_hmos','cust','version'];seed_lines=[]
 for name in seed_names:
@@ -199,6 +228,7 @@ echo PROMAX_CONTAINER_FILES_PRESENT_RUNTIME_NOT_VALIDATED
 setfile(G+'promax/mount-seed-images.sh',mount,0o100755)
 userdata=text('init-userdata-ext4.sh')+'\n$B sh /graphics/promax/mount-seed-images.sh\n';setfile(G+'init-userdata-ext4.sh',userdata,0o100755)
 userdata+=f'echo "{sha(task_profile_path.read_bytes())}  $R/system/profile/task_manager_service.json" | $B sha256sum -c -\n$B cp /graphics/promax/task_manager_service.json "$R/system/profile/task_manager_service.json"\necho "{sha(task_profile_bytes)}  $R/system/profile/task_manager_service.json" | $B sha256sum -c -\n'
+userdata+=f'echo "{sha(cust_source)}  $R/system/etc/param/const.ohos.para" | $B sha256sum -c -\n$B cp /graphics/promax/const.ohos.para "$R/system/etc/param/const.ohos.para"\necho "{sha(cust_output)}  $R/system/etc/param/const.ohos.para" | $B sha256sum -c -\n'
 setfile(G+'init-userdata-ext4.sh',userdata,0o100755)
 # Recompute the payload inventory, including every new guarded component.
 manifest=json.loads(old[P+'MANIFEST.json'][1]);members=set(manifest)
@@ -212,6 +242,8 @@ report={'donor':'GEM-LGRP3-CHN 207.0.0.111(SP12)','base_vendor_boot_sha256':sha(
 (WORK/'payload-integration-report.json').write_text(json.dumps(report,indent=2)+'\n')
 report['sandbox_port']=sandbox_report
 report['promax_task_service']=task_service_report
+report['bootcontrol_unlock_marker']=bootcontrol_report
+report['donor_software_layers']=cust_report
 # Materialize scripts for shell syntax checks, not full proprietary binaries.
 scripts=WORK/'integrated-scripts';scripts.mkdir(exist_ok=True)
 for n in changed:

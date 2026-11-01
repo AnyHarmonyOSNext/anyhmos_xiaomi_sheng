@@ -389,8 +389,8 @@
     },
     {
       "path": "compat/bootcontrol/bootcontrol_readonly.c",
-      "bytes": 5479,
-      "sha256": "a9311254b5b968c9d7af45dc82d66d9461ccff6a4a0149e773b3ab4d04f7de4e"
+      "bytes": 5559,
+      "sha256": "4548c61c0fee1b52ca569133f9b07a236788392edba5040c1b4a2d784f884120"
     },
     {
       "path": "compat/bootstrap/hmos_probe_v121.c",
@@ -999,13 +999,13 @@
     },
     {
       "path": "docs/PROMAX-PACKAGE.md",
-      "bytes": 3642,
-      "sha256": "ee0fd5fd60b03a569f70fb7dfd583c84ea0fabddd997cf5a13e66bc19b5dbdbd"
+      "bytes": 4127,
+      "sha256": "6c51c2c9c0dc22108a337554a44a441d2529c2c4bac79536ba8f7a5b50590e0d"
     },
     {
       "path": "docs/PROMAX-SP12-BUILD.md",
-      "bytes": 6610,
-      "sha256": "f4dd03eddfb7da3f072c9571511719e7ae1c564af740649e481e89e25c4b4499"
+      "bytes": 8755,
+      "sha256": "e7d715649c10e22c47892123b9d5842a7c8e7baee4c869eeb9a31fb4d09b9caf"
     },
     {
       "path": "docs/PROVENANCE.md",
@@ -1794,8 +1794,8 @@
     },
     {
       "path": "runtime/compat/graphics/mark-boot-success-v135.sh",
-      "bytes": 996,
-      "sha256": "69d47e7af36cae3a4a621615d1570dacb1a95eb21403f1c84983522af76f51c4"
+      "bytes": 1245,
+      "sha256": "b36a1468f52c96054010c4eded73e6f0058bad8cdea686512fa548c937b55038"
     },
     {
       "path": "runtime/compat/graphics/msdp-input-only.json",
@@ -1913,6 +1913,11 @@
       "sha256": "98457526a197b71beda22cb5b8c24a028baf40fec5c209e81d7b841a88aafbf2"
     },
     {
+      "path": "tests/test_bootcontrol_marker.py",
+      "bytes": 1677,
+      "sha256": "50e6d1c6474d0204c63cbc1d8fb7b132d91f5e52b8806caf02208e452a5fdb2a"
+    },
+    {
       "path": "tests/test_huawei_full_ota.py",
       "bytes": 3602,
       "sha256": "cedddfbb866d2f34e99392bf3f59f359f89251aaffa255e259c026ddb2724cec"
@@ -1939,8 +1944,8 @@
     },
     {
       "path": "tools/assemble_promax_package.py",
-      "bytes": 2854,
-      "sha256": "ef9e3a7c0bd250b9afed2295984fe3904865bb741a2ddb75b8947d4d58bb219e"
+      "bytes": 3399,
+      "sha256": "612b3fb1d7f1ad866fc9be82acdaaeece124a4205997b14e39663b96b468b733"
     },
     {
       "path": "tools/audit_donor.py",
@@ -1959,8 +1964,8 @@
     },
     {
       "path": "tools/build_promax_ramdisk.py",
-      "bytes": 18278,
-      "sha256": "d48afc7bda829000e5f41740f6a152108c544ccc20ca976ffa32f258c72033e6"
+      "bytes": 21518,
+      "sha256": "bfbf29d15d967ee7a664d5f9174d9fa3adaa99809d0d0130bd07dec02e2069da"
     },
     {
       "path": "tools/build_useriam.py",
@@ -1979,8 +1984,8 @@
     },
     {
       "path": "tools/Flash-ProMax.ps1",
-      "bytes": 6939,
-      "sha256": "5d0ceb3499f99b94f7c945c6c060ab78ac7868302f7d6adce8c1f4d8991ccbdd"
+      "bytes": 7127,
+      "sha256": "7e45ea5914a1518d3d2380806117b536d826a917e4eb021a32769fd6856c58d8"
     },
     {
       "path": "tools/refresh_manifest.py",

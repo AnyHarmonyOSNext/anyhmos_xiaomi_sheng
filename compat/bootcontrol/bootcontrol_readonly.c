@@ -85,7 +85,8 @@ static int run(int argc,char **argv,char **envp)
     while (fgets(line,sizeof(line),f)) {
         if (!strncmp(line,boot_id,36) && line[36]=='\n') boot_match=1;
         if (!strcmp(line,"AUTOSTART_SERVICES_READY=1\n")) desktop=1;
-        if (strstr(line,"SCREENLOCK_VERIFIED after=0 callback=0")) unlock=1;
+        /* The helper verifies the state for both callback and already-unlocked paths. */
+        if (strstr(line,"SCREENLOCK_VERIFIED after=0 ")) unlock=1;
         if (!strcmp(line,"AUTOSTART_EXIT code=0 stage=complete\n")) complete=1;
     }
     fclose(f);

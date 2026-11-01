@@ -11,7 +11,7 @@ $Fastboot = Join-Path $PackageRoot 'bin\fastboot.exe'
 $ManifestPath = Join-Path $PackageRoot 'PACKAGE.json'
 if (!(Test-Path -LiteralPath $ManifestPath)) { throw 'PACKAGE.json is missing.' }
 $Manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
-if ($Manifest.kind -ne 'sheng-promax-experimental' -or $Manifest.device_boot_tested -ne $false) {
+if ($Manifest.kind -ne 'sheng-promax-experimental' -or $Manifest.device_boot_tested -isnot [bool]) {
     throw 'Unexpected package identity or validation status.'
 }
 $RequiredImages = @('boot.img','init_boot.img','vendor_boot.img','vbmeta.img','vbmeta_system.img','super.img','userdata.img')
@@ -30,7 +30,12 @@ foreach ($Record in $Manifest.files) {
     }
     Write-Host "Verified $($Record.path)"
 }
-Write-Host 'Experimental GEM-W00 207.0.0.111(SP12) port. Device boot has NOT been tested.'
+Write-Host 'Experimental GEM-W00 207.0.0.111(SP12) port.'
+if ($Manifest.device_boot_tested) {
+    Write-Host 'A device boot was validated; see reports/device-validation.json for scope.'
+} else {
+    Write-Host 'Successful device boot has NOT been validated for this image.'
+}
 Write-Host 'GPU app compatibility, 144 Hz, and Zhuoyitong runtime are NOT validated.'
 if ($Mode -eq 'Verify') { Write-Host 'Offline verification passed. No device command was sent.'; return }
 

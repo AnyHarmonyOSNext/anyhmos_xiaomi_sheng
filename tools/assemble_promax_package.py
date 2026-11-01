@@ -33,8 +33,17 @@ for path in sorted(package.rglob('*')):
 for artifact in report['artifacts']:
     if artifact not in files:
         raise ValueError('Image changed since readback: ' + artifact['path'])
+runtime_path = package / 'reports/device-validation.json'
+boot_validated = False
+if runtime_path.exists():
+    runtime = json.loads(runtime_path.read_text())
+    vendor_hash = next(r['sha256'] for r in files if r['path'] == 'images/vendor_boot.img')
+    boot_validated = (runtime.get('vendor_boot_sha256') == vendor_hash
+                      and runtime.get('entered_setup_or_desktop') is True
+                      and runtime.get('autostart_complete') is True
+                      and runtime.get('bootcontrol_successful') is True)
 manifest = {'kind': 'sheng-promax-experimental', 'donor': report['donor'],
-            'device_boot_tested': False, 'userdata_bytes': report['userdata_bytes'],
+            'device_boot_tested': boot_validated, 'userdata_bytes': report['userdata_bytes'],
             'super_bytes': report['super_bytes'], 'target_slot': 'a',
             'data_wipe_required': True, 'contains_userdata_seed': True,
             'not_validated': ['144Hz', 'Zhuoyitong runtime', 'all application GPU paths'], 'files': files}
