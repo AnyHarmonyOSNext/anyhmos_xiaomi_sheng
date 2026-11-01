@@ -7,12 +7,13 @@ import json
 import re
 import subprocess
 from urllib.parse import unquote
+from refresh_manifest import SKIP
 
 ROOT=Path(__file__).resolve().parent.parent
 manifest=json.loads((ROOT/'SOURCE-MANIFEST.json').read_text())
 expected={v['path'] for v in manifest['files']}|{'SOURCE-MANIFEST.json','SHA256SUMS'}
 actual={p.relative_to(ROOT).as_posix() for p in ROOT.rglob('*') if p.is_file()
-        and not any(x in {'.git','work','out','__pycache__'} for x in p.relative_to(ROOT).parts)}
+        and not p.is_symlink() and not any(x in SKIP for x in p.relative_to(ROOT).parts)}
 assert actual==expected,dict(missing=sorted(expected-actual),extra=sorted(actual-expected))
 for v in manifest['files']:
     data=(ROOT/v['path']).read_bytes()

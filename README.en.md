@@ -1,5 +1,9 @@
 # Xiaomi Pad 6S Pro 12.4 · HarmonyOS NEXT
 
+## INTERINIT development fork
+
+This branch targets a mainland-China MatePad Pro Max HarmonyOS 7 donor, GPU application compatibility, 144Hz and the Zhuoyitong Android runtime. The new donor has not been obtained or validated. The working baseline and inherited feature claims below refer to the upstream MatePad Air port. See the [development roadmap](docs/FORK-ROADMAP.md) and [donor acquisition record](docs/DONOR-ACQUISITION.md).
+
 [简体中文](README.md) · [Building](docs/BUILDING.md) · [Source map](docs/SOURCE_MAP.md) · [Testing](docs/VERIFICATION.md) · [Provenance and licensing](docs/PROVENANCE.md)
 
 A HarmonyOS NEXT port for the Xiaomi Pad 6S Pro 12.4 (**sheng**). A compatibility layer connects HarmonyOS to the tablet's display, touch input, audio and wireless hardware. The system can reach the HarmonyOS desktop and run selected system and third-party applications.

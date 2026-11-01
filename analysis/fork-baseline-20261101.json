@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-01",
+  "device": "xiaomi-sheng",
+  "donor_baseline": "upstream MatePad Air package; not MatePad Pro Max",
+  "upstream_commit": "5f520ea2096ad1e989ac29f3f06f096b0873c837",
+  "evidence": "read-only commands through the device's HMOS probe; raw logs remain local",
+  "boot_completed_parameter": true,
+  "autostart_complete": true,
+  "original_bootcontrol_success_reported": true,
+  "userdata": {"filesystem": "ext4", "mounted_read_write": true},
+  "gpu": {"kernel_model": "Adreno740v2", "application_compatibility_validated": false},
+  "display": {
+    "connector_connected": true,
+    "kernel_modes": ["3048x2032x120vid", "3048x2032x144vid", "3048x2032x90vid", "3048x2032x60vid", "3048x2032x50vid", "3048x2032x48vid", "3048x2032x30vid"],
+    "144hz_switch_verified": false,
+    "composer_source_observation": "Only the current mode is exposed; other mode IDs are refused"
+  },
+  "container_prerequisite_observations": {
+    "CONFIG_PID_NS": false,
+    "CONFIG_USER_NS": false,
+    "CONFIG_KVM": true,
+    "CONFIG_ANDROID_BINDER_IPC": true,
+    "CONFIG_ANDROID_BINDERFS": true,
+    "kvm_node_present_in_checked_hmos_dev": false,
+    "hmos_binder_aliases_present": true,
+    "runtime_mechanism_identified": false,
+    "container_boot_verified": false
+  },
+  "new_donor_obtained": false,
+  "runtime_code_changed": false,
+  "firmware_flashed_for_this_baseline": false
+}

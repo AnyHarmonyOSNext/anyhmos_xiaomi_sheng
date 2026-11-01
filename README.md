@@ -1,5 +1,7 @@
 # 小米平板 6S Pro 12.4 · HarmonyOS NEXT
 
+> **INTERINIT 开发分支**：继续维护 sheng 适配，目标供体改为 **MatePad Pro Max 国行 HarmonyOS 7**，重点为 GPU 应用兼容、144Hz 与卓易通安卓运行环境。新供体尚未取得和验证，当前可启动基线仍来自上游 MatePad Air 包；下方功能表是继承的上游记录，不是 Pro Max 移植验收结果。见[开发路线与验收标准](docs/FORK-ROADMAP.md)、[供体获取记录](docs/DONOR-ACQUISITION.md)。
+
 [English](README.en.md) · [构建说明](docs/BUILDING.md) · [源码索引](docs/SOURCE_MAP.md) · [测试记录](docs/VERIFICATION.md) · [来源与许可](docs/PROVENANCE.md)
 
 这是小米平板 6S Pro 12.4（**sheng**）的 HarmonyOS NEXT 移植项目。通过兼容层适配显示、触控、音频和无线等硬件，目前已能进入鸿蒙桌面并使用部分系统及第三方应用。

@@ -5,7 +5,8 @@ import json
 
 ROOT=Path(__file__).resolve().parent.parent
 EXCLUDE={'SOURCE-MANIFEST.json','SHA256SUMS'}
-SKIP={'.git','work','out','__pycache__'}
+SKIP={'.git','work','out','__pycache__','.venv','node_modules',
+      'logs','screenshots','device-backup','platform-tools','releases','release'}
 
 
 def main():
@@ -18,10 +19,10 @@ def main():
         files.append(dict(path=relative.as_posix(),bytes=len(data),sha256=hashlib.sha256(data).hexdigest()))
     value=dict(format_version=1,hash_algorithm='SHA256',files=files,excludes=sorted(EXCLUDE))
     path=ROOT/'SOURCE-MANIFEST.json'
-    path.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8')
+    path.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
     checks=''.join(f"{v['sha256']}  {v['path']}\n" for v in files)
     checks+=hashlib.sha256(path.read_bytes()).hexdigest()+'  SOURCE-MANIFEST.json\n'
-    (ROOT/'SHA256SUMS').write_text(checks,encoding='utf-8')
+    (ROOT/'SHA256SUMS').write_text(checks,encoding='utf-8',newline='\n')
     print(json.dumps(dict(files=len(files)+2,bytes=sum(v['bytes'] for v in files))))
 
 
