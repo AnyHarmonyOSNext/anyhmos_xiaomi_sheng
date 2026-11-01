@@ -24,6 +24,7 @@ parser.add_argument('--tools', type=pathlib.Path, required=True)
 parser.add_argument('--work', type=pathlib.Path)
 parser.add_argument('--composer', type=pathlib.Path)
 parser.add_argument('--composer-sha256')
+parser.add_argument('--present-fence-bridge', action='store_true')
 parser.add_argument('--refresh-helper', type=pathlib.Path)
 parser.add_argument('--refresh-helper-sha256')
 parser.add_argument(
@@ -39,6 +40,8 @@ parser.add_argument(
 args = parser.parse_args()
 if bool(args.composer) != bool(args.composer_sha256):
     parser.error('--composer and --composer-sha256 must be supplied together')
+if args.present_fence_bridge and not args.composer:
+    parser.error('Present fence bridge requires a matching custom composer')
 if bool(args.refresh_helper) != bool(args.refresh_helper_sha256) or (
     args.refresh_helper and not args.composer
 ):
@@ -103,7 +106,10 @@ def extract_guard(path, previous=False):
     destination.write_bytes(result.stdout)
 
 
-for recipe_path in args.recipe_dir.glob('*.json'):
+recipe_paths = list(args.recipe_dir.glob('*.json'))
+if args.present_fence_bridge:
+    recipe_paths.append(REPO / 'patches/display/present-fence-export.json')
+for recipe_path in recipe_paths:
     extract_guard(json.loads(recipe_path.read_text(encoding='utf-8'))['path'])
 for path in [
     '/system/lib64/libaccountmgr.z.so',
@@ -163,6 +169,9 @@ if args.composer:
     blob = args.composer.read_bytes()
     if sha(blob) != args.composer_sha256:
         raise ValueError('Composer input hash mismatch')
+    # 真实呈现反馈必须配套输出描述符清理补丁
+    if (b'PRESENT_FENCE first_fd=' in blob) != args.present_fence_bridge:
+        raise ValueError('Composer and present fence bridge must be paired')
     elf = ELFFile(io.BytesIO(blob))
     if elf['e_machine'] != 'EM_AARCH64' or elf['e_type'] != 'ET_DYN':
         raise ValueError('Composer must be an AArch64 shared library')
@@ -226,7 +235,7 @@ bootcontrol_report = {
     'exact_unlock_variants_checked_by_launcher': True,
 }
 recipes = {}
-for path in sorted(args.recipe_dir.glob('*.json')):
+for path in sorted(recipe_paths):
     recipe = json.loads(path.read_text(encoding='utf-8'))
     source = ROOT / 'metadata/guard-inputs' / recipe['path'].lstrip('/')
     blob = source.read_bytes()
@@ -307,6 +316,9 @@ compat = (
     + stage('/system/lib64/libvulkan.so')
     + text('apply-compat-paths.sh')[start:]
 )
+if args.present_fence_bridge:
+    # 在原生显示服务启动前替换输出 fence 导出逻辑
+    compat += stage('/vendor/lib64/libdisplay_composer_service_1.5.z.so', bind=True)
 setfile(G + 'apply-compat-paths.sh', compat, 0o100755)
 render = '/system/lib64/librender_service_base.z.so'
 rh = recipes[render]['output_sha256']
@@ -684,6 +696,7 @@ report['promax_task_service'] = task_service_report
 report['bootcontrol_unlock_marker'] = bootcontrol_report
 report['donor_software_layers'] = cust_report
 report['display_composer'] = composer_report
+report['present_fence_bridge'] = args.present_fence_bridge
 report['refresh_policy'] = refresh_report
 # 导出生成脚本并检查 Shell 语法
 scripts = WORK / 'integrated-scripts'

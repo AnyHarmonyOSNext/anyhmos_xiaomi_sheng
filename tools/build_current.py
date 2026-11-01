@@ -77,6 +77,14 @@ def commands(out):
         [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
     add('vblank-probe','vblank_probe',['tests/display/vblank_probe.c'],
         [],[str(STAGE/'lib/libdrm.a')],display_inc)
+    add('present-contract','present_fence_contract',
+        ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp',
+         'tests/display/present_fence_contract.cpp'],
+        ['-DACE5_MODE_TEST','-DACE5_SUBMIT_TEST',
+         '-Wl,--wrap=drmModeAtomicAlloc','-Wl,--wrap=drmModeAtomicAddProperty',
+         '-Wl,--wrap=drmModeAtomicCommit','-Wl,--wrap=drmPrimeFDToHandle',
+         '-Wl,--wrap=drmModeAddFB2','-Wl,--wrap=drmModeRmFB'],
+        [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
     add('allocator','libdisplay_buffer_vdi_impl.z.so',['compat/display/buffer_vdi.cpp'],
         ['-g','-DACE5_LINEAR_STRIDE_ALIGNMENT=128','-shared','-fPIC','-Wl,-z,defs',
          '-Wl,-soname,libdisplay_buffer_vdi_impl.z.so'],cpp_runtime,display_inc,True)

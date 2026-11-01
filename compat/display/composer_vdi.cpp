@@ -3,6 +3,7 @@
 #include "composer_exports.h"
 #include "log.h"
 #include <cerrno>
+#include <climits>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -362,8 +363,9 @@ struct SubmitMetrics {
         last = previous;
     }
 } submitMetrics;
-int Submit(bool testOnly)
+int Submit(bool testOnly, int32_t *presentFence = nullptr)
 {
+    if (presentFence) *presentFence = -1;
     if (!testOnly && !requestedPowerOn) {
         if (!loggedOffSubmission) {
             Ace5Log("POWER_OFF_LATCH suppressed late frame without DRM commit");
@@ -392,10 +394,14 @@ int Submit(bool testOnly)
     if (!request) { drmModeRmFB(drm, fb); return FAIL; }
     timing[2] = MonotonicNs();
     bool valid = true;
+    uint64_t retireFence = UINT64_MAX;
 #define PROP(object, type, name, value) valid &= Property(request, object, type, name, value) >= 0
     PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "CRTC_ID", crtc);
     PROP(crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", modeBlob);
     PROP(crtc, DRM_MODE_OBJECT_CRTC, "ACTIVE", 1);
+    // 由内核返回本次呈现 fence，测试提交不创建文件描述符
+    if (!testOnly) PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "RETIRE_FENCE",
+        reinterpret_cast<uintptr_t>(&retireFence));
     // Partition the source exactly; no gap or duplicated column at the seam.
     const int leftSourceWidth = clientCrop.w / 2;
     for (unsigned half = 0; half < 2; ++half) {
@@ -421,9 +427,20 @@ int Submit(bool testOnly)
         DRM_MODE_ATOMIC_ALLOW_MODESET | (testOnly ? DRM_MODE_ATOMIC_TEST_ONLY : 0), nullptr) : -1;
     timing[4] = MonotonicNs();
     drmModeAtomicFree(request);
+    // 失败提交也可能已创建 fence，未移交的描述符由作用域释放
+    OwnedFence present(retireFence <= INT_MAX ? int(retireFence) : -1);
+    if (present.fd >= 0) fcntl(present.fd, F_SETFD, FD_CLOEXEC);
     if (rc || testOnly) drmModeRmFB(drm, fb);
     else { if (currentFb) drmModeRmFB(drm, currentFb); currentFb = fb; }
     timing[5] = MonotonicNs();
+    if (!rc && !testOnly && presentFence) {
+        *presentFence = present.Take();
+        static bool reported = false;
+        if (!reported) {
+            Metric("PRESENT_FENCE first_fd=%d blocking_commit=1", *presentFence);
+            reported = true;
+        }
+    }
     if (!rc && !testOnly) submitMetrics.Record(timing);
     if (rc) Log("atomic commit failed");
     return rc == 0 ? OK : FAIL;
@@ -661,7 +678,7 @@ extern "C" int32_t SetDisplayClientCrop(uint32_t id, const IRect &rect)
 extern "C" int32_t SetDisplayClientDamage(uint32_t id, std::vector<IRect> &rects)
 { DEVICE_LOCK(id); clientDamage = rects; return OK; }
 extern "C" int32_t Commit(uint32_t id, int32_t &fence)
-{ DEVICE_LOCK(id); fence = -1; return Submit(false); }
+{ DEVICE_LOCK(id); return Submit(false, &fence); }
 // Explicit test-only entry point for the independent recovery contract test.
 extern "C" int32_t Ace5TestClientBuffer(uint32_t id)
 { DEVICE_LOCK(id); return Submit(true); }
@@ -715,7 +732,31 @@ extern "C" void Ace5HoldComposerLockForTest(unsigned microseconds)
 }
 #endif
 
-
+#ifdef ACE5_SUBMIT_TEST
+namespace OHOS::HDI::Display::Composer {
+extern "C" void Ace5InitializeModesForTest();
+extern "C" void Ace5InitializeSubmitForTest()
+{
+    Ace5InitializeModesForTest();
+    std::lock_guard<std::mutex> lock(mutex);
+    plane = 90; secondPlane = 133;
+    propertyIds[{connector, "CRTC_ID"}] = 102;
+    propertyIds[{connector, "RETIRE_FENCE"}] = 999;
+    propertyIds[{crtc, "ACTIVE"}] = 103;
+    uint32_t property = 200;
+    for (uint32_t target : {plane, secondPlane})
+        for (const char *name : {"FB_ID", "CRTC_ID", "SRC_X", "SRC_Y", "SRC_W", "SRC_H",
+            "CRTC_X", "CRTC_Y", "CRTC_W", "CRTC_H", "color_fill"})
+            propertyIds[{target, name}] = property++;
+    client.value.fd = open("/dev/null", O_RDWR);
+    client.value.width = 3048; client.value.height = 2032;
+    client.value.stride = 12288; client.value.size = 12288 * 2032;
+    client.value.format = V::PIXEL_FMT_RGBA_8888;
+    clientCrop = {0, 0, 3048, 2032};
+}
+extern "C" int32_t Ace5SubmitInternalForTest() { return Submit(false); }
+}
+#endif
 
 #ifdef ACE5_MODE_TEST
 namespace OHOS::HDI::Display::Composer {

@@ -1,0 +1,18 @@
+{
+  "path": "/vendor/lib64/libdisplay_composer_service_1.5.z.so",
+  "input_sha256": "e0ba8da82c417e530767164b2ec921137be451895207199ff41bc23937c73cc8",
+  "output_sha256": "f2f3fc000a6f3feeefd4be02e1545e3ac4d198b4d30d8dd4cc66a152de79a94f",
+  "changes": [
+    {"offset": 183068, "before": "d9180094", "after": "1f2003d5"},
+    {"offset": 174576, "before": "24210094", "after": "1f2003d5"}
+  ],
+  "ownership_evidence": {
+    "purpose": "保留输出 fence 临时对象的析构清理",
+    "functions": ["OnCommit", "ReplyCommitAndGetReleaseFence"],
+    "removed_calls": "HdifdParcelable::Move; return values unused",
+    "exported_fd_is_duplicated_by": "FileDescriptorPack(..., true) -> HdifdParcelable::Init -> dup",
+    "original_fd_is_closed_by": "HdifdParcelable::~HdifdParcelable",
+    "input_fence_move_calls_preserved": true,
+    "requires_retire_fence_vdi": true
+  }
+}

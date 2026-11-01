@@ -424,8 +424,8 @@
     },
     {
       "path": "compat/display/composer_vdi.cpp",
-      "bytes": 34496,
-      "sha256": "156a3d620d91e50ac356e0cc3c34a360cb3bcf5ebe42ff44be8ec895cc83cc98"
+      "bytes": 36378,
+      "sha256": "3335e307eb1423327f3c924d2616cf9fe57dbff13e562339f63d7a78def64596"
     },
     {
       "path": "compat/display/include/display/buffer/v1_0/display_buffer_type.h",
@@ -1328,6 +1328,11 @@
       "sha256": "b78862e350928a84b82546dc61a4a346813f068c341ff0fb79dd62fe1edf4741"
     },
     {
+      "path": "patches/display/present-fence-export.json",
+      "bytes": 875,
+      "sha256": "0d12f781cd2dc862bf8c3a6b78b8b6c46837e72965320b1652d5f2716e6d0c17"
+    },
+    {
       "path": "patches/donor/gem-w00-111-sp12/init.json",
       "bytes": 530,
       "sha256": "f0ee584a1fa4259fa0975587feaa253651c4f5a821229d1485063e018dd281b6"
@@ -1873,6 +1878,11 @@
       "sha256": "19bc24e348ed3ffbe508f4d1a4544672cc434fadbe288a0b0b6933e95e1959b2"
     },
     {
+      "path": "tests/display/present_fence_contract.cpp",
+      "bytes": 3576,
+      "sha256": "52f8f6e3beaaf2bda33c639da3c4757e1591aba1e23695735af888d0eb87468b"
+    },
+    {
       "path": "tests/display/vblank_probe.c",
       "bytes": 1874,
       "sha256": "330fe99d267707cd285ef2bd5fb165dbc677b0016f77068768d228d557db5503"
@@ -1949,8 +1959,8 @@
     },
     {
       "path": "tools/build_current.py",
-      "bytes": 13551,
-      "sha256": "bb9295090f54244ae8a5755423b356249fbadc9346e7f91b76d817efeb65b941"
+      "bytes": 14079,
+      "sha256": "7753a1c118361649c516df0d2dbe965c6cf31ac776cb47b6c425035a882a3def"
     },
     {
       "path": "tools/build_display_drm.py",
@@ -1964,8 +1974,8 @@
     },
     {
       "path": "tools/build_promax_ramdisk.py",
-      "bytes": 29372,
-      "sha256": "6ddb0ca34e61cb7e7aeca6ea3715dd1ee6cdd435d0e30521d094a9727da37c4e"
+      "bytes": 30147,
+      "sha256": "b77f78626201fa4fa568c3825fe431d6904da444d2e46219073028cb40caebf3"
     },
     {
       "path": "tools/build_useriam.py",
