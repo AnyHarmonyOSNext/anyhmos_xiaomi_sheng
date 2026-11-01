@@ -1,0 +1,38 @@
+{
+  "path": "/system/lib64/platformsdk/libcli_tool_client.z.so",
+  "input_sha256": "2a2230a92163443463f5881bfa195ab0cb12cf331429fc98ba8911c2beb30377",
+  "output_sha256": "0204ee5e2ca053250caf0577032e52abec7769be9759320c459f6e348fc2285a",
+  "changes": [
+    {
+      "offset": 142788,
+      "before": "08008552",
+      "after": "08209c52"
+    },
+    {
+      "offset": 142800,
+      "before": "68cdbd72",
+      "after": "a8bea072"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 142880,
+      "new_offset": 142788,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS7CliTool16CliToolMGRClient21LoadCliToolMgrServiceEv"
+      ]
+    },
+    {
+      "old_offset": 142892,
+      "new_offset": 142800,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS7CliTool16CliToolMGRClient21LoadCliToolMgrServiceEv"
+      ]
+    }
+  ],
+  "device_validated": false
+}

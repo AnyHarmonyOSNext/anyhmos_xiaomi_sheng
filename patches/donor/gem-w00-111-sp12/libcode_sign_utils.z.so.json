@@ -1,0 +1,22 @@
+{
+  "path": "/system/lib64/libcode_sign_utils.z.so",
+  "input_sha256": "c69b5474a512e8be4569585e993b62b17430b76fc6f59a9433253589a072cfb6",
+  "output_sha256": "0bc890ab6b6fed714f115f8d9f3f4c2f6e401ae8bf156047fc1bc9b94c94ebeb",
+  "changes": [
+    {
+      "offset": 93924,
+      "before": "28608012",
+      "after": "08008052"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 77040,
+      "new_offset": 93924,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": []
+    }
+  ],
+  "device_validated": false
+}

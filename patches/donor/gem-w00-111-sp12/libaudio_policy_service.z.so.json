@@ -1,0 +1,22 @@
+{
+  "path": "/system/lib64/libaudio_policy_service.z.so",
+  "input_sha256": "9900fa6e3327b4b0d80f36350d9489039227d31a0db9fcf104469cc4983cb1c7",
+  "output_sha256": "babbe92fa6baff07e6f3d4422f0f00ad4b4d1afefd5852e6fa3fa6acafde5085",
+  "changes": [
+    {
+      "offset": 3348624,
+      "before": "36038052",
+      "after": "56008052"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 3240312,
+      "new_offset": 3348624,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": []
+    }
+  ],
+  "device_validated": false
+}

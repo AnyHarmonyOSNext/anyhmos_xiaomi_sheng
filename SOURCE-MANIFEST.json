@@ -4,13 +4,13 @@
   "files": [
     {
       "path": ".gitattributes",
-      "bytes": 8,
-      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+      "bytes": 44,
+      "sha256": "a0dbe96b1f881a4143be8ae8ea1dc8b4ead009ed09d5a802a8ff0f5ab9647c28"
     },
     {
       "path": ".gitignore",
-      "bytes": 368,
-      "sha256": "3d71c591c97d1bec46c69f0069552fc7c9a2bad2ca15bf572f720f8fa940639d"
+      "bytes": 408,
+      "sha256": "6760b1aa3b2227f5f443cdc411a782db5a6dcb69a1e28938eabd0236df68509b"
     },
     {
       "path": "analysis/alpha-metadata-v130-verification.json",
@@ -1349,88 +1349,88 @@
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/init.json",
-      "bytes": 551,
-      "sha256": "3093b35d8b76aa9ad6e5c0f8c019ea5f2b36028ea999e701718d2665fefa6e35"
+      "bytes": 530,
+      "sha256": "f0ee584a1fa4259fa0975587feaa253651c4f5a821229d1485063e018dd281b6"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libaudio_policy_client.z.so.json",
-      "bytes": 694,
-      "sha256": "dd7295227c38184259a3b34d32f3a1d1abdcdb52acde1d80c65b732487971c8f"
+      "bytes": 670,
+      "sha256": "82f251de0ffd76e7a7d37f22829523637a958fb78c06d5a9a02a347a6c8ce214"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libaudio_policy_service.z.so.json",
-      "bytes": 593,
-      "sha256": "ef45abd1b1d2df5753949a670ee26b8c10c7d80121effa8507085248c8efd93f"
+      "bytes": 571,
+      "sha256": "7f137be2396f212a510839ee19abc9d9f95f0b546c586b188b818f763f4810ba"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libcli_tool_client.z.so.json",
-      "bytes": 1024,
-      "sha256": "cbad9375a69847d41b36d652cfb869d6c848aa6608cc62994f85d18cff510fa0"
+      "bytes": 986,
+      "sha256": "48bf356f77887309ebf38f1435efaa4f14f020ccc31436352a64f25b9be3c3b7"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libcode_sign_utils.z.so.json",
-      "bytes": 582,
-      "sha256": "0f885eaafc80ea16fb839257d4b111410001d3adbe61ef6cbfac38cc3d6061ee"
+      "bytes": 560,
+      "sha256": "6ea0537a53f0fd33b0f6a4eb34fb66c23eb41417e066b8b1d39be8499623b91d"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libdevicestatus_service.z.so.json",
-      "bytes": 1015,
-      "sha256": "20e93776a7765bf3ba94649ee48eac1c4735df48dbf15bc02f9fea4a8c89e296"
+      "bytes": 977,
+      "sha256": "520988439b2b0a9e287888be48d9b54580dffe5731c3b24ab4068cf25692f6df"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libdistributeddatasvcfwk.z.so.json",
-      "bytes": 2006,
-      "sha256": "01f89368e9e6b016d43d03bd9cc82c59e193b1c7c9efafde0e01616475ac5074"
+      "bytes": 1930,
+      "sha256": "a7eeb0f62e60a3b28bcb69da57750d6851a143a40fa39198cb10c64c11b19a26"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libkv_store_crypt.z.so.json",
-      "bytes": 1978,
-      "sha256": "9c693f9a33781ad750e3945dde61efdcee30fd047979a1c15bb77e4d62979db4"
+      "bytes": 1902,
+      "sha256": "2e3cf65a4fa21b36f354e996b6f512e90c831038de0441e03f6c720c0258062a"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libmemmgrservice.z.so.json",
-      "bytes": 2284,
-      "sha256": "9db0de9f6247d6c0e9d9a472d4f08368fb135535f3c59f3f563f15bc1ff8eef6"
+      "bytes": 2251,
+      "sha256": "c9087dec3ebab97ba80236d39ad872e1c8b0b4ef6a587d2ecdab3721b572c98b"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libnet_tether_manager_if.z.so.json",
-      "bytes": 857,
-      "sha256": "6554a4c1d2dbc93929b2e49194350cfb9a868d154cf5e8640742fc5f9b0dcff5"
+      "bytes": 831,
+      "sha256": "28cf171eaf7eb6029f721cd435c2a6bfab008bea974f802efd5b0f9fb22c29a5"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/librelational_store_crypt.z.so.json",
-      "bytes": 2477,
-      "sha256": "96714b77508d65f07dc9cabd797a0d2f9b07e773742a99f6bf2702264665c7c2"
+      "bytes": 2379,
+      "sha256": "2748aef0803e21f00e94ce1eb3da248a5c014e456c02f6f41c38666abeca1462"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/librender_service_base.z.so.json",
-      "bytes": 1568,
-      "sha256": "bfd68ca3948422b0fd7ee6118fce4295bb291632f5a06c539264ab311d188714"
+      "bytes": 1516,
+      "sha256": "04b0cd290c34e896c0d1818262ff9bd28ebb1243487662c857e86d8d0534041b"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libsensor_client.z.so.json",
-      "bytes": 673,
-      "sha256": "5b9a13033b5141e8b82618a3e4f55d2ab0cc6314b3d6c4453693b7b042b05f0c"
+      "bytes": 649,
+      "sha256": "441f10de8cf651c514fa3d77f94de97427140bd62aa04a130350acfbce6197b5"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libsps_privacy_indicator_service_intf.z.so.json",
-      "bytes": 736,
-      "sha256": "322fe06cc06e12c95c9fa52109b303dd6ad2ad32d85804707dcddbea9eab7649"
+      "bytes": 712,
+      "sha256": "74573babb0dc03908715f45d4eef47a045bac8ae61b44c7b409e5d11f7d8ef4f"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libtime_system_ability.z.so.json",
-      "bytes": 1832,
-      "sha256": "6080df585e77189c52420440c17600e1b3a736720ffc35f01baf89b4e1c45fe3"
+      "bytes": 1783,
+      "sha256": "3868da80742ef54a2583add87eaadfd931fe31230aba6d32e09580a884d1a8ef"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libvulkan.so.json",
-      "bytes": 636,
-      "sha256": "270a399c6dd0de8134e4af13be8734c03058aad0053a3f18acd49191a977aab9"
+      "bytes": 615,
+      "sha256": "048d79d865b3cba7fa247d1070561c8ca698590dd0525fbb4b7a3db588d2cc49"
     },
     {
       "path": "patches/donor/gem-w00-111-sp12/libwifi_sdk.z.so.json",
-      "bytes": 1186,
-      "sha256": "af0f089f3122894f49d40d0e8766d84987275767d6879f40c0129a0e2cc140cf"
+      "bytes": 1146,
+      "sha256": "ef6c4ca9711b402d71d8305166a2721cbf58700e03f5da78f0ccbbdbc97e1552"
     },
     {
       "path": "patches/donor/libaudio_policy_client.z.so.json",
@@ -1959,8 +1959,8 @@
     },
     {
       "path": "tools/build_promax_ramdisk.py",
-      "bytes": 15366,
-      "sha256": "689ad89e3197cc9027ed7370d04246890889f4f645cfdee8586fad280c4e6f28"
+      "bytes": 15365,
+      "sha256": "711c123d1f263af44e3fa4246a61748edcf112c7251e1c9e64c223b5d10d679b"
     },
     {
       "path": "tools/build_useriam.py",

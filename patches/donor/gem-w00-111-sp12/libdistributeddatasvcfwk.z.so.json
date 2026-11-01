@@ -1,0 +1,76 @@
+{
+  "path": "/system/lib64/libdistributeddatasvcfwk.z.so",
+  "input_sha256": "d315623a929ccfe63a5e9c326ce3fc6972c8bc2ed7367e5ce9b82089e32d666a",
+  "output_sha256": "9dea02febef568a47358e4b1501607006fd2d616ff52ddddc0ba2b4e875cfb4e",
+  "changes": [
+    {
+      "offset": 101861,
+      "before": "6c696268756b7373646b2e7a2e736f00",
+      "after": "6c696264626b6579732e736f00000000"
+    },
+    {
+      "offset": 58185,
+      "before": "486b7347656e657261746552616e646f6d00",
+      "after": "446b7347656e657261746552616e646f6d00"
+    },
+    {
+      "offset": 58270,
+      "before": "486b7347656e65726174654b657900",
+      "after": "446b7347656e65726174654b657900"
+    },
+    {
+      "offset": 58285,
+      "before": "486b734b6579457869737400",
+      "after": "446b734b6579457869737400"
+    },
+    {
+      "offset": 58297,
+      "before": "486b73456e637279707400",
+      "after": "446b73456e637279707400"
+    },
+    {
+      "offset": 58308,
+      "before": "486b734465637279707400",
+      "after": "446b734465637279707400"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 101861,
+      "new_offset": 101861,
+      "kind": "identical_unique_string",
+      "string": "libhukssdk.z.so"
+    },
+    {
+      "old_offset": 58185,
+      "new_offset": 58185,
+      "kind": "identical_unique_string",
+      "string": "HksGenerateRandom"
+    },
+    {
+      "old_offset": 58270,
+      "new_offset": 58270,
+      "kind": "identical_unique_string",
+      "string": "HksGenerateKey"
+    },
+    {
+      "old_offset": 58285,
+      "new_offset": 58285,
+      "kind": "identical_unique_string",
+      "string": "HksKeyExist"
+    },
+    {
+      "old_offset": 58297,
+      "new_offset": 58297,
+      "kind": "identical_unique_string",
+      "string": "HksEncrypt"
+    },
+    {
+      "old_offset": 58308,
+      "new_offset": 58308,
+      "kind": "identical_unique_string",
+      "string": "HksDecrypt"
+    }
+  ],
+  "device_validated": false
+}

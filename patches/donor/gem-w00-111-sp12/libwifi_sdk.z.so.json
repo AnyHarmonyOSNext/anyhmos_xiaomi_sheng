@@ -1,0 +1,40 @@
+{
+  "path": "/system/lib64/platformsdk/libwifi_sdk.z.so",
+  "input_sha256": "b018fbe12c0e853a7f87485eda4d95616fc5157d99d0cdfeaff00e0694191639",
+  "output_sha256": "9b3f6dec4fb946c20cda4309e1b17d89e62db9c837527279c744f44ee7e28a2b",
+  "changes": [
+    {
+      "offset": 317160,
+      "before": "c91240f9",
+      "after": "c91640f9"
+    },
+    {
+      "offset": 317700,
+      "before": "2bc80094",
+      "after": "1b000014"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 317160,
+      "new_offset": 317160,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": []
+    },
+    {
+      "old_offset": 317700,
+      "new_offset": 317700,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": []
+    },
+    {
+      "old_offset": 317808,
+      "new_offset": 317808,
+      "kind": "manually_reviewed_function_mapping",
+      "proof": "Unique 1484-byte unwind function with identical normalized instruction/register sequence; branch destination is the same local error path, preserving new GOT and diagnostic addresses"
+    }
+  ],
+  "device_validated": false
+}

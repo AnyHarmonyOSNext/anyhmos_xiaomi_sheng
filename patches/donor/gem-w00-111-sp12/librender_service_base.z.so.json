@@ -1,0 +1,52 @@
+{
+  "path": "/system/lib64/librender_service_base.z.so",
+  "input_sha256": "990ce323e84a8479f84f0e8e2a7ea55774bc5101df6feebf45516af652c6ab73",
+  "output_sha256": "18c5c79f335ec45e6fda4c5c8eb2e5175f1cfcb634c3f948fd6ed676db08ce22",
+  "changes": [
+    {
+      "offset": 9245920,
+      "before": "21008052",
+      "after": "01008052"
+    },
+    {
+      "offset": 9447112,
+      "before": "09009052",
+      "after": "09008452"
+    },
+    {
+      "offset": 9451828,
+      "before": "e9008052",
+      "after": "e9028052"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 8957364,
+      "new_offset": 9245920,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS5Rosen31RSClientToRenderConnectionProxy17CommitTransactionERNSt3__h10unique_ptrINS0_17RSTransactionDataENS2_14default_deleteIS4_EEEE"
+      ]
+    },
+    {
+      "old_offset": 9157364,
+      "new_offset": 9447112,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS5Rosen17NativeBufferUtils13CreateVkImageERNS0_15RsVulkanContextEPP9VkImage_TRK34VkNativeBufferFormatPropertiesOHOSRK10VkExtent3Djb"
+      ]
+    },
+    {
+      "old_offset": 9162080,
+      "new_offset": 9451828,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS5Rosen17NativeBufferUtils34MakeBackendTextureFromNativeBufferEP18NativeWindowBufferiib"
+      ]
+    }
+  ],
+  "device_validated": false
+}

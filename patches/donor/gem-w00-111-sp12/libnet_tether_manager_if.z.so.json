@@ -1,0 +1,26 @@
+{
+  "path": "/system/lib64/platformsdk/libnet_tether_manager_if.z.so",
+  "input_sha256": "c1d80f12f87212812619894c5f4e8d523ced3a4dcc357803d995453dd9e9434a",
+  "output_sha256": "f1ee449be81103322f56506baee7899fa746523d4b2e574de212a9f258c7424c",
+  "changes": [
+    {
+      "offset": 29480,
+      "before": "e91240f9",
+      "after": "e91640f9"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "kind": "manually_reviewed_system_ability_lookup",
+      "old_function": 29176,
+      "new_function": 29208,
+      "old_target": 29448,
+      "new_target": 29480,
+      "service_id": "0x482",
+      "before": "ldr x9, [x23, #0x20]",
+      "after": "ldr x9, [x23, #0x28]",
+      "note": "Preserves the new x21 object ownership and added cleanup code; changes only original nonblocking SA query slot"
+    }
+  ],
+  "device_validated": false
+}
