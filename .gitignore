@@ -15,6 +15,7 @@ node_modules/
 *.dtb
 *.so
 *.so.*
+!/patches/donor/gem-w00-111-sp12/*.json
 !/patches/donor/*.json
 *.ko
 *.o

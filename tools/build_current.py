@@ -1,6 +1,6 @@
 """Build the selected implementations directly; never regenerate older versions.
 
-Run in WSL. --list and --dry-run do not compile or touch a device. External
+--list and --dry-run do not compile or touch a device. External
 SDK/upstream headers, libdrm and donor libraries must be supplied separately.
 """
 from pathlib import Path
@@ -24,8 +24,10 @@ def includes(paths):
 
 
 def commands(out):
-    clang = str(SDK/'llvm/bin/clang')
-    clangpp = str(SDK/'llvm/bin/clang++')
+    # 按宿主系统选择 SDK 工具名，保留目标平台参数
+    suffix = '.exe' if os.name == 'nt' else ''
+    clang = str(SDK/('llvm/bin/clang'+suffix))
+    clangpp = str(SDK/('llvm/bin/clang++'+suffix))
     cflags = ['--target=aarch64-linux-ohos', '-O2', '-Wall', '-Wextra']
     cppflags = cflags+['-std=c++17', '-fno-exceptions', '-fno-rtti', '-nostdlib++',
         '-include', str(ROOT/'compat/platform/platform_cpp_config.h')]
@@ -66,6 +68,23 @@ def commands(out):
         ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp'],
         ['-g','-shared','-fPIC','-Wl,-z,defs','-Wl,-soname,libdisplay_composer_vdi_impl.z.so'],
         [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
+    # 使用模拟 DRM 提交验证模式切换，不访问物理显示设备
+    add('mode-contract','mode_switch_contract',
+        ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp',
+         'tests/display/mode_switch_contract.cpp'],
+        ['-DACE5_MODE_TEST','-Wl,--wrap=drmModeCreatePropertyBlob',
+         '-Wl,--wrap=drmModeDestroyPropertyBlob','-Wl,--wrap=drmModeAtomicCommit'],
+        [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
+    add('vblank-probe','vblank_probe',['tests/display/vblank_probe.c'],
+        [],[str(STAGE/'lib/libdrm.a')],display_inc)
+    add('present-contract','present_fence_contract',
+        ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp',
+         'tests/display/present_fence_contract.cpp'],
+        ['-DACE5_MODE_TEST','-DACE5_SUBMIT_TEST',
+         '-Wl,--wrap=drmModeAtomicAlloc','-Wl,--wrap=drmModeAtomicAddProperty',
+         '-Wl,--wrap=drmModeAtomicCommit','-Wl,--wrap=drmPrimeFDToHandle',
+         '-Wl,--wrap=drmModeAddFB2','-Wl,--wrap=drmModeRmFB'],
+        [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
     add('allocator','libdisplay_buffer_vdi_impl.z.so',['compat/display/buffer_vdi.cpp'],
         ['-g','-DACE5_LINEAR_STRIDE_ALIGNMENT=128','-shared','-fPIC','-Wl,-z,defs',
          '-Wl,-soname,libdisplay_buffer_vdi_impl.z.so'],cpp_runtime,display_inc,True)
@@ -73,6 +92,8 @@ def commands(out):
         [],cpp_runtime,display_inc,True)
     add('display-wake','native_display_wake',['compat/display/native_display_wake.cpp'],
         ['-Os','-std=c++17'],cpp_runtime,[],True)
+    add('display-mode','native_refresh_rate',['compat/display/native_refresh_rate.cpp'],
+        ['-Os'],cpp_runtime,[],True)
     add('touch','sheng_thp_bridge',
         ['compat/touch/bridge.cpp','compat/touch/nvt_touch_core.cpp','compat/touch/nvt_finger_filter.cpp'],
         ['-std=c++20','-fexceptions'],cpp_runtime,[ROOT/'compat/touch'],True)
@@ -192,7 +213,8 @@ def main():
         subprocess.run(command,check=True)
         artifact=Path(command[command.index('-o')+1])
         if artifact.suffix!='.o':
-            strip='aarch64-linux-gnu-strip' if command[0]=='aarch64-linux-gnu-gcc' else str(SDK/'llvm/bin/llvm-strip')
+            suffix = '.exe' if os.name == 'nt' else ''
+            strip='aarch64-linux-gnu-strip' if command[0]=='aarch64-linux-gnu-gcc' else str(SDK/('llvm/bin/llvm-strip'+suffix))
             subprocess.run([strip,str(artifact)],check=True)
         report[name]=dict(command=command,bytes=artifact.stat().st_size,
             sha256=hashlib.sha256(artifact.read_bytes()).hexdigest())

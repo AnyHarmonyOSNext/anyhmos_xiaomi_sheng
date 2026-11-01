@@ -1,0 +1,24 @@
+{
+  "path": "/system/lib64/libsps_privacy_indicator_service_intf.z.so",
+  "input_sha256": "fe4868cbbdd4b8bb4212d36d23c555d59cf2d8c3bdbe83739fbd021060324d9b",
+  "output_sha256": "252e660d221ab8b72178602d8ab4f5bc0f0589c19914e4afa73c6f07486961c1",
+  "changes": [
+    {
+      "offset": 104408,
+      "before": "c91240f9",
+      "after": "c91640f9"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 104408,
+      "new_offset": 104408,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS18AppSecurityPrivacy21SecurityPrivacyServer16PrivacyIndicator22PrivacyIndicatorClient15InitializeProxyEv"
+      ]
+    }
+  ],
+  "device_validated": false
+}

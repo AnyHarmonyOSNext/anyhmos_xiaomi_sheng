@@ -1,0 +1,49 @@
+{
+  "path": "/system/lib64/libtime_system_ability.z.so",
+  "input_sha256": "3bc6776912e9055ffb4af348584dde1370697eadecc707e27054466ba1b5395c",
+  "output_sha256": "d7ad79c43862ac4f5a4b52d5c38bee1faa7a485f69c62aa2d545e884c0efebe3",
+  "changes": [
+    {
+      "offset": 228744,
+      "before": "80018052",
+      "after": "00008012"
+    },
+    {
+      "offset": 228748,
+      "before": "01008152",
+      "after": "607a34b8"
+    },
+    {
+      "offset": 228752,
+      "before": "03000014",
+      "after": "3a000014"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 241392,
+      "new_offset": 228744,
+      "kind": "manually_reviewed_function_mapping",
+      "proof": "Unique 820-byte unwind function, complete normalized instruction/register sequence identical; six real clock ids identical; skips the same unsupported clock path"
+    },
+    {
+      "old_offset": 241396,
+      "new_offset": 228748,
+      "kind": "manually_reviewed_function_mapping",
+      "proof": "Unique 820-byte unwind function, complete normalized instruction/register sequence identical; six real clock ids identical; skips the same unsupported clock path"
+    },
+    {
+      "old_offset": 241400,
+      "new_offset": 228752,
+      "kind": "manually_reviewed_function_mapping",
+      "proof": "Unique 820-byte unwind function, complete normalized instruction/register sequence identical; six real clock ids identical; skips the same unsupported clock path"
+    },
+    {
+      "old_offset": 241632,
+      "new_offset": 228984,
+      "kind": "manually_reviewed_function_mapping",
+      "proof": "Unique 820-byte unwind function, complete normalized instruction/register sequence identical; six real clock ids identical; skips the same unsupported clock path"
+    }
+  ],
+  "device_validated": false
+}

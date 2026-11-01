@@ -1,0 +1,21 @@
+{
+  "path": "/system/lib64/libvulkan.so",
+  "input_sha256": "b0f280fa1584b17337f08f3afa2d0bdb0916642c364b706f97d6472990606c2d",
+  "output_sha256": "49968afab53e72281ed5c1bbb1df6cfb998b62c15747c62f2a57e6be5a392f36",
+  "changes": [
+    {
+      "offset": 94581,
+      "before": "2f73797374656d2f6574633a2f76656e646f722f65746300",
+      "after": "2f636f6d7061742f65746300000000000000000000000000"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 94581,
+      "new_offset": 94581,
+      "kind": "identical_unique_string",
+      "string": "/system/etc:/vendor/etc"
+    }
+  ],
+  "device_validated": false
+}

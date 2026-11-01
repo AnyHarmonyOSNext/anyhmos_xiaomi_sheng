@@ -1,0 +1,24 @@
+{
+  "path": "/system/lib64/platformsdk/libsensor_client.z.so",
+  "input_sha256": "d469e2c31d042b2f4e2a91892d7921c49a7597f20e8dff506d6f9530fe1cdaea",
+  "output_sha256": "c91fe932de46ddb86d6f908624874dd9e14ae6d29c76ea39fae0e8bb1638078f",
+  "changes": [
+    {
+      "offset": 136560,
+      "before": "a93e40f9",
+      "after": "a91640f9"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 136560,
+      "new_offset": 136560,
+      "kind": "normalized_aarch64_context",
+      "anchor_instructions": 13,
+      "symbols": [
+        "_ZN4OHOS7Sensors19SensorServiceClient17LoadSensorServiceEv"
+      ]
+    }
+  ],
+  "device_validated": false
+}
