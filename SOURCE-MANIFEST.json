@@ -984,18 +984,28 @@
     },
     {
       "path": "docs/DONOR-ACQUISITION.md",
-      "bytes": 3975,
-      "sha256": "1ec092590f2acbf986fd3668e9b8f2c63f5785cf5ec0dfe6597a340dbbfdc730"
+      "bytes": 4231,
+      "sha256": "4ece7dbc1126a831effbf0ced94436c32290af39557bec2503301c67e061a35a"
     },
     {
       "path": "docs/FORK-ROADMAP.md",
-      "bytes": 4615,
-      "sha256": "f2c8d60116fdf3ce2ce1d0c46cd9edfde4f98fa3a5ec39af6d581282568046ae"
+      "bytes": 4781,
+      "sha256": "7c5d4a8a2ca0e7cdf0cc4b4f62b652388d255a0d9b85ece735ade41fc33fb64b"
     },
     {
       "path": "docs/PACKAGING.md",
       "bytes": 1175,
       "sha256": "c486fe5397f95191db62a756f06fbce14e75a7c3fcb189a58ae634de694955c1"
+    },
+    {
+      "path": "docs/PROMAX-PACKAGE.md",
+      "bytes": 3642,
+      "sha256": "ee0fd5fd60b03a569f70fb7dfd583c84ea0fabddd997cf5a13e66bc19b5dbdbd"
+    },
+    {
+      "path": "docs/PROMAX-SP12-BUILD.md",
+      "bytes": 4749,
+      "sha256": "460901c66fef3917a79c2308e64d69947576f24a914e1780074138a00d0a1f2e"
     },
     {
       "path": "docs/PROVENANCE.md",
@@ -1338,6 +1348,91 @@
       "sha256": "b78862e350928a84b82546dc61a4a346813f068c341ff0fb79dd62fe1edf4741"
     },
     {
+      "path": "patches/donor/gem-w00-111-sp12/init.json",
+      "bytes": 551,
+      "sha256": "3093b35d8b76aa9ad6e5c0f8c019ea5f2b36028ea999e701718d2665fefa6e35"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libaudio_policy_client.z.so.json",
+      "bytes": 694,
+      "sha256": "dd7295227c38184259a3b34d32f3a1d1abdcdb52acde1d80c65b732487971c8f"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libaudio_policy_service.z.so.json",
+      "bytes": 593,
+      "sha256": "ef45abd1b1d2df5753949a670ee26b8c10c7d80121effa8507085248c8efd93f"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libcli_tool_client.z.so.json",
+      "bytes": 1024,
+      "sha256": "cbad9375a69847d41b36d652cfb869d6c848aa6608cc62994f85d18cff510fa0"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libcode_sign_utils.z.so.json",
+      "bytes": 582,
+      "sha256": "0f885eaafc80ea16fb839257d4b111410001d3adbe61ef6cbfac38cc3d6061ee"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libdevicestatus_service.z.so.json",
+      "bytes": 1015,
+      "sha256": "20e93776a7765bf3ba94649ee48eac1c4735df48dbf15bc02f9fea4a8c89e296"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libdistributeddatasvcfwk.z.so.json",
+      "bytes": 2006,
+      "sha256": "01f89368e9e6b016d43d03bd9cc82c59e193b1c7c9efafde0e01616475ac5074"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libkv_store_crypt.z.so.json",
+      "bytes": 1978,
+      "sha256": "9c693f9a33781ad750e3945dde61efdcee30fd047979a1c15bb77e4d62979db4"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libmemmgrservice.z.so.json",
+      "bytes": 2284,
+      "sha256": "9db0de9f6247d6c0e9d9a472d4f08368fb135535f3c59f3f563f15bc1ff8eef6"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libnet_tether_manager_if.z.so.json",
+      "bytes": 857,
+      "sha256": "6554a4c1d2dbc93929b2e49194350cfb9a868d154cf5e8640742fc5f9b0dcff5"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/librelational_store_crypt.z.so.json",
+      "bytes": 2477,
+      "sha256": "96714b77508d65f07dc9cabd797a0d2f9b07e773742a99f6bf2702264665c7c2"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/librender_service_base.z.so.json",
+      "bytes": 1568,
+      "sha256": "bfd68ca3948422b0fd7ee6118fce4295bb291632f5a06c539264ab311d188714"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libsensor_client.z.so.json",
+      "bytes": 673,
+      "sha256": "5b9a13033b5141e8b82618a3e4f55d2ab0cc6314b3d6c4453693b7b042b05f0c"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libsps_privacy_indicator_service_intf.z.so.json",
+      "bytes": 736,
+      "sha256": "322fe06cc06e12c95c9fa52109b303dd6ad2ad32d85804707dcddbea9eab7649"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libtime_system_ability.z.so.json",
+      "bytes": 1832,
+      "sha256": "6080df585e77189c52420440c17600e1b3a736720ffc35f01baf89b4e1c45fe3"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libvulkan.so.json",
+      "bytes": 636,
+      "sha256": "270a399c6dd0de8134e4af13be8734c03058aad0053a3f18acd49191a977aab9"
+    },
+    {
+      "path": "patches/donor/gem-w00-111-sp12/libwifi_sdk.z.so.json",
+      "bytes": 1186,
+      "sha256": "af0f089f3122894f49d40d0e8766d84987275767d6879f40c0129a0e2cc140cf"
+    },
+    {
       "path": "patches/donor/libaudio_policy_client.z.so.json",
       "bytes": 408,
       "sha256": "8121ed7fbc3e786c181a0675d4f70e00a053ff978dfe644d014758372a566687"
@@ -1364,13 +1459,13 @@
     },
     {
       "path": "README.en.md",
-      "bytes": 9753,
-      "sha256": "50fd113bd6e90a6678ab4f79252f7f0d0b2bd8985c8cec6939c82f812b4919e0"
+      "bytes": 9943,
+      "sha256": "2475a96c25747460370082cf08666e29b2a1cfcf683642171995d76dab71f4d5"
     },
     {
       "path": "README.md",
-      "bytes": 8393,
-      "sha256": "23b76566e93585f3c2b2965d0d92d194a8c99c9dc5988fd2037e1e7ae1d118ce"
+      "bytes": 8487,
+      "sha256": "0673be95664194addbaa804221c3bbb74e65e53a72e1cff08432a4b873b84ad5"
     },
     {
       "path": "RELEASE.json",
@@ -1803,9 +1898,24 @@
       "sha256": "5828126b3c9c77dc45f613dac5a02b0b6dd34a2aa71b15aefe6874f05b846bd0"
     },
     {
+      "path": "tests/Test-FlashPreflight.ps1",
+      "bytes": 3719,
+      "sha256": "525393bbcc44a97c59a8c9053b71fdf025622640b5209a2dc2fed9fe12b0761d"
+    },
+    {
+      "path": "tests/test_android_sparse.py",
+      "bytes": 1886,
+      "sha256": "542483bc7231cc7ce6d6b6cb0c852aafc2427433c8dc86c14345413059cd3b14"
+    },
+    {
       "path": "tests/test_audit_donor.py",
       "bytes": 3266,
       "sha256": "98457526a197b71beda22cb5b8c24a028baf40fec5c209e81d7b841a88aafbf2"
+    },
+    {
+      "path": "tests/test_huawei_full_ota.py",
+      "bytes": 3602,
+      "sha256": "cedddfbb866d2f34e99392bf3f59f359f89251aaffa255e259c026ddb2724cec"
     },
     {
       "path": "tests/test_userdata_mount.py",
@@ -1818,9 +1928,19 @@
       "sha256": "29ef143926a06f37dbe1ec2b6759a60509f6d45475938c907bb7aa17f1afdefa"
     },
     {
+      "path": "tools/android_sparse.py",
+      "bytes": 8203,
+      "sha256": "c2eb2883abe3299bbcd2ba0ab246b0f284e6cd57c4933b26a6707220cc95b5c8"
+    },
+    {
       "path": "tools/apply_guarded_elf_patch.py",
       "bytes": 2089,
       "sha256": "ac6d1b615a02855d3e03ff275e5055a98440e9d951d95b9a0964e8557ee26ce4"
+    },
+    {
+      "path": "tools/assemble_promax_package.py",
+      "bytes": 2854,
+      "sha256": "ef9e3a7c0bd250b9afed2295984fe3904865bb741a2ddb75b8947d4d58bb219e"
     },
     {
       "path": "tools/audit_donor.py",
@@ -1833,6 +1953,16 @@
       "sha256": "44c20bf8bd1ff338562f9ea87bcf1729a8245cc8f5d22a9ecc62a98e051f9a1c"
     },
     {
+      "path": "tools/build_promax_images.py",
+      "bytes": 10792,
+      "sha256": "ba2bf39771d728580f844cd21a0ee877be8ce99d1c3387f1c32d4a57b0450ca7"
+    },
+    {
+      "path": "tools/build_promax_ramdisk.py",
+      "bytes": 15366,
+      "sha256": "689ad89e3197cc9027ed7370d04246890889f4f645cfdee8586fad280c4e6f28"
+    },
+    {
       "path": "tools/build_useriam.py",
       "bytes": 2939,
       "sha256": "02fc4f2454edd2961cb19732e1b4a07fe4946a8bd8a2daf5dce4efd3d1afccaf"
@@ -1841,6 +1971,16 @@
       "path": "tools/collect_port_baseline.sh",
       "bytes": 1166,
       "sha256": "b323663cc9ce614023e28402bd48c4fb93760569bbef8830b56fd534f974ce0b"
+    },
+    {
+      "path": "tools/extract_huawei_full_ota.py",
+      "bytes": 6572,
+      "sha256": "006e423af3dbf6033dea177acd7535a834e23a7318a916ea5787aeb84f1df6b6"
+    },
+    {
+      "path": "tools/Flash-ProMax.ps1",
+      "bytes": 6939,
+      "sha256": "5d0ceb3499f99b94f7c945c6c060ab78ac7868302f7d6adce8c1f4d8991ccbdd"
     },
     {
       "path": "tools/refresh_manifest.py",

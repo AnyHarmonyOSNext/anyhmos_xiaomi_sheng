@@ -10,7 +10,7 @@
 4. 社区[机型索引](https://github.com/KHwang9883/MobileModels/blob/master/brands/huawei_cn.md)提供 GEM-W00/GEM-W10 等国行候选代码；这是定位线索，最终以包内产品和区域元数据为准，不能混入 GEM-W09 等海外包或相似命名机型。
 5. [卓易通官网](https://www.droitong.com/)是应用来源入口，但此项不证明已获得 Pro Max 系统内的容器服务、镜像和驱动依赖。
 
-此次检索尚未定位到**能核验机型、区域与版本的 Pro Max 国行 HarmonyOS 7 全量包公开直链**，因此没有下载其他机型包来冒充供体。当前没有可供审计的目标供体，Pro Max 迁移尚不能开始实际打包。
+初次检索未找到可核验的公开直链。随后用户提供三部分官方 CDN 地址，并将下载完毕的包交给本地构建。包内元数据确认 GEM-W00、all/cn、FULL OTA 和目标 SP12 版本；ZIP CRC 与全部组件 SHA-256 已通过，实验镜像已完成离线构建。精确大小、哈希、补丁迁移、工具来源及检查范围见[SP12 构建记录](PROMAX-SP12-BUILD.md)。尚未完成华为签名的密码学验证，不能把组件哈希检查写成官方签名认证。
 
 ## 可以推进的取得方式
 
@@ -26,4 +26,4 @@
 - [runassu 的 update.bin 解包工具](https://github.com/runassu/HarmonyOS-NEXT-Update-Package-Unpack-Tool)提供结构说明和哈希检查选项。
 - [SimomYung 的解包项目](https://github.com/SimomYung/unpack_huawei_package)公开测试包和解析实现；其 README 所列其他设备的包不是本目标供体。
 
-这些只是候选解包工具，尚未在 Pro Max HarmonyOS 7 包上验证。先审查选定版本源码，校验输出分区哈希/长度及包中记录；存在格式差异、签名或加密限制时记录实际错误，不跳过校验声称成功。文件系统提取后运行 [audit_donor.py](../tools/audit_donor.py)，重新评估闭源 HDI/系统库 ABI 和现有补丁，不沿用 MatePad Air 偏移。
+以上为格式研究参考。本次商业包存在超过 4 GiB 的组件，部分参考工具的 32 位字段解析不能直接采用；实际使用本仓库 [extract_huawei_full_ota.py](../tools/extract_huawei_full_ota.py) 的 64 位流式解析和逐组件校验。文件系统提取后重新评估闭源 HDI/系统库 ABI 和现有补丁，不能沿用 MatePad Air 偏移，也不能仅改哈希来绕过保护。

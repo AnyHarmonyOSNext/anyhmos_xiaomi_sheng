@@ -1,6 +1,6 @@
 # MatePad Pro Max 供体与 sheng 后续适配
 
-本分支基于 `AnyHarmonyOSNext/anyhmos_xiaomi_sheng` 的 `5f520ea2096ad1e989ac29f3f06f096b0873c837`。保留原版权、来源及逐文件许可，不给上游代码重新指定整体许可证。现有功能说明属于 MatePad Air 基线；本分支尚未完成 Pro Max 移植，也没有发布新 ROM。
+本分支基于 `AnyHarmonyOSNext/anyhmos_xiaomi_sheng` 的 `5f520ea2096ad1e989ac29f3f06f096b0873c837`。保留原版权、来源及逐文件许可，不给上游代码重新指定整体许可证。现有功能说明属于 MatePad Air 基线；已构建 Pro Max SP12 私有实验镜像，尚需完成启动与功能验收，仓库不发布供体 ROM 文件。
 
 ## 当前已验证内容
 
@@ -34,6 +34,6 @@ python tools/refresh_manifest.py
 python tools/verify_sources.py
 ```
 
-当前电脑未就绪的原构建依赖包括 WSL/Linux 构建环境、匹配 native SDK、上游源码、libdrm 及 donor 链接库。本次仅验证工具和真机只读采集，不声称编译或刷测了 144Hz、Pro Max 或卓易通修复。构建准备沿用 [BUILDING.md](BUILDING.md)，不移除已有二进制哈希保护来强行使用新供体。
+重编 native GPU/144Hz/容器接口仍需要匹配 native SDK、源码、libdrm 及 donor 链接库。SP12 镜像构建可用 Windows 上经来源与哈希核对的 Cygwin 文件系统工具完成，详见[构建记录](PROMAX-SP12-BUILD.md)。17 组供体补丁逐项迁移至新输入并保留前后哈希，沙箱配置保留 Pro Max 新字段。该工作不代表已完成 144Hz 或卓易通运行时修复；原生组件构建仍参考 [BUILDING.md](BUILDING.md)。
 
 发布前保留可恢复的原机分区备份、明确镜像来源和哈希；私有系统镜像、应用、设备备份、个人串口日志和凭据不进入 Git。

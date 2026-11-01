@@ -2,7 +2,7 @@
 
 ## INTERINIT development fork
 
-This branch targets a mainland-China MatePad Pro Max HarmonyOS 7 donor, GPU application compatibility, 144Hz and the Zhuoyitong Android runtime. The new donor has not been obtained or validated. The working baseline and inherited feature claims below refer to the upstream MatePad Air port. See the [development roadmap](docs/FORK-ROADMAP.md) and [donor acquisition record](docs/DONOR-ACQUISITION.md).
+This branch targets the mainland-China MatePad Pro Max HarmonyOS 7 donor, GEM-W00 207.0.0.111(SP12), GPU application compatibility, 144Hz and the Zhuoyitong Android runtime. The three FULL OTA archives passed component integrity checks, and an experimental private image set has been built for device testing. Offline checks do not establish boot or feature compatibility. The inherited feature table below refers to the upstream MatePad Air baseline. See the [package scope](docs/PROMAX-PACKAGE.md), [build record](docs/PROMAX-SP12-BUILD.md) and [development roadmap](docs/FORK-ROADMAP.md).
 
 [简体中文](README.md) · [Building](docs/BUILDING.md) · [Source map](docs/SOURCE_MAP.md) · [Testing](docs/VERIFICATION.md) · [Provenance and licensing](docs/PROVENANCE.md)
 
