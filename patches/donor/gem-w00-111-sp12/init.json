@@ -1,0 +1,21 @@
+{
+  "path": "/system/bin/init",
+  "input_sha256": "d2be5a02ca459e037f13264856f1bee92aea293b76060cda1a8cfc8ed1b7bc12",
+  "output_sha256": "d77b6422ba7cf21fa5d942f5909b23ceed74ed05694848360364d45b5ab2a013",
+  "changes": [
+    {
+      "offset": 38241,
+      "before": "6574632f696e697400",
+      "after": "6574632f73686e6700"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 36827,
+      "new_offset": 38241,
+      "kind": "identical_unique_string",
+      "string": "etc/init"
+    }
+  ],
+  "device_validated": false
+}

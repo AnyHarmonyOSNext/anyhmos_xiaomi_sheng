@@ -3,6 +3,7 @@
 #include "composer_exports.h"
 #include "log.h"
 #include <cerrno>
+#include <climits>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -88,6 +89,8 @@ uint64_t vsyncPeriod = 16666667ULL;
 pthread_t vsyncThread;
 VBlankCallback vsyncCallback = nullptr;
 void *vsyncData = nullptr;
+uint64_t modeGeneration = 0;
+void Metric(const char *format, ...);
 uint64_t Period() { return mode.vrefresh ? 1000000000ULL / mode.vrefresh : 16666667ULL; }
 bool Device(uint32_t id) { return id == 0 && drm >= 0 && connector; }
 void Log(const char *message) { Ace5Log("%s errno=%d", message, errno); }
@@ -237,6 +240,7 @@ uint64_t MonotonicNs()
 void *VsyncLoop(void *)
 {
     unsigned sequence = 0, errors = 0;
+    uint64_t generation = 0, previous = 0, intervals = 0, sum = 0, minimum = 0, maximum = 0;
     for (;;) {
         bool enabled;
         {
@@ -244,7 +248,7 @@ void *VsyncLoop(void *)
             if (quit) break;
             enabled = vsyncEnabled;
         }
-        if (!enabled) { usleep(5000); continue; }
+        if (!enabled) { previous = 0; usleep(5000); continue; }
         // Only the vblank worker waits here: never hold the commit mutex.
         // Timestamp is the kernel's actual scanout timestamp, not wake time.
         drmVBlank wait{};
@@ -260,12 +264,32 @@ void *VsyncLoop(void *)
         errors = 0;
         uint64_t timestamp = uint64_t(wait.reply.tval_sec) * 1000000000ULL +
             uint64_t(wait.reply.tval_usec) * 1000ULL;
-        VBlankCallback callback; void *data;
+        VBlankCallback callback; void *data; uint64_t period, currentGeneration;
         {
             std::lock_guard<std::mutex> state(vsyncMutex);
             if (quit) break;
             callback = vsyncEnabled ? vsyncCallback : nullptr; data = vsyncData;
+            period = vsyncPeriod; currentGeneration = modeGeneration;
         }
+        // 按内核时间戳统计周期，切换后的首个间隔不参与统计
+        if (generation != currentGeneration) {
+            previous = intervals = sum = minimum = maximum = 0;
+            generation = currentGeneration;
+        }
+        if (previous && timestamp > previous && timestamp - previous < 100000000ULL) {
+            uint64_t delta = timestamp - previous;
+            sum += delta; ++intervals;
+            if (!minimum || delta < minimum) minimum = delta;
+            if (delta > maximum) maximum = delta;
+            if (intervals >= 240) {
+                Metric("HARDWARE_VSYNC expected_ns=%llu samples=%llu avg_ns=%llu min_ns=%llu max_ns=%llu",
+                    (unsigned long long)period, (unsigned long long)intervals,
+                    (unsigned long long)(sum / intervals), (unsigned long long)minimum,
+                    (unsigned long long)maximum);
+                intervals = sum = minimum = maximum = 0;
+            }
+        }
+        previous = callback ? timestamp : 0;
         if (callback) callback(++sequence, timestamp, data);
     }
     return nullptr;
@@ -339,8 +363,9 @@ struct SubmitMetrics {
         last = previous;
     }
 } submitMetrics;
-int Submit(bool testOnly)
+int Submit(bool testOnly, int32_t *presentFence = nullptr)
 {
+    if (presentFence) *presentFence = -1;
     if (!testOnly && !requestedPowerOn) {
         if (!loggedOffSubmission) {
             Ace5Log("POWER_OFF_LATCH suppressed late frame without DRM commit");
@@ -369,10 +394,14 @@ int Submit(bool testOnly)
     if (!request) { drmModeRmFB(drm, fb); return FAIL; }
     timing[2] = MonotonicNs();
     bool valid = true;
+    uint64_t retireFence = UINT64_MAX;
 #define PROP(object, type, name, value) valid &= Property(request, object, type, name, value) >= 0
     PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "CRTC_ID", crtc);
     PROP(crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", modeBlob);
     PROP(crtc, DRM_MODE_OBJECT_CRTC, "ACTIVE", 1);
+    // 由内核返回本次呈现 fence，测试提交不创建文件描述符
+    if (!testOnly) PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "RETIRE_FENCE",
+        reinterpret_cast<uintptr_t>(&retireFence));
     // Partition the source exactly; no gap or duplicated column at the seam.
     const int leftSourceWidth = clientCrop.w / 2;
     for (unsigned half = 0; half < 2; ++half) {
@@ -398,9 +427,20 @@ int Submit(bool testOnly)
         DRM_MODE_ATOMIC_ALLOW_MODESET | (testOnly ? DRM_MODE_ATOMIC_TEST_ONLY : 0), nullptr) : -1;
     timing[4] = MonotonicNs();
     drmModeAtomicFree(request);
+    // 失败提交也可能已创建 fence，未移交的描述符由作用域释放
+    OwnedFence present(retireFence <= INT_MAX ? int(retireFence) : -1);
+    if (present.fd >= 0) fcntl(present.fd, F_SETFD, FD_CLOEXEC);
     if (rc || testOnly) drmModeRmFB(drm, fb);
     else { if (currentFb) drmModeRmFB(drm, currentFb); currentFb = fb; }
     timing[5] = MonotonicNs();
+    if (!rc && !testOnly && presentFence) {
+        *presentFence = present.Take();
+        static bool reported = false;
+        if (!reported) {
+            Metric("PRESENT_FENCE first_fd=%d blocking_commit=1", *presentFence);
+            reported = true;
+        }
+    }
     if (!rc && !testOnly) submitMetrics.Record(timing);
     if (rc) Log("atomic commit failed");
     return rc == 0 ? OK : FAIL;
@@ -435,6 +475,40 @@ int BlackPowerOn()
     clientCrop = {0, 0, mode.hdisplay, mode.vdisplay};
     return Submit(false);
 }
+// 采用先检验模式再提交的方法，失败时保留目前状态防止黑砖救不了
+int ChangeMode(uint32_t modeId)
+{
+    if (modeId >= displayModes.size()) return INVALID;
+    if (modeId == selectedMode) return OK;
+    const auto &candidate = displayModes[modeId];
+    uint32_t candidateBlob = 0;
+    if (drmModeCreatePropertyBlob(drm, &candidate, sizeof(candidate), &candidateBlob)) return FAIL;
+    auto *request = drmModeAtomicAlloc();
+    if (!request) { drmModeDestroyPropertyBlob(drm, candidateBlob); return FAIL; }
+    // 仅改变模式属性，保留双屏平面、帧缓冲及亮灭屏状态
+    int result = Property(request, crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", candidateBlob) < 0 ? FAIL : OK;
+    if (!result) result = drmModeAtomicCommit(drm, request,
+        DRM_MODE_ATOMIC_ALLOW_MODESET | DRM_MODE_ATOMIC_TEST_ONLY, nullptr);
+    if (!result) result = drmModeAtomicCommit(drm, request, DRM_MODE_ATOMIC_ALLOW_MODESET, nullptr);
+    int saved = errno;
+    drmModeAtomicFree(request);
+    if (result) {
+        drmModeDestroyPropertyBlob(drm, candidateBlob);
+        Metric("MODE_REJECT id=%u hz=%u errno=%d", modeId, candidate.vrefresh, saved);
+        return FAIL;
+    }
+    uint32_t previousBlob = modeBlob;
+    mode = candidate; modeBlob = candidateBlob; selectedMode = modeId;
+    {
+        std::lock_guard<std::mutex> state(vsyncMutex);
+        vsyncPeriod = Period(); ++modeGeneration;
+    }
+    if (previousBlob) drmModeDestroyPropertyBlob(drm, previousBlob);
+    Metric("MODE_APPLIED id=%u hz=%u period_ns=%llu powered_on=%d",
+        selectedMode, mode.vrefresh, (unsigned long long)Period(), requestedPowerOn);
+    Ace5Log("mode applied id=%u %ux%u@%u", selectedMode, mode.hdisplay, mode.vdisplay, mode.vrefresh);
+    return OK;
+}
 }
 
 #define DEVICE_LOCK(id) std::lock_guard<std::mutex> lock(mutex); if (!Device(id)) return INVALID
@@ -464,13 +538,42 @@ extern "C" int32_t GetDisplayCapability(uint32_t id, DisplayCapability &info)
     return OK;
 }
 extern "C" int32_t GetDisplaySupportedModes(uint32_t id, std::vector<DisplayModeInfo> &modes)
-{ DEVICE_LOCK(id); modes = {{mode.hdisplay, mode.vdisplay, mode.vrefresh, 0}}; return OK; }
+{
+    DEVICE_LOCK(id); modes.clear();
+    // 使用连接器枚举顺序作为稳定编号，保留内核提供的真实时序
+    for (uint32_t i = 0; i < displayModes.size(); ++i) {
+        const auto &item = displayModes[i];
+        modes.push_back({item.hdisplay, item.vdisplay, item.vrefresh, int32_t(i)});
+    }
+    return OK;
+}
 extern "C" int32_t GetDisplaySupportedModesExt(uint32_t id, std::vector<DisplayModeInfoExt> &modes)
-{ DEVICE_LOCK(id); modes = {{{mode.hdisplay, mode.vdisplay, mode.vrefresh, 0}, 0}}; return OK; }
+{
+    DEVICE_LOCK(id); modes.clear();
+    for (uint32_t i = 0; i < displayModes.size(); ++i) {
+        const auto &item = displayModes[i];
+        modes.push_back({{item.hdisplay, item.vdisplay, item.vrefresh, int32_t(i)}, i});
+    }
+    return OK;
+}
 extern "C" int32_t GetDisplayMode(uint32_t id, uint32_t &modeId)
-{ DEVICE_LOCK(id); modeId = 0; return OK; }
+{ DEVICE_LOCK(id); modeId = selectedMode; return OK; }
 extern "C" int32_t SetDisplayMode(uint32_t id, uint32_t modeId)
-{ DEVICE_LOCK(id); return modeId == 0 ? OK : UNSUPPORTED; }
+{ DEVICE_LOCK(id); return ChangeMode(modeId); }
+extern "C" int32_t SetDisplayModeAsync(uint32_t id, uint32_t modeId, ModeCallback cb, void *data)
+{
+    if (!cb) return INVALID;
+    uint64_t period;
+    {
+        DEVICE_LOCK(id);
+        int result = ChangeMode(modeId);
+        if (result) return result;
+        period = Period();
+    }
+    // 解锁后回报已生效的周期，允许回调再次查询显示状态
+    cb(modeId, period, data);
+    return OK;
+}
 extern "C" int32_t GetDisplayPowerStatus(uint32_t id, V::DispPowerStatus &status)
 {
     DEVICE_LOCK(id); bool active;
@@ -575,7 +678,7 @@ extern "C" int32_t SetDisplayClientCrop(uint32_t id, const IRect &rect)
 extern "C" int32_t SetDisplayClientDamage(uint32_t id, std::vector<IRect> &rects)
 { DEVICE_LOCK(id); clientDamage = rects; return OK; }
 extern "C" int32_t Commit(uint32_t id, int32_t &fence)
-{ DEVICE_LOCK(id); fence = -1; return Submit(false); }
+{ DEVICE_LOCK(id); return Submit(false, &fence); }
 // Explicit test-only entry point for the independent recovery contract test.
 extern "C" int32_t Ace5TestClientBuffer(uint32_t id)
 { DEVICE_LOCK(id); return Submit(true); }
@@ -626,5 +729,45 @@ extern "C" void Ace5InitializeVsyncForTest() { std::lock_guard<std::mutex> lock(
 
 extern "C" void Ace5HoldComposerLockForTest(unsigned microseconds)
 { std::lock_guard<std::mutex> lock(mutex); usleep(microseconds); }
+}
+#endif
+
+#ifdef ACE5_SUBMIT_TEST
+namespace OHOS::HDI::Display::Composer {
+extern "C" void Ace5InitializeModesForTest();
+extern "C" void Ace5InitializeSubmitForTest()
+{
+    Ace5InitializeModesForTest();
+    std::lock_guard<std::mutex> lock(mutex);
+    plane = 90; secondPlane = 133;
+    propertyIds[{connector, "CRTC_ID"}] = 102;
+    propertyIds[{connector, "RETIRE_FENCE"}] = 999;
+    propertyIds[{crtc, "ACTIVE"}] = 103;
+    uint32_t property = 200;
+    for (uint32_t target : {plane, secondPlane})
+        for (const char *name : {"FB_ID", "CRTC_ID", "SRC_X", "SRC_Y", "SRC_W", "SRC_H",
+            "CRTC_X", "CRTC_Y", "CRTC_W", "CRTC_H", "color_fill"})
+            propertyIds[{target, name}] = property++;
+    client.value.fd = open("/dev/null", O_RDWR);
+    client.value.width = 3048; client.value.height = 2032;
+    client.value.stride = 12288; client.value.size = 12288 * 2032;
+    client.value.format = V::PIXEL_FMT_RGBA_8888;
+    clientCrop = {0, 0, 3048, 2032};
+}
+extern "C" int32_t Ace5SubmitInternalForTest() { return Submit(false); }
+}
+#endif
+
+#ifdef ACE5_MODE_TEST
+namespace OHOS::HDI::Display::Composer {
+extern "C" void Ace5InitializeModesForTest()
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    drm = open("/dev/null", O_RDWR); connector = 88; crtc = 176; modeBlob = 1;
+    mode = {}; mode.hdisplay = 3048; mode.vdisplay = 2032; mode.vrefresh = 120;
+    displayModes = {mode}; mode.vrefresh = 144; displayModes.push_back(mode);
+    mode = displayModes[0]; selectedMode = 0;
+    propertyIds[{crtc, "MODE_ID"}] = 101;
+}
 }
 #endif

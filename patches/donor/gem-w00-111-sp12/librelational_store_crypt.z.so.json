@@ -1,0 +1,98 @@
+{
+  "path": "/system/lib64/librelational_store_crypt.z.so",
+  "input_sha256": "9f45c86037177043da257fcff03a1c1da321d97256520841ff3cd2b021107f92",
+  "output_sha256": "5855fce4b77fab7ea008d1f51487bf9819a8416e713ce6ab1a5603ec40f1d8ce",
+  "changes": [
+    {
+      "offset": 3615,
+      "before": "6c696268756b7373646b2e7a2e736f00",
+      "after": "6c696264626b6579732e736f00000000"
+    },
+    {
+      "offset": 3171,
+      "before": "486b7347656e657261746552616e646f6d00",
+      "after": "536b7347656e657261746552616e646f6d00"
+    },
+    {
+      "offset": 3074,
+      "before": "486b7347656e65726174654b657900",
+      "after": "536b7347656e65726174654b657900"
+    },
+    {
+      "offset": 3089,
+      "before": "486b734b6579457869737400",
+      "after": "536b734b6579457869737400"
+    },
+    {
+      "offset": 3004,
+      "before": "486b73496e697400",
+      "after": "536b73496e697400"
+    },
+    {
+      "offset": 2928,
+      "before": "486b7355706461746500",
+      "after": "536b7355706461746500"
+    },
+    {
+      "offset": 2994,
+      "before": "486b7346696e69736800",
+      "after": "536b7346696e69736800"
+    },
+    {
+      "offset": 2919,
+      "before": "486b7341626f727400",
+      "after": "536b7341626f727400"
+    }
+  ],
+  "relocation_evidence": [
+    {
+      "old_offset": 3615,
+      "new_offset": 3615,
+      "kind": "identical_unique_string",
+      "string": "libhukssdk.z.so"
+    },
+    {
+      "old_offset": 3171,
+      "new_offset": 3171,
+      "kind": "identical_unique_string",
+      "string": "HksGenerateRandom"
+    },
+    {
+      "old_offset": 3074,
+      "new_offset": 3074,
+      "kind": "identical_unique_string",
+      "string": "HksGenerateKey"
+    },
+    {
+      "old_offset": 3089,
+      "new_offset": 3089,
+      "kind": "identical_unique_string",
+      "string": "HksKeyExist"
+    },
+    {
+      "old_offset": 3004,
+      "new_offset": 3004,
+      "kind": "identical_unique_string",
+      "string": "HksInit"
+    },
+    {
+      "old_offset": 2928,
+      "new_offset": 2928,
+      "kind": "identical_unique_string",
+      "string": "HksUpdate"
+    },
+    {
+      "old_offset": 2994,
+      "new_offset": 2994,
+      "kind": "identical_unique_string",
+      "string": "HksFinish"
+    },
+    {
+      "old_offset": 2919,
+      "new_offset": 2919,
+      "kind": "identical_unique_string",
+      "string": "HksAbort"
+    }
+  ],
+  "device_validated": false
+}
