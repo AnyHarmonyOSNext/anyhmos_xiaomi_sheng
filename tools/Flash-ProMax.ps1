@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [ValidateSet('Verify','Inspect','Flash')][string]$Mode = 'Verify',
     [ValidatePattern('^[a-zA-Z0-9_-]+$')][string]$Serial,
@@ -20,6 +20,7 @@ foreach ($Name in $RequiredImages) {
     if ($Records.Count -ne 1) { throw "Missing or duplicate artifact: $Name" }
 }
 Write-Host 'Verifying package sizes and SHA-256 checksums...'
+# 刷写前逐项核对文件大小和哈希
 foreach ($Record in $Manifest.files) {
     if ($Record.path -match '(^[\\/]|:|(^|[\\/])\.\.([\\/]|$))') { throw 'Invalid manifest path.' }
     $Path = Join-Path $PackageRoot $Record.path
@@ -36,12 +37,13 @@ if ($Manifest.device_boot_tested) {
 } else {
     Write-Host 'Successful device boot has NOT been validated for this image.'
 }
-Write-Host 'GPU app compatibility, 144 Hz, and Zhuoyitong runtime are NOT validated.'
+Write-Host ('Not validated: ' + (@($Manifest.not_validated) -join ', '))
 if ($Mode -eq 'Verify') { Write-Host 'Offline verification passed. No device command was sent.'; return }
 
 $LogDir = Join-Path $PackageRoot 'logs'
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 $LogPath = Join-Path $LogDir ('fastboot-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.txt')
+# 同时读取标准输出和错误流，避免原生命令阻塞
 function Invoke-Fastboot([string[]]$Arguments) {
     foreach ($Argument in $Arguments) {
         if ($Argument.Contains('"') -or $Argument.EndsWith('\')) { throw 'Unsupported native argument.' }
@@ -89,6 +91,7 @@ function Convert-HexSize([string]$Value) {
     if ($Value -notmatch '^0x[0-9a-fA-F]+$') { throw "Invalid partition size: $Value" }
     return [Convert]::ToInt64($Value.Substring(2),16)
 }
+# 核对设备型号、解锁状态及实际分区容量
 if ((Get-FastbootVar 'product') -ne 'sheng') { throw 'Only Xiaomi sheng is supported.' }
 if ((Get-FastbootVar 'unlocked') -ne 'yes') { throw 'Bootloader must already be unlocked.' }
 if ((Get-FastbootVar 'is-userspace') -ne 'no') { throw 'Use bootloader Fastboot, not fastbootd.' }

@@ -1,5 +1,5 @@
 #!/busybox sh
-# Read-only diagnostic. Keep the raw serial log local; review before sharing.
+# 只读采集显示、GPU 和容器依赖状态
 B=/busybox
 R=/hmos-root
 echo SHENG_PORT_BASELINE_BEGIN

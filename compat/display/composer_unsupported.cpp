@@ -6,7 +6,6 @@ extern "C" int32_t DestroyVirtualDisplay(uint32_t devId) { return -5; }
 extern "C" int32_t SetVirtualDisplayBuffer(uint32_t devId, const BufferHandle& buffer, const int32_t fence) { return -5; }
 extern "C" int32_t SetDisplayProperty(uint32_t devId, uint32_t id, uint64_t value) { return -5; }
 extern "C" int32_t RegSeamlessChangeCallback(SeamlessChangeCallback cb, void* data) { return -5; }
-extern "C" int32_t SetDisplayModeAsync(uint32_t devId, uint32_t modeId, ModeCallback cb, void *data) { return -5; }
 extern "C" int32_t SetLayerPerFrameParameter(
         uint32_t devId, uint32_t layerId, const std::string& key, const std::vector<int8_t>& value) { return -5; }
 extern "C" int32_t SetDisplayPerFrameParameter(

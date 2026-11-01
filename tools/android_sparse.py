@@ -1,4 +1,5 @@
 """Read Android sparse images without allocating their expanded size."""
+
 from __future__ import annotations
 
 import bisect
@@ -18,6 +19,7 @@ class SparseImage:
             self.file.close()
             raise
 
+    # 校验稀疏块布局并记录逻辑地址映射
     def _parse(self):
         self.chunks = []
         header = self.file.read(28)
@@ -60,6 +62,7 @@ class SparseImage:
     def close(self):
         self.file.close()
 
+    # 按逻辑地址读取原始块、填充块和空洞
     def read_at(self, offset: int, length: int) -> bytes:
         if offset < 0 or length < 0 or offset + length > self.size:
             raise ValueError('Read outside sparse image')
@@ -75,7 +78,7 @@ class SparseImage:
                     raise ValueError('Truncated raw sparse chunk')
             elif kind == 0xCAC2:
                 phase = (offset - start) % 4
-                data = (value * ((take + phase + 3) // 4))[phase:phase + take]
+                data = (value * ((take + phase + 3) // 4))[phase : phase + take]
             else:
                 data = bytes(take)
             output.extend(data)
@@ -92,17 +95,25 @@ class SparseImage:
             length -= take
         return digest.hexdigest()
 
+    # 仅写入有效数据，保留 NTFS 稀疏空洞
     def expand_ntfs_sparse(self, destination: Path):
         """Materialize only data ranges; Windows is required for sparse marking."""
         if os.name != 'nt':
             raise OSError('NTFS sparse expansion requires Windows')
         import ctypes
         import msvcrt
+
         with Path(destination).open('xb') as out:
             returned = ctypes.c_ulong()
             ok = ctypes.windll.kernel32.DeviceIoControl(
                 ctypes.c_void_p(msvcrt.get_osfhandle(out.fileno())),
-                0x900C4, None, 0, None, 0, ctypes.byref(returned), None,
+                0x900C4,
+                None,
+                0,
+                None,
+                0,
+                ctypes.byref(returned),
+                None,
             )
             if not ok:
                 raise OSError('Cannot mark verification file sparse')
@@ -115,6 +126,7 @@ class SparseImage:
             out.truncate(self.size)
 
 
+# 核对动态分区校验和、备份及映射边界
 def inspect_super(image: SparseImage) -> dict:
     geometry = image.read_at(4096, 4096)
     if struct.unpack_from('<I', geometry)[0] != 0x616C4467:
@@ -138,7 +150,7 @@ def inspect_super(image: SparseImage) -> dict:
     header[12:44] = bytes(32)
     if hashlib.sha256(header).digest() != expected:
         raise ValueError('LP metadata header checksum mismatch')
-    table = metadata[header_size:header_size + table_size]
+    table = metadata[header_size : header_size + table_size]
     if hashlib.sha256(table).digest() != metadata[48:80]:
         raise ValueError('LP metadata table checksum mismatch')
     for i in range(slots * 2):
@@ -154,17 +166,33 @@ def inspect_super(image: SparseImage) -> dict:
     extents = rows(92, '<QIQI')
     partitions = []
     for name, attributes, first, count, group in rows(80, '<36sIIII'):
-        spans = extents[first:first + count]
+        spans = extents[first : first + count]
         if len(spans) != count:
             raise ValueError('LP extent index invalid')
-        partitions.append({'name': name.split(b'\0')[0].decode(), 'attributes': attributes,
-                           'group': group, 'bytes': sum(e[0] * 512 for e in spans),
-                           'extents': [list(e) for e in spans]})
-    groups = [{'name': n.split(b'\0')[0].decode(), 'flags': f, 'maximum': m}
-              for n, f, m in rows(104, '<36sIQ')]
-    devices = [{'first_sector': s, 'alignment': a, 'alignment_offset': o, 'bytes': z,
-                'name': n.split(b'\0')[0].decode(), 'flags': f}
-               for s, a, o, z, n, f in rows(116, '<QIIQ36sI')]
+        partitions.append(
+            {
+                'name': name.split(b'\0')[0].decode(),
+                'attributes': attributes,
+                'group': group,
+                'bytes': sum(e[0] * 512 for e in spans),
+                'extents': [list(e) for e in spans],
+            }
+        )
+    groups = [
+        {'name': n.split(b'\0')[0].decode(), 'flags': f, 'maximum': m}
+        for n, f, m in rows(104, '<36sIQ')
+    ]
+    devices = [
+        {
+            'first_sector': s,
+            'alignment': a,
+            'alignment_offset': o,
+            'bytes': z,
+            'name': n.split(b'\0')[0].decode(),
+            'flags': f,
+        }
+        for s, a, o, z, n, f in rows(116, '<QIIQ36sI')
+    ]
     occupied = []
     for partition in partitions:
         for sectors, kind, start, source in partition['extents']:
@@ -180,6 +208,13 @@ def inspect_super(image: SparseImage) -> dict:
         used = sum(p['bytes'] for p in partitions if p['group'] == i)
         if group['maximum'] and used > group['maximum']:
             raise ValueError('LP group capacity exceeded')
-    return {'expanded_bytes': image.size, 'metadata_max_size': maximum, 'slots': slots,
-            'block': block, 'partitions': partitions, 'groups': groups, 'devices': devices,
-            'checksums_and_backups_verified': True}
+    return {
+        'expanded_bytes': image.size,
+        'metadata_max_size': maximum,
+        'slots': slots,
+        'block': block,
+        'partitions': partitions,
+        'groups': groups,
+        'devices': devices,
+        'checksums_and_backups_verified': True,
+    }

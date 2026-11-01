@@ -8,14 +8,16 @@ import unittest
 import zipfile
 
 spec = importlib.util.spec_from_file_location(
-    'extract_huawei_full_ota', Path(__file__).resolve().parents[1] / 'tools/extract_huawei_full_ota.py')
+    'extract_huawei_full_ota',
+    Path(__file__).resolve().parents[1] / 'tools/extract_huawei_full_ota.py',
+)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 
 def payload(content=b'partition', name=b'/system', declared_size=None, digest=None):
     record = bytearray(87)
-    record[:len(name)] = name
+    record[: len(name)] = name
     struct.pack_into('<Q', record, 47, len(content) if declared_size is None else declared_size)
     record[55:87] = hashlib.sha256(content).digest() if digest is None else digest
     header = bytearray(180)

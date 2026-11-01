@@ -1,4 +1,4 @@
-# Exercise production preflight with a substituted transport. No device is opened.
+﻿# 使用模拟传输验证刷写前检查，不访问实际设备
 $ErrorActionPreference = 'Stop'
 $Repo = Split-Path $PSScriptRoot -Parent
 $Fixture = Join-Path $Repo ('work\flash-test-' + [guid]::NewGuid().ToString('N'))
@@ -37,13 +37,16 @@ function Invoke-Fastboot([string[]]$Arguments) {
 '@
 $Source=$Source.Substring(0,$Function.Extent.StartOffset)+$Mock+$Source.Substring($Function.Extent.EndOffset)
 $TestScript=Join-Path $Fixture 'Mock-Flash.ps1'
-[IO.File]::WriteAllText($TestScript,$Source)
+# 保留 BOM，使 Windows PowerShell 正确读取中文注释
+[IO.File]::WriteAllText($TestScript,$Source,[Text.UTF8Encoding]::new($true))
 $Passed=@()
 foreach ($Case in @('valid','wrong-product','wrong-capacity','corrupt-image')) {
     $env:HMOS_FLASH_TEST=$Case
     if($Case -eq 'corrupt-image'){[IO.File]::AppendAllText((Join-Path $Fixture 'images\boot.img'),'x')}
     $Info=New-Object System.Diagnostics.ProcessStartInfo
     $Info.FileName='powershell.exe'
+    # 使用子进程默认模块路径，避免继承其他 PowerShell 版本的环境
+    $Info.EnvironmentVariables.Remove('PSModulePath')
     $Info.Arguments='-NoProfile -ExecutionPolicy Bypass -File "'+$TestScript+'" -Mode Inspect'
     $Info.UseShellExecute=$false;$Info.CreateNoWindow=$true;$Info.RedirectStandardOutput=$true;$Info.RedirectStandardError=$true
     $Process=[Diagnostics.Process]::Start($Info)

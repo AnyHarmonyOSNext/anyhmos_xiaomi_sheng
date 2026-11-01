@@ -3,6 +3,7 @@
 The L2 container uses 87-byte component records and a 64-bit stored size.
 Container hashes prove consistency, not the authenticity of its signature.
 """
+
 import argparse
 import hashlib
 import json
@@ -20,6 +21,7 @@ def exact(stream, size):
     return data
 
 
+# 解析含 64 位长度的组件表并检查容器边界
 def header(stream, payload_size):
     raw = exact(stream, 180)
     if struct.unpack_from('<H', raw)[0] != 1 or struct.unpack_from('<H', raw, 176)[0] != 5:
@@ -42,12 +44,19 @@ def header(stream, payload_size):
     components = []
     names = set()
     for pos in range(0, count_bytes, 87):
-        name = records[pos:pos + 32].split(b'\0')[0].decode().removeprefix('/')
-        if not name or name in names or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in name):
+        name = records[pos : pos + 32].split(b'\0')[0].decode().removeprefix('/')
+        if (
+            not name
+            or name in names
+            or any(
+                c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-'
+                for c in name
+            )
+        ):
             raise ValueError('Invalid or duplicate component name')
         names.add(name)
         size = struct.unpack_from('<Q', records, pos + 47)[0]
-        digest = records[pos + 55:pos + 87].hex()
+        digest = records[pos + 55 : pos + 87].hex()
         components.append({'name': name, 'offset': offset, 'bytes': size, 'sha256': digest})
         offset += size
     if offset != payload_size:
@@ -63,6 +72,7 @@ def file_hash(path):
     return digest.hexdigest()
 
 
+# 逐块校验组件，验证后再将临时文件转为镜像
 def extract(source, destination, selected):
     before = source.stat()
     destination.mkdir(parents=True, exist_ok=True)
@@ -111,8 +121,17 @@ def extract(source, destination, selected):
                     temp.rename(output)
                 result = {**component, 'hash_verified': True, 'extracted': save}
                 results.append(result)
-                print(json.dumps({'component': component['name'], 'bytes': component['bytes'],
-                                  'hash_verified': True, 'extracted': save}), flush=True)
+                print(
+                    json.dumps(
+                        {
+                            'component': component['name'],
+                            'bytes': component['bytes'],
+                            'hash_verified': True,
+                            'extracted': save,
+                        }
+                    ),
+                    flush=True,
+                )
             if stream.read(1):
                 raise ValueError('Unexpected trailing payload data')
         # update.bin was read to EOF, which also checks its ZIP CRC.
@@ -126,10 +145,16 @@ def extract(source, destination, selected):
     after = source.stat()
     if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
         raise ValueError('Input ZIP changed during verification')
-    report = {'input_file': source.name, 'input_bytes': before.st_size,
-              'input_sha256': digest, 'zip_crc_verified': True,
-              'container_component_hashes_verified': True, 'signature_verified': False,
-              'metadata': metadata, 'components': results}
+    report = {
+        'input_file': source.name,
+        'input_bytes': before.st_size,
+        'input_sha256': digest,
+        'zip_crc_verified': True,
+        'container_component_hashes_verified': True,
+        'signature_verified': False,
+        'metadata': metadata,
+        'components': results,
+    }
     with report_path.open('x', encoding='utf-8', newline='\n') as output:
         json.dump(report, output, ensure_ascii=False, indent=2)
         output.write('\n')

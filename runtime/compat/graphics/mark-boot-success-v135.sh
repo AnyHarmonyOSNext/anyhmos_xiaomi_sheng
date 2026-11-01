@@ -10,7 +10,7 @@ D=/compat/bootcontrol-v135
 $B grep -q '^androidboot.hardware.sku = "sheng"$' /proc/bootconfig
 completed=$($B chroot "$R" /system/bin/param get bootevent.boot.completed)
 [ "$(echo "$completed" | $B tr -d ' \r\n')" = true ] || exit 34
-# Callback delivery is optional; VERIFIED is emitted only after the state API confirms unlock.
+# 仅接受状态接口确认解锁后产生的完整记录
 $B grep -Eq '^SCREENLOCK_VERIFIED after=0 (callback=-?[0-9]+( elapsed=[0-9]+)?|already_unlocked=1)$' \
  "$R/data/local/tmp/v116-autostart.txt" || exit 36
 cd "$D"

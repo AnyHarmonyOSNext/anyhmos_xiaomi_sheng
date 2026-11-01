@@ -7,7 +7,8 @@ import tempfile
 import unittest
 
 spec = importlib.util.spec_from_file_location(
-    'audit_donor', Path(__file__).resolve().parents[1] / 'tools/audit_donor.py')
+    'audit_donor', Path(__file__).resolve().parents[1] / 'tools/audit_donor.py'
+)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
@@ -22,16 +23,21 @@ class DonorAuditTests(unittest.TestCase):
             for partition, data in [('system', b'original'), ('vendor', b'changed')]:
                 (donor / partition).mkdir(parents=True)
                 (donor / partition / 'libtest.so').write_bytes(data)
-            recipe = {'name': 'libtest.so',
-                      'input_sha256': hashlib.sha256(b'original').hexdigest(),
-                      'output_sha256': hashlib.sha256(b'patched').hexdigest()}
-            (recipes / 'test.json').write_text(json.dumps(recipe))
+            recipe = {
+                'name': 'libtest.so',
+                'input_sha256': hashlib.sha256(b'original').hexdigest(),
+                'output_sha256': hashlib.sha256(b'patched').hexdigest(),
+            }
+            (recipes / 'test.json').write_text(json.dumps(recipe), encoding='utf-8')
             report = module.audit(donor.resolve(), recipes)
             results = report['existing_patch_input_checks'][0]['candidates']
-            self.assertEqual(results, [
-                {'path': 'system/libtest.so', 'status': 'input_hash_matched'},
-                {'path': 'vendor/libtest.so', 'status': 'different_input_requires_review'},
-            ])
+            self.assertEqual(
+                results,
+                [
+                    {'path': 'system/libtest.so', 'status': 'input_hash_matched'},
+                    {'path': 'vendor/libtest.so', 'status': 'different_input_requires_review'},
+                ],
+            )
             self.assertEqual((donor / 'vendor/libtest.so').read_bytes(), b'changed')
 
     def test_missing_and_already_patched_inputs(self):
@@ -42,10 +48,16 @@ class DonorAuditTests(unittest.TestCase):
             recipes.mkdir()
             (donor / 'present.so').write_bytes(b'patched')
             for name in ('missing.so', 'present.so'):
-                (recipes / (name + '.json')).write_text(json.dumps({
-                    'name': name, 'input_sha256': '0' * 64,
-                    'output_sha256': hashlib.sha256(b'patched').hexdigest(),
-                }))
+                (recipes / (name + '.json')).write_text(
+                    json.dumps(
+                        {
+                            'name': name,
+                            'input_sha256': '0' * 64,
+                            'output_sha256': hashlib.sha256(b'patched').hexdigest(),
+                        }
+                    ),
+                    encoding='utf-8',
+                )
             checks = module.audit(donor.resolve(), recipes)['existing_patch_input_checks']
             self.assertEqual(checks[0]['status'], 'missing')
             self.assertEqual(checks[1]['candidates'][0]['status'], 'already_patched')

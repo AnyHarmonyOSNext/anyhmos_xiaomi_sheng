@@ -43,11 +43,6 @@
       "sha256": "3b1b232d01ba55944459befb197394a364dd61a108d80d0b267afbf767210fd5"
     },
     {
-      "path": "analysis/fork-baseline-20261101.json",
-      "bytes": 1385,
-      "sha256": "085780c15e7a6ecc0b3630338214455c219bf726e1052fe5cb6bdf0cccff59f4"
-    },
-    {
       "path": "analysis/nearlink-v141-verification.json",
       "bytes": 1406,
       "sha256": "1f9dc059eb380dac0c5c795e3609dbc588066e35416ab6692cecc1a55b5e6e22"
@@ -389,8 +384,8 @@
     },
     {
       "path": "compat/bootcontrol/bootcontrol_readonly.c",
-      "bytes": 5559,
-      "sha256": "4548c61c0fee1b52ca569133f9b07a236788392edba5040c1b4a2d784f884120"
+      "bytes": 5550,
+      "sha256": "7535729f925a59d87fef097749e86b2ffdd851feb2d789ea93032dce5d43f318"
     },
     {
       "path": "compat/bootstrap/hmos_probe_v121.c",
@@ -424,13 +419,13 @@
     },
     {
       "path": "compat/display/composer_unsupported.cpp",
-      "bytes": 2600,
-      "sha256": "f78edbaba01306e7a17f0148626a7c987a572d70db584c48dea4e111067c3cf1"
+      "bytes": 2484,
+      "sha256": "47040b44010cd82aec514cb2a2f8ad58af9b8bba6675e3f10122e2c27c94667e"
     },
     {
       "path": "compat/display/composer_vdi.cpp",
-      "bytes": 30116,
-      "sha256": "8a63e4fd7b3a4a04daf851f213eb2c27823012b2a3283b0f4b9214ae2122cdd9"
+      "bytes": 34496,
+      "sha256": "156a3d620d91e50ac356e0cc3c34a360cb3bcf5ebe42ff44be8ec895cc83cc98"
     },
     {
       "path": "compat/display/include/display/buffer/v1_0/display_buffer_type.h",
@@ -496,6 +491,11 @@
       "path": "compat/display/native_display_wake.cpp",
       "bytes": 2278,
       "sha256": "c213a27d038a98305a54dcfa7ebc7c569b3f4d592e1632a905b24c4e8af2d432"
+    },
+    {
+      "path": "compat/display/native_refresh_rate.cpp",
+      "bytes": 2814,
+      "sha256": "b3fc22959e317e19ce24f53320e5a3398abb8f19fa17354da03ca718c40e97a5"
     },
     {
       "path": "compat/framework/account/account_hmac.c",
@@ -983,29 +983,9 @@
       "sha256": "b169d9702a9634eb70f8e2cdd18d908bb9b279456dad27f04c5690675822a4e5"
     },
     {
-      "path": "docs/DONOR-ACQUISITION.md",
-      "bytes": 4231,
-      "sha256": "4ece7dbc1126a831effbf0ced94436c32290af39557bec2503301c67e061a35a"
-    },
-    {
-      "path": "docs/FORK-ROADMAP.md",
-      "bytes": 4781,
-      "sha256": "7c5d4a8a2ca0e7cdf0cc4b4f62b652388d255a0d9b85ece735ade41fc33fb64b"
-    },
-    {
       "path": "docs/PACKAGING.md",
       "bytes": 1175,
       "sha256": "c486fe5397f95191db62a756f06fbce14e75a7c3fcb189a58ae634de694955c1"
-    },
-    {
-      "path": "docs/PROMAX-PACKAGE.md",
-      "bytes": 4127,
-      "sha256": "6c51c2c9c0dc22108a337554a44a441d2529c2c4bac79536ba8f7a5b50590e0d"
-    },
-    {
-      "path": "docs/PROMAX-SP12-BUILD.md",
-      "bytes": 8755,
-      "sha256": "e7d715649c10e22c47892123b9d5842a7c8e7baee4c869eeb9a31fb4d09b9caf"
     },
     {
       "path": "docs/PROVENANCE.md",
@@ -1279,8 +1259,8 @@
     },
     {
       "path": "output/Collect-PortBaseline.ps1",
-      "bytes": 951,
-      "sha256": "8fa4e08180a7107d24074cbb13e9b2ee5cc8cef37e1f9b7e8f733d644b5bae23"
+      "bytes": 1005,
+      "sha256": "0e2a813308aa643928908688ded0d2d8dce54caa6eae23a2a9cfde5b7893a78d"
     },
     {
       "path": "output/Common.ps1",
@@ -1459,13 +1439,13 @@
     },
     {
       "path": "README.en.md",
-      "bytes": 9943,
-      "sha256": "2475a96c25747460370082cf08666e29b2a1cfcf683642171995d76dab71f4d5"
+      "bytes": 9319,
+      "sha256": "198b1136e75c50ec56ad2b76d8bca347080f00630fd72bb413f9c3cae7cb02be"
     },
     {
       "path": "README.md",
-      "bytes": 8487,
-      "sha256": "0673be95664194addbaa804221c3bbb74e65e53a72e1cff08432a4b873b84ad5"
+      "bytes": 7931,
+      "sha256": "e054d7c431bf00b4d4a4d7f8b1bb2e315b332040d194391f40eb0778c11af6a1"
     },
     {
       "path": "RELEASE.json",
@@ -1794,8 +1774,8 @@
     },
     {
       "path": "runtime/compat/graphics/mark-boot-success-v135.sh",
-      "bytes": 1245,
-      "sha256": "b36a1468f52c96054010c4eded73e6f0058bad8cdea686512fa548c937b55038"
+      "bytes": 1210,
+      "sha256": "f1dbc317afd6265c9baf2a7c7b56868d0d3c076ee16d2a5a6b734fd1804989a7"
     },
     {
       "path": "runtime/compat/graphics/msdp-input-only.json",
@@ -1888,6 +1868,16 @@
       "sha256": "279506d8d1380eff046a8262dbebdd293f22be74ad535a15b7a05e85124e3f68"
     },
     {
+      "path": "tests/display/mode_switch_contract.cpp",
+      "bytes": 3364,
+      "sha256": "19bc24e348ed3ffbe508f4d1a4544672cc434fadbe288a0b0b6933e95e1959b2"
+    },
+    {
+      "path": "tests/display/vblank_probe.c",
+      "bytes": 1874,
+      "sha256": "330fe99d267707cd285ef2bd5fb165dbc677b0016f77068768d228d557db5503"
+    },
+    {
       "path": "tests/ipc/binder_nested.c",
       "bytes": 6537,
       "sha256": "38e528d510548973d4cde88e119b3985708b54ba0fe37ed21362fba958c6f1e2"
@@ -1899,28 +1889,33 @@
     },
     {
       "path": "tests/Test-FlashPreflight.ps1",
-      "bytes": 3719,
-      "sha256": "525393bbcc44a97c59a8c9053b71fdf025622640b5209a2dc2fed9fe12b0761d"
+      "bytes": 3942,
+      "sha256": "7151fe2413e8b225f34708e850cc93ed902e79d4ce98d3d88f63a5377aaa0731"
     },
     {
       "path": "tests/test_android_sparse.py",
-      "bytes": 1886,
-      "sha256": "542483bc7231cc7ce6d6b6cb0c852aafc2427433c8dc86c14345413059cd3b14"
+      "bytes": 1958,
+      "sha256": "c035ddf009b138506e428a9d5e69c5828bbf30ab3ce073f53ab9d92dea4a9b88"
     },
     {
       "path": "tests/test_audit_donor.py",
-      "bytes": 3266,
-      "sha256": "98457526a197b71beda22cb5b8c24a028baf40fec5c209e81d7b841a88aafbf2"
+      "bytes": 3538,
+      "sha256": "511864480259a042c9c9e1a2a2e512a30df8d3ddc8a9da77e26e655f7f4ce6d3"
     },
     {
       "path": "tests/test_bootcontrol_marker.py",
-      "bytes": 1677,
-      "sha256": "50e6d1c6474d0204c63cbc1d8fb7b132d91f5e52b8806caf02208e452a5fdb2a"
+      "bytes": 1775,
+      "sha256": "1e5918896e2a9a4d5b09ec8b8300710f914c89402c2218d13faf92365036eb1a"
     },
     {
       "path": "tests/test_huawei_full_ota.py",
-      "bytes": 3602,
-      "sha256": "cedddfbb866d2f34e99392bf3f59f359f89251aaffa255e259c026ddb2724cec"
+      "bytes": 3609,
+      "sha256": "a5f6154acba07ca740fa87cb0b967e5c0ed7fb9892c2e94f7d881b59bdf84c0e"
+    },
+    {
+      "path": "tests/test_refresh_policy.py",
+      "bytes": 1809,
+      "sha256": "1a96d9296d2921e079ecdda9499d5252565d223d9d195c8003ab1bc27f580757"
     },
     {
       "path": "tests/test_userdata_mount.py",
@@ -1934,8 +1929,8 @@
     },
     {
       "path": "tools/android_sparse.py",
-      "bytes": 8203,
-      "sha256": "c2eb2883abe3299bbcd2ba0ab246b0f284e6cd57c4933b26a6707220cc95b5c8"
+      "bytes": 8721,
+      "sha256": "e52a8b7b26d5ba086a26ae4228399be04be0b765aa68501f5718802015397626"
     },
     {
       "path": "tools/apply_guarded_elf_patch.py",
@@ -1944,28 +1939,33 @@
     },
     {
       "path": "tools/assemble_promax_package.py",
-      "bytes": 3399,
-      "sha256": "612b3fb1d7f1ad866fc9be82acdaaeece124a4205997b14e39663b96b468b733"
+      "bytes": 3820,
+      "sha256": "3e436e4cad61f9893bd540263c078df5c5e779198378b0e9e522feb0e1655e38"
     },
     {
       "path": "tools/audit_donor.py",
-      "bytes": 4623,
-      "sha256": "db94f8407da4729d3de45c8d8aa3b82fac1c7cd909179413702d71b5cf8d8a1a"
+      "bytes": 4940,
+      "sha256": "a9d74aac044321e18ccc2fd793f73bd33e1f786d201efec7c57e4daf9091ffc4"
     },
     {
       "path": "tools/build_current.py",
-      "bytes": 12632,
-      "sha256": "44c20bf8bd1ff338562f9ea87bcf1729a8245cc8f5d22a9ecc62a98e051f9a1c"
+      "bytes": 13551,
+      "sha256": "bb9295090f54244ae8a5755423b356249fbadc9346e7f91b76d817efeb65b941"
+    },
+    {
+      "path": "tools/build_display_drm.py",
+      "bytes": 3079,
+      "sha256": "b73e969847918fa6886017dba18d662970ac44332a0de564797ec36ccbffe8f1"
     },
     {
       "path": "tools/build_promax_images.py",
-      "bytes": 10792,
-      "sha256": "ba2bf39771d728580f844cd21a0ee877be8ce99d1c3387f1c32d4a57b0450ca7"
+      "bytes": 11713,
+      "sha256": "1011fe13dce1bc9b5f056b9cdcdd105b3d9591e2756d1d21a410978e3fcbcd56"
     },
     {
       "path": "tools/build_promax_ramdisk.py",
-      "bytes": 21518,
-      "sha256": "bfbf29d15d967ee7a664d5f9174d9fa3adaa99809d0d0130bd07dec02e2069da"
+      "bytes": 29372,
+      "sha256": "6ddb0ca34e61cb7e7aeca6ea3715dd1ee6cdd435d0e30521d094a9727da37c4e"
     },
     {
       "path": "tools/build_useriam.py",
@@ -1974,28 +1974,33 @@
     },
     {
       "path": "tools/collect_port_baseline.sh",
-      "bytes": 1166,
-      "sha256": "b323663cc9ce614023e28402bd48c4fb93760569bbef8830b56fd534f974ce0b"
+      "bytes": 1137,
+      "sha256": "b15ecce250930c185fda3e898a1e488166f4a6278e8f2524466b94b8092ee49e"
     },
     {
       "path": "tools/extract_huawei_full_ota.py",
-      "bytes": 6572,
-      "sha256": "006e423af3dbf6033dea177acd7535a834e23a7318a916ea5787aeb84f1df6b6"
+      "bytes": 7031,
+      "sha256": "e799ccacb6e9146cf4051c2840cffc43b2ea536d1b760e9aeca149dcef5a682c"
     },
     {
       "path": "tools/Flash-ProMax.ps1",
-      "bytes": 7127,
-      "sha256": "7e45ea5914a1518d3d2380806117b536d826a917e4eb021a32769fd6856c58d8"
+      "bytes": 7285,
+      "sha256": "be456a7ac9aa4e7d21ffd689bd362951e98db3236a25786a1710976a93e193ab"
+    },
+    {
+      "path": "tools/patch_refresh_policy.py",
+      "bytes": 1971,
+      "sha256": "5e78b84c98e0f2bb094c431a236293d454a0e5ec22959056f376515e6e22aff0"
     },
     {
       "path": "tools/refresh_manifest.py",
-      "bytes": 1316,
-      "sha256": "aa0110b817235865c00c2b06993f01d48be4aa187ba31c8ca7ecb819ac10207e"
+      "bytes": 2201,
+      "sha256": "e5002a366434cbb0a5cc5df87b19195ba6bcf474da1c8de19c5a4461fda7beb0"
     },
     {
       "path": "tools/update_promax_ramdisk_package.py",
-      "bytes": 1884,
-      "sha256": "f4263e5e66adb856780e9b0eb1f0a448bf6a424a3e437e4df93aac01c008ea4e"
+      "bytes": 2077,
+      "sha256": "2392bf51307b614a2adedc53457148b13fa28fe0ef247898cecfadc3ecf45605"
     },
     {
       "path": "tools/vendor_ramdisk_edit.py",
@@ -2004,8 +2009,8 @@
     },
     {
       "path": "tools/verify_sources.py",
-      "bytes": 2408,
-      "sha256": "8d028459b682e3a7b0b32ee3d85de2c97b60926aa609e92f67e590ca8146f5ac"
+      "bytes": 2675,
+      "sha256": "d9b78f66d7d07c84dc3151da1a8eee941b0143e014f91238fce3b60c0f74e696"
     }
   ],
   "excludes": [

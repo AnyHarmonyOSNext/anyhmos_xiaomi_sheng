@@ -17,14 +17,19 @@ class SparseTests(unittest.TestCase):
         self.directory.cleanup()
 
     def write(self, chunks, blocks=3):
-        self.path.write_bytes(struct.pack('<IHHHHIIII', 0xED26FF3A, 1, 0, 28, 12, 4096, blocks, len(chunks), 0) + b''.join(chunks))
+        self.path.write_bytes(
+            struct.pack('<IHHHHIIII', 0xED26FF3A, 1, 0, 28, 12, 4096, blocks, len(chunks), 0)
+            + b''.join(chunks)
+        )
 
     def test_cross_chunk_reads_and_fill_phase(self):
-        self.write([
-            struct.pack('<HHII', 0xCAC1, 0, 1, 4108) + b'a' * 4096,
-            struct.pack('<HHII', 0xCAC2, 0, 1, 16) + b'abcd',
-            struct.pack('<HHII', 0xCAC3, 0, 1, 12),
-        ])
+        self.write(
+            [
+                struct.pack('<HHII', 0xCAC1, 0, 1, 4108) + b'a' * 4096,
+                struct.pack('<HHII', 0xCAC2, 0, 1, 16) + b'abcd',
+                struct.pack('<HHII', 0xCAC3, 0, 1, 12),
+            ]
+        )
         image = SparseImage(self.path)
         try:
             self.assertEqual(image.read_at(4094, 8), b'aaabcdab')

@@ -1,4 +1,5 @@
 """Exercise the actual launcher pattern against both authoritative helper paths."""
+
 from pathlib import Path
 import re
 import shutil
@@ -10,7 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class MarkerTests(unittest.TestCase):
     def test_verified_paths_and_rejected_states(self):
-        source = (ROOT / 'runtime/compat/graphics/mark-boot-success-v135.sh').read_text()
+        source = (ROOT / 'runtime/compat/graphics/mark-boot-success-v135.sh').read_text(
+            encoding='utf-8'
+        )
         pattern = re.search(r"grep -Eq '([^']+)'", source).group(1)
         bash = shutil.which('bash') or r'C:\Program Files\Git\bin\bash.exe'
         cases = {
@@ -27,8 +30,12 @@ class MarkerTests(unittest.TestCase):
         }
         for line, expected in cases.items():
             with self.subTest(line=line):
-                result = subprocess.run([bash, '-c', 'grep -Eq "$1"', 'marker-test', pattern],
-                                        input=line + '\n', text=True, capture_output=True)
+                result = subprocess.run(
+                    [bash, '-c', 'grep -Eq "$1"', 'marker-test', pattern],
+                    input=line + '\n',
+                    text=True,
+                    capture_output=True,
+                )
                 self.assertEqual(result.returncode == 0, expected, result.stderr)
 
 
