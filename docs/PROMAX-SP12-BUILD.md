@@ -43,3 +43,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests/Test-FlashPreflight.ps
 整包写入成功后，实际 ext4 userdata 和完整 preload 已挂载。第二个 loop 绑定暴露了节点编号问题：本机启动参数 `loop.max_part=7`，sysfs 的 loop0/1/2 设备号为 `7:0`、`7:8`、`7:16`，连续次设备号会指向分区节点。节点创建已改为逐项读取 `/sys/class/block/loop*/dev`，不硬编码步长，并排除 loop 分区名。
 
 修正设备节点后，chip_prod、anco_hmos、cust、version 四个实际镜像分别完成只读 loop 挂载和卸载测试；这只验证文件系统与 loop 挂载，不代表其中服务可运行。修正版只需更新 vendor_boot，保留已经写入的 super 与 userdata。
+
+Pro Max SceneBoard 还会请求 SA65984 的 PC/平板模式信息。该能力由 `task_manager_service` 提供，原来的精简启动配置没有导入此服务。新增定义保留供体 UID、GID、能力和权限，仅准备其数据目录，未导入缺失的 Kirin sysfs 操作。
+
+真机日志显示，原供体的常量参数会在约 55 秒提前触发此服务，而它依赖的公共事件服务 SA3299 在本移植的桌面阶段才启动，超过了 60 秒依赖等待窗口。因此已把任务服务的自动触发参数改为 `sheng.debug.start.promaxtask`，由 `sheng.debug.start.screen=true` 的 job 先创建并授权目录，再设置新参数。原供体能力参数仍保留为 true；服务的权限不扩大。配置前后哈希写入私有 payload 报告，实际桌面注册结果须继续验证。
+
+开发过程中若 A 槽尚未通过系统启动成功检查，连续重启会消耗 bootloader 的重试次数；耗尽后可能回到 Fastboot。只在对应镜像仍是当前测试目标时重新 `set_active a` 恢复尝试次数，不提前标记 slot successful。整包刷机脚本已在写入全部成功后执行该激活步骤。

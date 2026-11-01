@@ -34,7 +34,7 @@ def extract_guard(path,previous=False):
  result=subprocess.run(command,check=True,capture_output=True);destination.write_bytes(result.stdout)
 for recipe_path in args.recipe_dir.glob('*.json'):
  extract_guard(json.loads(recipe_path.read_text())['path'])
-for path in ['/system/lib64/libaccountmgr.z.so','/system/lib64/chipset-sdk/libhukssdk.z.so','/system/lib64/chipset-sdk-sp/libcrypto_openssl.z.so','/sys_prod/etc/param/hw_defaults.para','/system/etc/sandbox/appdata-sandbox.json','/system/etc/sandbox/appdata-sandbox-isolated.json']:
+for path in ['/system/lib64/libaccountmgr.z.so','/system/lib64/chipset-sdk/libhukssdk.z.so','/system/lib64/chipset-sdk-sp/libcrypto_openssl.z.so','/sys_prod/etc/param/hw_defaults.para','/system/etc/sandbox/appdata-sandbox.json','/system/etc/sandbox/appdata-sandbox-isolated.json','/system/etc/init/task_manager_service.cfg','/system/profile/task_manager_service.json']:
  extract_guard(path)
 for name in ['appdata-sandbox.json','appdata-sandbox-isolated.json']:
  extract_guard('/system/etc/sandbox/'+name,previous=True)
@@ -127,6 +127,28 @@ setfile(G+'apply-app-sandbox.sh',sandbox,0o100755)
 # Pro Max already has an audio policy directory; cover it with the sheng policy.
 audio=text('apply-audio-v116.sh').replace('[ ! -e "$R/chip_prod/etc/audio" ]\n$B ln -s /compat/etc/audio "$R/chip_prod/etc/audio"', '[ -d "$R/chip_prod/etc/audio" ]\n$B mount --bind "$R/compat/etc/audio" "$R/chip_prod/etc/audio"')
 assert audio!=text('apply-audio-v116.sh');setfile(G+'apply-audio-v116.sh',audio,0o100755)
+# Pro Max SceneBoard queries SA65984 for its PC/tablet mode during startup.
+# Keep the donor service identity and permissions; omit absent Kirin sysfs jobs.
+task_cfg_path=ROOT/'metadata/guard-inputs/system/etc/init/task_manager_service.cfg'
+task_profile_path=ROOT/'metadata/guard-inputs/system/profile/task_manager_service.json'
+task_cfg=json.loads(task_cfg_path.read_text());task_profile=json.loads(task_profile_path.read_text())
+assert task_profile['process']=='task_manager_service'
+assert len(task_profile['systemability'])==1 and task_profile['systemability'][0]['name']==65984
+assert task_profile['systemability'][0]['depend']==[3299]
+task_service=task_cfg['services'][0]
+assert task_service['name']=='task_manager_service' and task_service['uid']=='task_manager_service'
+assert task_service['path']==['/system/bin/sa_main','/system/profile/task_manager_service.json']
+task_service['disabled']=True
+assert task_profile['systemability'][0]['start-on-demand']['param']==[{'name':'const.taskmanager_service.support','value':'true'}]
+task_profile['systemability'][0]['start-on-demand']['param']=[{'name':'sheng.debug.start.promaxtask','value':'true'}]
+task_profile_bytes=(json.dumps(task_profile,indent=2)+'\n').encode()
+setfile(G+'promax/task_manager_service.json',task_profile_bytes)
+desktop=json.loads(text('init-desktop-services.cfg'));assert all(s['name']!='task_manager_service' for s in desktop['services'])
+desktop['services'].append(task_service)
+prepare=next(j['cmds'] for j in task_cfg['jobs'] if j['name']=='post-fs-data')
+desktop['jobs'].append({'name':'param:sheng-promax-task','condition':'sheng.debug.start.screen=true','cmds':prepare+['setparam sheng.debug.start.promaxtask true']})
+setfile(G+'init-desktop-services.cfg',json.dumps(desktop,indent=2)+'\n')
+task_service_report={'service':'task_manager_service','sa':65984,'donor_cfg_sha256':sha(task_cfg_path.read_bytes()),'donor_profile_sha256':sha(task_profile_path.read_bytes()),'staged_profile_sha256':sha(task_profile_bytes),'startup_gate':'sheng.debug.start.screen -> prepare directories -> sheng.debug.start.promaxtask','donor_permissions_preserved':True,'hardware_sysfs_jobs_imported':False,'runtime_validated':False}
 # Additional filesystems are carried inside freshly created ext4 userdata.
 seed_names=['preload','chip_prod','anco_hmos','cust','version'];seed_lines=[]
 for name in seed_names:
@@ -176,6 +198,8 @@ echo PROMAX_CONTAINER_FILES_PRESENT_RUNTIME_NOT_VALIDATED
 '''
 setfile(G+'promax/mount-seed-images.sh',mount,0o100755)
 userdata=text('init-userdata-ext4.sh')+'\n$B sh /graphics/promax/mount-seed-images.sh\n';setfile(G+'init-userdata-ext4.sh',userdata,0o100755)
+userdata+=f'echo "{sha(task_profile_path.read_bytes())}  $R/system/profile/task_manager_service.json" | $B sha256sum -c -\n$B cp /graphics/promax/task_manager_service.json "$R/system/profile/task_manager_service.json"\necho "{sha(task_profile_bytes)}  $R/system/profile/task_manager_service.json" | $B sha256sum -c -\n'
+setfile(G+'init-userdata-ext4.sh',userdata,0o100755)
 # Recompute the payload inventory, including every new guarded component.
 manifest=json.loads(old[P+'MANIFEST.json'][1]);members=set(manifest)
 for name in new:
@@ -187,6 +211,7 @@ changed={n for n in new if n not in old or new[n]!=old[n]};added=set(new)-set(ol
 report={'donor':'GEM-LGRP3-CHN 207.0.0.111(SP12)','base_vendor_boot_sha256':sha(base.read_bytes()),'changed_entries':sorted(changed),'added_entries':sorted(added),'patch_recipes':len(recipes),'account_input_checks':account_checks,'seed_checksums':seed_lines,'boot_unchanged':True,'init_boot_unchanged':True,'dtb_unchanged':True,'kernel_unchanged':True,'device_boot_tested':False,'features_not_validated':['144Hz','Zhuoyitong Android backend','all application GPU paths']}
 (WORK/'payload-integration-report.json').write_text(json.dumps(report,indent=2)+'\n')
 report['sandbox_port']=sandbox_report
+report['promax_task_service']=task_service_report
 # Materialize scripts for shell syntax checks, not full proprietary binaries.
 scripts=WORK/'integrated-scripts';scripts.mkdir(exist_ok=True)
 for n in changed:
