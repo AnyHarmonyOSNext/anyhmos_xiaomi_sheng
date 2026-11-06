@@ -1,0 +1,11 @@
+{
+  "path": "/system/lib64/init/autorun/libfile_migrate_init.z.so",
+  "input_sha256": "6c40082ea9222c7c0fad6e7af6f2d9ae3d46b347efa3d8fafbd1d8dd5c8ae45e",
+  "output_sha256": "bf86bb9c72095d537b92c1b1cf6d3bc45ba6c7a89e7522bae06b5c367d2c819a",
+  "changes": [
+    {"offset": 14344, "before": "340440f9", "after": "34cc40a9"},
+    {"offset": 14348, "before": "f30301aa", "after": "930300b4"},
+    {"offset": 14516, "before": "730a40f9", "after": "1f2003d5"}
+  ],
+  "device_validated": false
+}

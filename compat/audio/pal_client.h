@@ -5,4 +5,6 @@
 int sheng_pal_connect(void);
 int sheng_pal_request(int fd, uint32_t op, uint32_t arg0, uint32_t arg1,
     const void *pcm, uint32_t bytes, struct sheng_pal_reply *reply);
+int sheng_pal_capture_read(int fd, void *pcm, uint32_t capacity,
+    struct sheng_pal_reply *reply);
 #endif

@@ -284,17 +284,19 @@ public:
     {
         if (!Valid(h)) return INVALID;
         layout.pixelFormat = h.format;
-        layout.planes = {{0, uint32_t(h.stride), uint32_t(h.height)}};
+        // 平面列步长按像素或交错色度组的字节数返回
+        const uint32_t pixelStride = IsYuv420(h.format) || h.format == 38 ? 1 : BytesPerPixel(h.format);
+        layout.planes = {{0, uint32_t(h.stride), pixelStride}};
         if (IsYuv420(h.format)) {
             const uint32_t luma = uint32_t(h.stride) * uint32_t(h.height);
             if (IsPlanar420(h.format)) {
                 const uint32_t chromaStride = uint32_t(h.stride / 2);
                 const uint32_t chromaSize = chromaStride * uint32_t(h.height / 2);
                 // Plane order follows native memory order: Y,U,V or Y,V,U.
-                layout.planes.push_back({luma, chromaStride, uint32_t(h.height / 2)});
-                layout.planes.push_back({luma + chromaSize, chromaStride, uint32_t(h.height / 2)});
+                layout.planes.push_back({luma, chromaStride, 1});
+                layout.planes.push_back({luma + chromaSize, chromaStride, 1});
             } else {
-                layout.planes.push_back({luma, uint32_t(h.stride), uint32_t(h.height / 2)});
+                layout.planes.push_back({luma, uint32_t(h.stride), 2});
             }
         }
         return OK;

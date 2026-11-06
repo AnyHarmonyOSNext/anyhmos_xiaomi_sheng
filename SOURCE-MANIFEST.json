@@ -8,6 +8,11 @@
       "sha256": "a0dbe96b1f881a4143be8ae8ea1dc8b4ead009ed09d5a802a8ff0f5ab9647c28"
     },
     {
+      "path": ".github/workflows/build-ipc-gki.yml",
+      "bytes": 1250,
+      "sha256": "06b9b47254d0bff54df24a2ec8ae81db749187cd205d9f46935cbf35914861e2"
+    },
+    {
       "path": ".gitignore",
       "bytes": 408,
       "sha256": "6760b1aa3b2227f5f443cdc411a782db5a6dcb69a1e28938eabd0236df68509b"
@@ -88,14 +93,19 @@
       "sha256": "d88c23bb80a42cbd26497b442cc90a8db15a87e65c8c993084d04fd7eccf242f"
     },
     {
+      "path": "compat/audio/audio_capture_vdi.inc",
+      "bytes": 12075,
+      "sha256": "93142cf3132ab880e0323abfa83dd7bd9a58d8ee3074b59a7b8b5d9c37c8bb4f"
+    },
+    {
       "path": "compat/audio/audio_manager_service.c",
       "bytes": 2996,
       "sha256": "22295caeff83a34eec29d569c899246d63a62ea9910a4e00b9d4178428e79072"
     },
     {
       "path": "compat/audio/audio_vdi.c",
-      "bytes": 15555,
-      "sha256": "4580526c5045fa0f719da3f98742cc11a44e781cbfbc2f362bff32ea53048e62"
+      "bytes": 16428,
+      "sha256": "5a884256d86444b795d195ae9ec3b9881514be68b7bb4f15f6e94c6843f81692"
     },
     {
       "path": "compat/audio/audio_vdi_loader.c",
@@ -148,14 +158,24 @@
       "sha256": "a7fed63ae7a52e0e516fa766e350567b74e3ee1d3a68f155dee6199cca517432"
     },
     {
+      "path": "compat/audio/pal_capture_backend.inc",
+      "bytes": 5748,
+      "sha256": "92ed3e5d7c6ceb6ef3780afabe68f382ccc0d8337dede511a6cfc8064ea127ea"
+    },
+    {
+      "path": "compat/audio/pal_capture_worker.inc",
+      "bytes": 5539,
+      "sha256": "f4f9cf118618006ee62c7a2f66f13fa22300c27dcdc888bf4b143e31777d37e4"
+    },
+    {
       "path": "compat/audio/pal_client.c",
-      "bytes": 1676,
-      "sha256": "e2cced2c0971251b676fde854ce2cbc998dfca104b5dcbeb9007cbad86c7fcf3"
+      "bytes": 2978,
+      "sha256": "e8a24a1d5a1887cfc1e8e003f05d32328e25c1f5dbfe2af80bf6bcbbc7cadfb0"
     },
     {
       "path": "compat/audio/pal_client.h",
-      "bytes": 289,
-      "sha256": "45590ef665b0dfcda35277f8398fd39f3f65d1ab2eeb60baa5dde18fb6ad8234"
+      "bytes": 390,
+      "sha256": "88c0d466ce4ae80081cb3daaeeb1cee0f3db4befa355f06b1593a866ee0f7d9d"
     },
     {
       "path": "compat/audio/pal_lifecycle.c",
@@ -164,8 +184,8 @@
     },
     {
       "path": "compat/audio/pal_server.c",
-      "bytes": 11347,
-      "sha256": "3d2992fde36307d8e53fcec0455adf2381720e0cb365f8530c0fecdcfea8fb16"
+      "bytes": 13211,
+      "sha256": "ba06cd4da53bc96b8a1d5a4ba5ede6101a809a8da2b634b91c5ca83488e723ce"
     },
     {
       "path": "compat/audio/pd-mapper/assoc.c",
@@ -239,8 +259,18 @@
     },
     {
       "path": "compat/audio/protocol.h",
-      "bytes": 777,
-      "sha256": "42ca9777727ae130025ac3eb5023cd9a6205975196b9b31f8e2b11747acd291f"
+      "bytes": 1074,
+      "sha256": "a1d1f8a281ebb21d71357bdd1c450962774906d6e6f215039f8386e0cf074be0"
+    },
+    {
+      "path": "compat/battery/battery_charge_adapter.cpp",
+      "bytes": 7464,
+      "sha256": "c4cfab729eb51e3b2f4b7ef4f714877a679ea7b7f16f39e4460a7068b2b87cc3"
+    },
+    {
+      "path": "compat/battery/battery_charge_adapter.h",
+      "bytes": 821,
+      "sha256": "2cf8bd06ee47aa839e7d71637cbce8b35b49d3201c9e859afacfb37edef52f09"
     },
     {
       "path": "compat/battery/include/battery/v2_0/battery_callback_proxy.h",
@@ -294,8 +324,8 @@
     },
     {
       "path": "compat/battery/native_battery_hdi_publisher_v131.cpp",
-      "bytes": 4113,
-      "sha256": "e80fb2371e04f6c0a98b1ef763e760a58653bf74628249c7ab21d9057ba59d71"
+      "bytes": 4295,
+      "sha256": "585c33d3599fe29d178ca05d9b315c6b8324007ef2f18e83c920fba83a75468f"
     },
     {
       "path": "compat/battery/native_battery_probe_v131.cpp",
@@ -389,8 +419,8 @@
     },
     {
       "path": "compat/bootstrap/hmos_probe_v121.c",
-      "bytes": 65352,
-      "sha256": "e62294311d04cfd0b45afc7ffd67d5222ec01ddff18dd454a3eed97324a4053f"
+      "bytes": 73578,
+      "sha256": "e10246b131deec076acb8f03e14f37720eeaeec6ff737f6066fd6641a2b4cea8"
     },
     {
       "path": "compat/bootstrap/init_entry.c",
@@ -409,13 +439,13 @@
     },
     {
       "path": "compat/bootstrap/probe_serial_v121.inc",
-      "bytes": 3635,
-      "sha256": "824d4dc8ad906d9af169a9f7af96c56c115c7c79a596d67fe1ccde4e351c9086"
+      "bytes": 3653,
+      "sha256": "3835dc47955a9024fccd64f38160e88d231eabaec02bac7ab42548ffe991b1d3"
     },
     {
       "path": "compat/display/buffer_vdi.cpp",
-      "bytes": 14387,
-      "sha256": "04752b942cd8304dc28dd01e40f88c42f7eb6190fe0c34d461bf82e6b050cbbb"
+      "bytes": 14494,
+      "sha256": "bc594e051c1a7a86148c4ffe839f5058cf9b537bd624ea508beb748e9b0a2bdd"
     },
     {
       "path": "compat/display/composer_unsupported.cpp",
@@ -424,8 +454,13 @@
     },
     {
       "path": "compat/display/composer_vdi.cpp",
-      "bytes": 36378,
-      "sha256": "3335e307eb1423327f3c924d2616cf9fe57dbff13e562339f63d7a78def64596"
+      "bytes": 61611,
+      "sha256": "0402ea8b2c2810c1c09e56fc60c274eba2d32036248076de435f8ce7ee837fa5"
+    },
+    {
+      "path": "compat/display/direct_scanout_state.h",
+      "bytes": 758,
+      "sha256": "53d5641b03a8e78c3056e8fdcdb8bdcff6ef256309372db45c1c152fab2b2be3"
     },
     {
       "path": "compat/display/include/display/buffer/v1_0/display_buffer_type.h",
@@ -489,13 +524,13 @@
     },
     {
       "path": "compat/display/native_display_wake.cpp",
-      "bytes": 2278,
-      "sha256": "c213a27d038a98305a54dcfa7ebc7c569b3f4d592e1632a905b24c4e8af2d432"
+      "bytes": 5114,
+      "sha256": "4998a1e5778f4fe571b22f942fd110c4f53cc204411d8fe5dc6476bb464c0d77"
     },
     {
       "path": "compat/display/native_refresh_rate.cpp",
-      "bytes": 2814,
-      "sha256": "b3fc22959e317e19ce24f53320e5a3398abb8f19fa17354da03ca718c40e97a5"
+      "bytes": 3748,
+      "sha256": "76f104bdeaf8f60a997c9adf4f31fe51989c04907eabb9b6ce46e5c74c2d6e24"
     },
     {
       "path": "compat/framework/account/account_hmac.c",
@@ -558,6 +593,36 @@
       "sha256": "bcd2e9560453dfdcdb8051e9e81333f6d52b67ba9fd2f45155c8088b5502d5f7"
     },
     {
+      "path": "compat/graphics/apply_mesa.py",
+      "bytes": 1333,
+      "sha256": "93c4a46a229ea17202de56510a1cd2e3c60fdee582be1d3e6e02324cceff26ed"
+    },
+    {
+      "path": "compat/graphics/dmabuf_sync/kernel/Makefile",
+      "bytes": 29,
+      "sha256": "340f425bd8c2586db0c0f13e6834d8810be4c4fdd042a97bde29edf7bf0cfae8"
+    },
+    {
+      "path": "compat/graphics/dmabuf_sync/kernel/sheng_dmabuf_sync.c",
+      "bytes": 9351,
+      "sha256": "ae6142f7d510283d243caa1c5b083c131c9ed34e7b870f2b35c7167f9e2faef2"
+    },
+    {
+      "path": "compat/graphics/dmabuf_sync/uapi/sheng_dmabuf_sync.h",
+      "bytes": 1221,
+      "sha256": "aa1424897971824aaf871fb6e1926baf83805d44791204311231a3e2b04353e1"
+    },
+    {
+      "path": "compat/graphics/mesa-gallium-egl.patch",
+      "bytes": 97900,
+      "sha256": "55e426985c2b6a5f5054cba157314b972ef105373eba0c4d5c1cda06a02856bb"
+    },
+    {
+      "path": "compat/graphics/mesa-turnip.patch",
+      "bytes": 55870,
+      "sha256": "6582ed51b09e8fe117feb35370f8a417e3c13d79d1ea6965e34cb3313d7af94f"
+    },
+    {
       "path": "compat/ipc/access_tokenid.c",
       "bytes": 10862,
       "sha256": "e90435cfbe6fd00d329f945cb24cfcef3fb0180da810bb598b25895639be8bbd"
@@ -579,8 +644,8 @@
     },
     {
       "path": "compat/ipc/binder.c",
-      "bytes": 209425,
-      "sha256": "53c4c9acff5e52cd9a304acc838808dfe80e5f228da3c2ddb9c25d935bf9fc7b"
+      "bytes": 210306,
+      "sha256": "42f60c165932081630ab3c05d9fc44a87cc7f5e370bd350325d25a6741f7caef"
     },
     {
       "path": "compat/ipc/binder_alloc.c",
@@ -594,8 +659,8 @@
     },
     {
       "path": "compat/ipc/binder_internal.h",
-      "bytes": 24272,
-      "sha256": "6a536cce808191d135e16120560988fb6a584a5e371c545a16e4b02336a3c2e7"
+      "bytes": 24303,
+      "sha256": "ab49af3956a74b6723f3bf7e3ad49e05e275c87a7dcecfc8debe83b0f2760f60"
     },
     {
       "path": "compat/ipc/binder_trace.h",
@@ -643,6 +708,76 @@
       "sha256": "e98ca53719580fd9c471aba14de3ab8886964afbc3b8651bdfadcd1df4bcc686"
     },
     {
+      "path": "compat/power/batterysecret_process_compat.c",
+      "bytes": 1034,
+      "sha256": "2887269b5f775977b448cc26a34d3851f8a0f17dcceebc40642bcadee78d250a"
+    },
+    {
+      "path": "compat/power/thermal/init-fusion-services-r2.cfg",
+      "bytes": 7325,
+      "sha256": "2b33d0c2ecb4995d25142cdbe414636022f8f05081c20f9d6dd5126d3e4febc0"
+    },
+    {
+      "path": "compat/power/thermal/init-xiaomi-thermal.cfg",
+      "bytes": 611,
+      "sha256": "234464ea9fe311a2ec3a549387e1eda10591cd194a661469bd8065c032f918da"
+    },
+    {
+      "path": "compat/power/thermal/native_thermal_launcher.c",
+      "bytes": 740,
+      "sha256": "cdf5bcee8fa18848c509ec9b14fd8dcf28f09a87a2386ab1eb667237b25e9259"
+    },
+    {
+      "path": "compat/power/thermal/stage-xiaomi-thermal.sh",
+      "bytes": 1051,
+      "sha256": "aa5f5d1f93115cd693a9eeb346b994c497e4e1e33ba40522c1e5bebf84e16136"
+    },
+    {
+      "path": "compat/sensors/native_sensorspd_launcher.c",
+      "bytes": 13690,
+      "sha256": "16d71a50bdcba1c940dbfebaa7e5830d9de42880cd656bb74d0d9c5c97d91939"
+    },
+    {
+      "path": "compat/sensors/sensor_hdi_publisher.cpp",
+      "bytes": 9519,
+      "sha256": "472250cc7503ca3730543a89d4f907a367ef24147cfcca185cfb89dca49f11d7"
+    },
+    {
+      "path": "compat/sensors/sensor_interface_service.cpp",
+      "bytes": 17422,
+      "sha256": "005d50efc6e5c9dfd8dcc288a22eae4f76fb7fae1885d6ee251eb38154ed5ff9"
+    },
+    {
+      "path": "compat/sensors/sensor_interface_service.h",
+      "bytes": 3951,
+      "sha256": "643c7c7e59d485a322c03632e2610704becfc6bdfd369c8299d10d00c3a5ee5b"
+    },
+    {
+      "path": "compat/sensors/ssc_backend.c",
+      "bytes": 24418,
+      "sha256": "ba6e6a89a8d4378977d5a8c04ac37e5ba0f1c03cb8e8d20ca5cb360bb8c9173c"
+    },
+    {
+      "path": "compat/sensors/ssc_backend.h",
+      "bytes": 3583,
+      "sha256": "9f6bd4c652b1588be045a5b2a9946615741c1171027d716211d0c1530b3ed7c6"
+    },
+    {
+      "path": "compat/sensors/ssc_time.c",
+      "bytes": 4166,
+      "sha256": "0e938a7a002226846608933b5e3424c41ada341a9efe97a3f7984253276f35c2"
+    },
+    {
+      "path": "compat/sensors/ssc_time.h",
+      "bytes": 766,
+      "sha256": "504b6e7f3fd102e0dc832874b441f0ca9630b7d1c2787b91dc72ce32b0dc14a1"
+    },
+    {
+      "path": "compat/sensors/ssc_wire.h",
+      "bytes": 22680,
+      "sha256": "fed0776bc71351f382682063e58f445b8ac64833ef8a2825d3db4a8f8a379c2e"
+    },
+    {
       "path": "compat/services/bootanimation_launcher.c",
       "bytes": 535,
       "sha256": "3726ee8bd719ee55134b555b24da3b0292b831887d2de5cac59b7258c0a4f33d"
@@ -668,9 +803,14 @@
       "sha256": "fc8288be00ab1a1bf171690de12092b5759533289953bece803b3cb4bd2ebce8"
     },
     {
+      "path": "compat/services/hiview_namespace_launcher.c",
+      "bytes": 18717,
+      "sha256": "3c077d401cbec55d3d8de498c5d269c92e09d10fcce83fb5edf89035c0603e44"
+    },
+    {
       "path": "compat/services/native_brightness_launcher.c",
-      "bytes": 663,
-      "sha256": "5fb203286b2c20168e1e986b259bc5e5dfbc4619b0b4b6a8ac2f821321b7742b"
+      "bytes": 1459,
+      "sha256": "bc70db4f961bc733c18eebc28b4e11c67b185c002441cc8f0329c737335be6ee"
     },
     {
       "path": "compat/services/native_buffer_import_observer.S",
@@ -689,8 +829,8 @@
     },
     {
       "path": "compat/services/native_input_dispatch.c",
-      "bytes": 1573,
-      "sha256": "e30018ce9572af7650620e8df49d5f1b045814cb8b9a69c36ec4c2a459ab42e8"
+      "bytes": 1654,
+      "sha256": "e5e453e0f9b7aa75e79b077a2b612597ce9bc944af5d2fcb832a7b65102c7224"
     },
     {
       "path": "compat/services/native_render_launcher.c",
@@ -1333,6 +1473,11 @@
       "sha256": "0d12f781cd2dc862bf8c3a6b78b8b6c46837e72965320b1652d5f2716e6d0c17"
     },
     {
+      "path": "patches/display/render-commit-async.json",
+      "bytes": 486,
+      "sha256": "a0f4021d0bb5f1e9235f91219964b46c0628a83dd58e0925a87d59c2c0a335ee"
+    },
+    {
       "path": "patches/donor/gem-w00-111-sp12/init.json",
       "bytes": 530,
       "sha256": "f0ee584a1fa4259fa0975587feaa253651c4f5a821229d1485063e018dd281b6"
@@ -1441,6 +1586,11 @@
       "path": "patches/donor/libwifi_sdk.z.so.json",
       "bytes": 547,
       "sha256": "a4632de7870e00d41ade3010382250f9415ac45365bed50beef1f4e575330ed4"
+    },
+    {
+      "path": "patches/init/file-migrate-hook-guard.json",
+      "bytes": 488,
+      "sha256": "72f895e562b1faf6ae63c266e43bd6671f2aa1f5945af94b37748a1850dd4fb8"
     },
     {
       "path": "README.en.md",
@@ -1599,8 +1749,8 @@
     },
     {
       "path": "runtime/compat/graphics/apply-hardware-v116.sh",
-      "bytes": 3898,
-      "sha256": "d160f691fa26d6b1e4763dd3254534cf1fa754c87a5e9abceb529d809536f828"
+      "bytes": 4724,
+      "sha256": "9c48ad3aa81781b93120db36d136773dee1c11655536891e4f2a56f8e9e161b4"
     },
     {
       "path": "runtime/compat/graphics/apply-memmgr-v2.sh",
@@ -1656,6 +1806,11 @@
       "path": "runtime/compat/graphics/apply-useriam.sh",
       "bytes": 1278,
       "sha256": "e7535a668bcec38b41c9464649e96d0eef1eb69b0d1216875f90a3d8ac47618d"
+    },
+    {
+      "path": "runtime/compat/graphics/default_settings-pcmode.json",
+      "bytes": 875,
+      "sha256": "e8169fb2aad7a142c7024909a74efaaae4f3b49069b187a7e3cfcaa47fc77a8f"
     },
     {
       "path": "runtime/compat/graphics/device_manager.json",
@@ -1714,8 +1869,8 @@
     },
     {
       "path": "runtime/compat/graphics/init-platform-v116.cfg",
-      "bytes": 25841,
-      "sha256": "2fef38725b92ae82f4b3863e5618f1683a198866eebfdb5e518a2c593225765b"
+      "bytes": 27572,
+      "sha256": "b3480cb239adc629568bb362cd8cdca52cfaebf739dec6076b71dbfe89146011"
     },
     {
       "path": "runtime/compat/graphics/init-userdata-ext4.sh",
@@ -1803,6 +1958,21 @@
       "sha256": "9819fc85d02c838e03aae4dc70258572f70a481ee5eadb715aaf1d3aa84de8aa"
     },
     {
+      "path": "runtime/compat/graphics/prepare-native-hiview-events.sh",
+      "bytes": 4833,
+      "sha256": "2b27e32c706d7d8cacdebcac83dacb976f544bfc9e7982b319dfccd395cb151e"
+    },
+    {
+      "path": "runtime/compat/graphics/prepare-parentcontrol-el1.sh",
+      "bytes": 2588,
+      "sha256": "a7fc995a975ea4dd10823dac9826f32327e2802a689291f4934b984c98c88293"
+    },
+    {
+      "path": "runtime/compat/graphics/prepare-private-persist.sh",
+      "bytes": 7695,
+      "sha256": "c89f86181da8736182a71e642c93a7f5fd8d7bbdb5f7bad5aa979931db75c289"
+    },
+    {
       "path": "runtime/compat/graphics/service_router.json",
       "bytes": 238,
       "sha256": "d5b28711846bfb4d1ae77f20f095e8fab1ce401235acca5ec0dc5d3aa154bb68"
@@ -1838,6 +2008,11 @@
       "sha256": "2aec5130f654a01da19cc4a4182fa0a755f0385f77928ef00654a2bbce85cb5d"
     },
     {
+      "path": "runtime/compat/graphics/start-xiaomi-charging.sh",
+      "bytes": 405,
+      "sha256": "f93a6c760d54138d817bb4cee79c095ae1696ef0e23a1b4aa8fa0a56621ae645"
+    },
+    {
       "path": "runtime/compat/graphics/useriam-core.json",
       "bytes": 757,
       "sha256": "d227d82ff25bf9e54e9d83d4857174c7d32730d489445f7df21cf5a70e9479dc"
@@ -1854,13 +2029,28 @@
     },
     {
       "path": "runtime/compat/hmos-init-debug.cfg",
-      "bytes": 29182,
-      "sha256": "369af218bd02a5e561e4559c07db3c039d9372f4ff0be5ac07bddc749b8258fc"
+      "bytes": 29215,
+      "sha256": "dc10f2523c3d4feb8cbf765fcecd5c00fd88295a10e09c52f4870b70a97ece32"
+    },
+    {
+      "path": "runtime/compat/sensors/prepare-private-persist.sh",
+      "bytes": 1313,
+      "sha256": "bf8af1f2c2b08cef0c3667fa6be069e99513805b29b2e92adf861ef27b003a57"
+    },
+    {
+      "path": "runtime/compat/sensors/stage-fastrpc-nodes.sh",
+      "bytes": 922,
+      "sha256": "cc993824f02bf58d7e45c06021ec0a32335ff4e79d972991a0291cd7cb5eab43"
+    },
+    {
+      "path": "runtime/compat/sensors/start-sensors.sh",
+      "bytes": 3255,
+      "sha256": "45acbd403f8c5659db8a0d63129d03a5eb35e2ad7a4be5d4f7cfa49fcce2f54f"
     },
     {
       "path": "SOURCE-SELECTION.json",
-      "bytes": 99185,
-      "sha256": "faaf0b43fcc57ae132aaae5ca01eb0bb4afc5290c1de425a34c005febdebbdb6"
+      "bytes": 115408,
+      "sha256": "527633ef7e0f1dcd2441a74d4e7c754260e86c361c604a710d26e94c9c02dcd4"
     },
     {
       "path": "tests/bootstrap/test_probe_serial_v121.c",
@@ -1873,9 +2063,24 @@
       "sha256": "279506d8d1380eff046a8262dbebdd293f22be74ad535a15b7a05e85124e3f68"
     },
     {
+      "path": "tests/display/direct_scanout_contract.cpp",
+      "bytes": 15310,
+      "sha256": "d4acae8ea30f95a2858117f999935e5f398fb6dde377c7c252bd3fb90c8fb66e"
+    },
+    {
+      "path": "tests/display/display_route_policy_contract.cpp",
+      "bytes": 4198,
+      "sha256": "86b25bc4bbdd94920c513d9fea2b9272c416d64228eb32c41fe15a9a0bb7c12c"
+    },
+    {
       "path": "tests/display/mode_switch_contract.cpp",
       "bytes": 3364,
       "sha256": "19bc24e348ed3ffbe508f4d1a4544672cc434fadbe288a0b0b6933e95e1959b2"
+    },
+    {
+      "path": "tests/display/plane_layout_contract.cpp",
+      "bytes": 4349,
+      "sha256": "045770129b8c5ca866c0776658b7ac328dfbc71bf885855bff6ce3b82ed42023"
     },
     {
       "path": "tests/display/present_fence_contract.cpp",
@@ -1891,6 +2096,11 @@
       "path": "tests/ipc/binder_nested.c",
       "bytes": 6537,
       "sha256": "38e528d510548973d4cde88e119b3985708b54ba0fe37ed21362fba958c6f1e2"
+    },
+    {
+      "path": "tests/ipc/binder_oneway_pid.c",
+      "bytes": 8000,
+      "sha256": "85b5eda5ef9306633aece0ca51154908e9bfb2213d88c27397a94132bb897292"
     },
     {
       "path": "tests/ipc/token_contract.c",
@@ -1918,9 +2128,69 @@
       "sha256": "1e5918896e2a9a4d5b09ec8b8300710f914c89402c2218d13faf92365036eb1a"
     },
     {
+      "path": "tests/test_bootstrap_packaging.py",
+      "bytes": 9784,
+      "sha256": "160f1860d2a41602de289b861f71d3d763e0b30e43f02184d4e1d1564a0f5158"
+    },
+    {
+      "path": "tests/test_core_runtime_services.py",
+      "bytes": 17317,
+      "sha256": "bc368f6718d1221f37d2d0b121fcb159511e88faf4806c103da8877218d33cf6"
+    },
+    {
+      "path": "tests/test_display_log_retention.py",
+      "bytes": 11477,
+      "sha256": "294c293a5fde56d38b84d902e3e7281105d952e57e7d7b419003fb645ceebe64"
+    },
+    {
+      "path": "tests/test_experience_rule_service.py",
+      "bytes": 8855,
+      "sha256": "4f9339cd66e519c6f9afe71126c7483213159456ba0cbcc1efde495921aba512"
+    },
+    {
+      "path": "tests/test_file_migrate_hook_guard.py",
+      "bytes": 9455,
+      "sha256": "2c871c0e84bfe588cb04ecd503c3d2a2e37b7fcd100e77e5b9fbc35bd4f0f41a"
+    },
+    {
       "path": "tests/test_huawei_full_ota.py",
       "bytes": 3609,
       "sha256": "a5f6154acba07ca740fa87cb0b967e5c0ed7fb9892c2e94f7d881b59bdf84c0e"
+    },
+    {
+      "path": "tests/test_huawei_id_startup.py",
+      "bytes": 6268,
+      "sha256": "4f3675d17a0d44d909cb29f9f064f0597f921016823c1566d6341f592194efe3"
+    },
+    {
+      "path": "tests/test_ipc_pair_packaging.py",
+      "bytes": 10115,
+      "sha256": "d574f1e1fb8da9eb859c16d669bc50196b6dd5e03807889ee3f20a4342606a6d"
+    },
+    {
+      "path": "tests/test_native_hiview_events.py",
+      "bytes": 19437,
+      "sha256": "db34c0038e56db21fe7e85c9cc924158600f09352ec1e5c50a2cab6de3011e7c"
+    },
+    {
+      "path": "tests/test_package_sensors.py",
+      "bytes": 5630,
+      "sha256": "c055b0dc4bdd7dc7847ae4bc4554a7422c11ddedb97c33781343372759a1a949"
+    },
+    {
+      "path": "tests/test_parent_control_service.py",
+      "bytes": 23379,
+      "sha256": "ded416fbd1dad9037d34d4eb62b7935b3063947e114689a9566e377992facb88"
+    },
+    {
+      "path": "tests/test_privacy_service.py",
+      "bytes": 4667,
+      "sha256": "431f052823deface9fc4d83dac45afff78eb710f4dca585cc2cfc56a2a447d75"
+    },
+    {
+      "path": "tests/test_private_persist_parameters.py",
+      "bytes": 2399,
+      "sha256": "606c720c3cf11c7bf761b0e5eaec6db9dc4247506ce8c331c0da0c9fcac0395d"
     },
     {
       "path": "tests/test_refresh_policy.py",
@@ -1928,9 +2198,24 @@
       "sha256": "1a96d9296d2921e079ecdda9499d5252565d223d9d195c8003ab1bc27f580757"
     },
     {
+      "path": "tests/test_render_commit_async.py",
+      "bytes": 6550,
+      "sha256": "6019902da9fb5865a0175272b99826e142d54d1c151f9a64336ee8b1056d9586"
+    },
+    {
+      "path": "tests/test_samgr_original_role.py",
+      "bytes": 11708,
+      "sha256": "c310f2d60e57464a0c110ed755c9b895fcf0bd45911d2de6ae7f20e550be1b90"
+    },
+    {
       "path": "tests/test_userdata_mount.py",
       "bytes": 7449,
       "sha256": "78c66a8a5498b49c2645e340841266a1cbd5b0c2812f2ac8644ed1f8bb0a1713"
+    },
+    {
+      "path": "tests/test_vibrator_service.py",
+      "bytes": 13139,
+      "sha256": "dd0212b955f0438500303caa1921673c7a4d1e4683722fe4b2b0026b732873e1"
     },
     {
       "path": "tests/useriam/empty_contract.cpp",
@@ -1959,13 +2244,18 @@
     },
     {
       "path": "tools/build_current.py",
-      "bytes": 14079,
-      "sha256": "7753a1c118361649c516df0d2dbe965c6cf31ac776cb47b6c425035a882a3def"
+      "bytes": 16964,
+      "sha256": "ccbb7f3c38788921883bc612e4e542544996518a46e4d298b34298d46c34d6c0"
     },
     {
       "path": "tools/build_display_drm.py",
       "bytes": 3079,
       "sha256": "b73e969847918fa6886017dba18d662970ac44332a0de564797ec36ccbffe8f1"
+    },
+    {
+      "path": "tools/build_ipc_gki.sh",
+      "bytes": 7691,
+      "sha256": "1d785b9784179cf14790cf23ce05c507f081b4ef0f0bc5c8f21892060b5a6906"
     },
     {
       "path": "tools/build_promax_images.py",
@@ -1974,8 +2264,13 @@
     },
     {
       "path": "tools/build_promax_ramdisk.py",
-      "bytes": 30147,
-      "sha256": "b77f78626201fa4fa568c3825fe431d6904da444d2e46219073028cb40caebf3"
+      "bytes": 90132,
+      "sha256": "c78e27034ffb7fd3caf46e5a9c922e470930cfc19c77e8819f93ded48f2fadeb"
+    },
+    {
+      "path": "tools/build_sensors.py",
+      "bytes": 4841,
+      "sha256": "793aa61d3738318a66ba7b767208b008f7a2117f381ff683915b21227700d059"
     },
     {
       "path": "tools/build_useriam.py",
@@ -1988,6 +2283,11 @@
       "sha256": "b15ecce250930c185fda3e898a1e488166f4a6278e8f2524466b94b8092ee49e"
     },
     {
+      "path": "tools/experience_rule_service.py",
+      "bytes": 3721,
+      "sha256": "074765d6509cac4efe13476b46ce9697ae7e78348da5ab0446ca15ca36b7bdd0"
+    },
+    {
       "path": "tools/extract_huawei_full_ota.py",
       "bytes": 7031,
       "sha256": "e799ccacb6e9146cf4051c2840cffc43b2ea536d1b760e9aeca149dcef5a682c"
@@ -1998,14 +2298,49 @@
       "sha256": "be456a7ac9aa4e7d21ffd689bd362951e98db3236a25786a1710976a93e193ab"
     },
     {
+      "path": "tools/hiview_event_service.py",
+      "bytes": 9710,
+      "sha256": "6d6a8d4508cc0210e8ef64addb78efff87ff31f6e67d2ebdd5d9eddf61750d7f"
+    },
+    {
+      "path": "tools/package_sensors.py",
+      "bytes": 13597,
+      "sha256": "b63fca2a72c6d41dd8f842d6b4d29bc779568d415c7e5a4c2fbf1ce77d17bd09"
+    },
+    {
+      "path": "tools/package_thermal.py",
+      "bytes": 2435,
+      "sha256": "6fa761c00dbca3e638a2760ebff39c4994e8926391061538b2ce486d517e41fc"
+    },
+    {
+      "path": "tools/package_xiaomi_charging.py",
+      "bytes": 5235,
+      "sha256": "698e3a45714ad16dc6e3b5c23efad0147d4a87940294fcca0156a1bfb99562e1"
+    },
+    {
+      "path": "tools/parent_control_service.py",
+      "bytes": 9561,
+      "sha256": "1d86756f09dd0f539bd4e69855b3e2a24130d3b17a15be5a92185b81f60f27d7"
+    },
+    {
       "path": "tools/patch_refresh_policy.py",
       "bytes": 1971,
       "sha256": "5e78b84c98e0f2bb094c431a236293d454a0e5ec22959056f376515e6e22aff0"
     },
     {
+      "path": "tools/private_persist_parameters.py",
+      "bytes": 1852,
+      "sha256": "045e498aa1e4ec3ee554a5360a646a41f162bc498e49aca66fc18a40ad9847b0"
+    },
+    {
       "path": "tools/refresh_manifest.py",
       "bytes": 2201,
       "sha256": "e5002a366434cbb0a5cc5df87b19195ba6bcf474da1c8de19c5a4461fda7beb0"
+    },
+    {
+      "path": "tools/samgr_original_role.py",
+      "bytes": 3544,
+      "sha256": "7e28e3733f7e556ca12720a5a32b11ec50f979d44cb3d41809038e9510eac66e"
     },
     {
       "path": "tools/update_promax_ramdisk_package.py",

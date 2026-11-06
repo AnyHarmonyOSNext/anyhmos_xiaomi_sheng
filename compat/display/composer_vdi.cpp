@@ -1,5 +1,4 @@
-// Ace5 client-composition backend. Real DRM enumeration and atomic scanout.
-// No device composition, protected buffers, private compression or fake fences.
+// Sheng 显示后端：保留客户端合成，按原生同步协议直扫不透明单层
 #include "composer_exports.h"
 #include "log.h"
 #include <cerrno>
@@ -15,6 +14,7 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <linux/dma-buf.h>
 #include <linux/dma-heap.h>
 #include <time.h>
@@ -22,6 +22,12 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <drm_fourcc.h>
+
+#ifndef SHENG_DEFAULT_DISPLAY_ROUTE
+#define SHENG_DEFAULT_DISPLAY_ROUTE 0
+#endif
+static_assert(SHENG_DEFAULT_DISPLAY_ROUTE == 0 || SHENG_DEFAULT_DISPLAY_ROUTE == 2,
+    "Default display route must be 0 or 2");
 
 namespace OHOS::HDI::Display::Composer {
 namespace {
@@ -66,6 +72,22 @@ struct Layer {
     std::vector<IRect> dirty, visible;
     Buffer buffer;
 };
+#include "direct_scanout_state.h"
+DirectReleaseCache directRelease;
+uint32_t preparedDirectLayer = 0;
+int scanoutPolicy = 0;
+uint64_t policyReadTime = 0, directFrames = 0, directFailures = 0, frameAtomicTotal = 0, frameAtomicEnd = 0;
+bool requireClientFrame = false, directAppliedError = false, planeRulesApplied = false;
+bool directReleaseUnavailable = false;
+struct PlaneBlendRules {
+    uint32_t id = 0;
+    bool queried = false, valid = false;
+    uint64_t oldBlend = 0, oldAlpha = 0, opaqueAlpha = 0;
+};
+PlaneBlendRules planeBlend[2];
+#ifdef ACE5_DIRECT_TEST
+int scanoutPolicyOverride = -1;
+#endif
 std::mutex mutex;
 int drm = -1;
 // SHENG_SPLIT_SCANOUT_V1: each DSI half needs its own SSPP plane.
@@ -132,6 +154,8 @@ int Property(drmModeAtomicReqPtr request, uint32_t id, uint32_t type,
 }
 void CleanupDrm()
 {
+    directRelease.Reset(); preparedDirectLayer = 0; requireClientFrame = false; directReleaseUnavailable = false;
+    planeRulesApplied = false; planeBlend[0] = {}; planeBlend[1] = {};
     if (drm >= 0) {
         if (currentFb) drmModeRmFB(drm, currentFb);
         if (modeBlob) drmModeDestroyPropertyBlob(drm, modeBlob);
@@ -241,6 +265,10 @@ void *VsyncLoop(void *)
 {
     unsigned sequence = 0, errors = 0;
     uint64_t generation = 0, previous = 0, intervals = 0, sum = 0, minimum = 0, maximum = 0;
+    uint64_t dispatchCount = 0, callbackSum = 0, callbackMax = 0, callbackSlow = 0;
+    uint64_t wakeSum = 0, wakeMax = 0, skipped = 0;
+    unsigned previousHardwareSequence = 0;
+    bool hardwareSequenceKnown = false;
     for (;;) {
         bool enabled;
         {
@@ -248,7 +276,7 @@ void *VsyncLoop(void *)
             if (quit) break;
             enabled = vsyncEnabled;
         }
-        if (!enabled) { previous = 0; usleep(5000); continue; }
+        if (!enabled) { previous = 0; hardwareSequenceKnown = false; usleep(5000); continue; }
         // Only the vblank worker waits here: never hold the commit mutex.
         // Timestamp is the kernel's actual scanout timestamp, not wake time.
         drmVBlank wait{};
@@ -275,6 +303,8 @@ void *VsyncLoop(void *)
         if (generation != currentGeneration) {
             previous = intervals = sum = minimum = maximum = 0;
             generation = currentGeneration;
+            dispatchCount = callbackSum = callbackMax = callbackSlow = 0;
+            wakeSum = wakeMax = skipped = 0; hardwareSequenceKnown = false;
         }
         if (previous && timestamp > previous && timestamp - previous < 100000000ULL) {
             uint64_t delta = timestamp - previous;
@@ -290,7 +320,33 @@ void *VsyncLoop(void *)
             }
         }
         previous = callback ? timestamp : 0;
-        if (callback) callback(++sequence, timestamp, data);
+        if (callback) {
+            // 分别统计内核唤醒延迟与回调耗时，不改变提交时序
+            uint64_t start = MonotonicNs();
+            uint64_t wake = start > timestamp ? start - timestamp : 0;
+            callback(++sequence, timestamp, data);
+            uint64_t elapsed = MonotonicNs() - start;
+            if (hardwareSequenceKnown) {
+                unsigned delta = wait.reply.sequence - previousHardwareSequence;
+                if (delta > 1 && delta < 1000) skipped += delta - 1;
+            }
+            previousHardwareSequence = wait.reply.sequence; hardwareSequenceKnown = true;
+            ++dispatchCount; callbackSum += elapsed; wakeSum += wake;
+            if (elapsed > callbackMax) callbackMax = elapsed;
+            if (wake > wakeMax) wakeMax = wake;
+            if (elapsed >= period) ++callbackSlow;
+            if (dispatchCount >= 240) {
+                Metric("VSYNC_DISPATCH period_ns=%llu callbacks=%llu callback_avg_us=%llu callback_max_us=%llu wake_avg_us=%llu wake_max_us=%llu skipped=%llu callback_over_period=%llu",
+                    (unsigned long long)period, (unsigned long long)dispatchCount,
+                    (unsigned long long)(callbackSum / dispatchCount / 1000),
+                    (unsigned long long)(callbackMax / 1000),
+                    (unsigned long long)(wakeSum / dispatchCount / 1000),
+                    (unsigned long long)(wakeMax / 1000), (unsigned long long)skipped,
+                    (unsigned long long)callbackSlow);
+                dispatchCount = callbackSum = callbackMax = callbackSlow = 0;
+                wakeSum = wakeMax = skipped = 0;
+            }
+        } else hardwareSequenceKnown = false;
     }
     return nullptr;
 }
@@ -324,11 +380,278 @@ void Metric(const char *format, ...)
     }
     errno = saved;
 }
+// 保存原有混合属性，直扫与客户端回退分别使用不透明和原值
+bool PlaneBlendProperties(drmModeAtomicReqPtr request, unsigned half, bool opaque)
+{
+    uint32_t target = half ? secondPlane : plane;
+    auto &rules = planeBlend[half];
+    if (rules.id != target) { rules = {}; rules.id = target; }
+    if (!rules.queried) {
+        auto *props = drmModeObjectGetProperties(drm, target, DRM_MODE_OBJECT_PLANE);
+        if (!props) return false;
+        bool blend = false, alpha = false;
+        for (uint32_t i = 0; i < props->count_props; ++i) {
+            auto *p = drmModeGetProperty(drm, props->props[i]);
+            if (!p) continue;
+            if (!strcmp(p->name, "blend_op")) {
+                for (int e = 0; e < p->count_enums; ++e)
+                    if (!strcmp(p->enums[e].name, "opaque") && p->enums[e].value == 1) blend = true;
+                rules.oldBlend = props->prop_values[i];
+            } else if (!strcmp(p->name, "alpha") && (p->flags & DRM_MODE_PROP_RANGE) &&
+                p->count_values >= 2 && !p->values[0] && p->values[1] > 0 && p->values[1] <= 65535) {
+                rules.oldAlpha = props->prop_values[i]; rules.opaqueAlpha = p->values[1]; alpha = true;
+            }
+            drmModeFreeProperty(p);
+        }
+        drmModeFreeObjectProperties(props);
+        rules.queried = true; rules.valid = blend && alpha;
+    }
+    if (!rules.valid) return false;
+    bool blend = Property(request, target, DRM_MODE_OBJECT_PLANE, "blend_op",
+        opaque ? 1 : rules.oldBlend) >= 0;
+    bool alpha = Property(request, target, DRM_MODE_OBJECT_PLANE, "alpha",
+        opaque ? rules.opaqueAlpha : rules.oldAlpha) >= 0;
+    return blend && alpha;
+}
+// 为当前模式构造双半屏属性，测试请求不申请呈现 fence
+bool ScanoutProperties(drmModeAtomicReqPtr request, uint32_t fb,
+    const IRect &crop, uint64_t *retireFence, uint64_t *releaseFence = nullptr, bool opaque = false)
+{
+    bool valid = true;
+#define PROP(object, type, name, value) valid &= Property(request, object, type, name, value) >= 0
+    PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "CRTC_ID", crtc);
+    PROP(crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", modeBlob);
+    PROP(crtc, DRM_MODE_OBJECT_CRTC, "ACTIVE", 1);
+    if (retireFence) PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "RETIRE_FENCE",
+        reinterpret_cast<uintptr_t>(retireFence));
+    // 层释放使用 CRTC 原生 fence，不复用连接器呈现 fence
+    if (releaseFence) PROP(crtc, DRM_MODE_OBJECT_CRTC, "output_fence",
+        reinterpret_cast<uintptr_t>(releaseFence));
+    // Partition the source exactly; no gap or duplicated column at the seam.
+    const int leftSourceWidth = crop.w / 2;
+    for (unsigned half = 0; half < 2; ++half) {
+        const uint32_t target = half ? secondPlane : plane;
+        const int sourceX = crop.x + (half ? leftSourceWidth : 0);
+        const int sourceWidth = half ? crop.w - leftSourceWidth : leftSourceWidth;
+        const uint32_t outputWidth = mode.hdisplay / 2;
+        PROP(target, DRM_MODE_OBJECT_PLANE, "FB_ID", fb);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_ID", crtc);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_X", uint64_t(sourceX) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_Y", uint64_t(crop.y) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_W", uint64_t(sourceWidth) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_H", uint64_t(crop.h) << 16);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_X", half * outputWidth);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_Y", 0);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_W", outputWidth);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_H", mode.vdisplay);
+        PROP(target, DRM_MODE_OBJECT_PLANE, "color_fill", 0);
+        if (opaque || planeRulesApplied) valid &= PlaneBlendProperties(request, half, opaque);
+    }
+#undef PROP
+    return valid;
+}
+struct LayerTestResult {
+    int result = UNSUPPORTED, error = 0, cleanup = 0;
+    const char *stage = "candidate";
+};
+int singleLayerCleanupError = 0;
+bool FullScreen(const IRect &rect)
+{
+    return !rect.x && !rect.y && rect.w == mode.hdisplay && rect.h == mode.vdisplay;
+}
+// 仅检查不透明单层及当前保存的旋转状态
+const char *SingleLayerReason(const Layer &layer)
+{
+    const auto &b = layer.buffer.value;
+    if (!requestedPowerOn) return "power_off";
+    if (layer.composition != V::COMPOSITION_DEVICE) return "composition";
+    if (!plane || !secondPlane || plane == secondPlane || (mode.hdisplay & 1)) return "planes";
+    if (!Linear(b)) return "layout";
+    if (b.width != mode.hdisplay || b.height != mode.vdisplay) return "buffer_size";
+    if (!FullScreen(layer.region) || !FullScreen(layer.crop)) return "rect";
+    if (layer.visible.size() != 1 || !FullScreen(layer.visible[0])) return "visible";
+    if (layer.transform != V::ROTATE_NONE) return "transform";
+    if (layer.mask != V::LAYER_NORAML) return "mask";
+    if (layer.alpha.enPixelAlpha || (layer.alpha.enGlobalAlpha && layer.alpha.gAlpha != 255))
+        return "alpha";
+    if (layer.blend != V::BLEND_NONE && layer.blend != V::BLEND_SRC &&
+        layer.blend != V::BLEND_SRCOVER) return "blend";
+    return nullptr;
+}
+// 临时导入候选缓冲区，仅验证双半屏原子请求
+LayerTestResult TestSingleLayer(const Layer &layer)
+{
+    const auto &b = layer.buffer.value;
+    uint32_t handle = 0, fb = 0;
+    if (drmPrimeFDToHandle(drm, b.fd, &handle)) return {FAIL, errno, 0, "import"};
+    uint32_t handles[4]{handle}, pitches[4]{uint32_t(b.stride)}, offsets[4]{};
+    int rc = drmModeAddFB2(drm, b.width, b.height, Format(b.format), handles, pitches,
+        offsets, &fb, 0);
+    int error = errno;
+    drm_gem_close closeHandle{handle, 0};
+    int cleanup = ioctl(drm, DRM_IOCTL_GEM_CLOSE, &closeHandle) ? errno : 0;
+    if (rc) return {FAIL, error, cleanup, "framebuffer"};
+    if (cleanup) {
+        error = cleanup;
+        drmModeRmFB(drm, fb);
+        return {FAIL, error, cleanup, "gem_close"};
+    }
+    auto *request = drmModeAtomicAlloc();
+    if (!request) {
+        error = errno;
+        if (drmModeRmFB(drm, fb) && !cleanup) cleanup = errno;
+        return {FAIL, error, cleanup, "request"};
+    }
+    bool valid = ScanoutProperties(request, fb, layer.crop, nullptr, nullptr, true);
+    rc = valid ? drmModeAtomicCommit(drm, request,
+        DRM_MODE_ATOMIC_ALLOW_MODESET | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) : FAIL;
+    error = errno;
+    drmModeAtomicFree(request);
+    if (drmModeRmFB(drm, fb) && !cleanup) cleanup = errno;
+    return {rc || cleanup ? FAIL : OK, rc ? error : 0, cleanup, valid ? "test_only" : "properties"};
+}
+// 零为原路径，一为影子测试，二为受限单层直扫
+int ReadScanoutPolicy()
+{
+#ifdef ACE5_DIRECT_TEST
+    if (scanoutPolicyOverride >= 0) return scanoutPolicyOverride;
+#endif
+    int fd = open("/dev/sheng-display-route-mode",
+        O_RDONLY | O_CLOEXEC | O_NOFOLLOW);
+    // 控制文件缺失时使用构建默认，其他打开失败保持原路径
+    if (fd < 0) {
+#if SHENG_DEFAULT_DISPLAY_ROUTE == 2
+        return errno == ENOENT ? 2 : 0;
+#else
+        return 0;
+#endif
+    }
+    char enabled = 0;
+    // 固定控制文件仅取首字符，允许常规换行及原有文件权限
+    int result = read(fd, &enabled, 1) == 1 && enabled >= '0' && enabled <= '2' ? enabled - '0' : 0;
+    close(fd); return result;
+}
+// 在持锁的准备与提交入口刷新策略，不丢弃已提交的释放 fence
+void RefreshScanoutPolicy(uint64_t now)
+{
+    if (policyReadTime && (now < policyReadTime || now - policyReadTime < 2000000000ULL)) return;
+    policyReadTime = now;
+    int saved = errno;
+    int policy = ReadScanoutPolicy();
+    if (policy != scanoutPolicy) {
+        Metric("SCANOUT_POLICY previous=%d requested=%d", scanoutPolicy, policy);
+        scanoutPolicy = policy;
+    }
+    errno = saved;
+}
+// 仅显式影子模式执行周期性诊断，不干扰正式直扫
+void RecordSingleLayerDiagnostic(uint64_t now)
+{
+    static uint64_t last = 0;
+    if (last && (now < last || now - last < 2000000000ULL)) return;
+    last = now;
+    int saved = errno;
+    RefreshScanoutPolicy(now);
+    if (scanoutPolicy != 1) { errno = saved; return; }
+    if (layers.size() != 1) {
+        Metric("LAYER_TEST count=%zu stage=layer_count result=%d", layers.size(), UNSUPPORTED);
+        errno = saved; return;
+    }
+    const auto &entry = *layers.begin();
+    const auto &layer = entry.second;
+    const auto &b = layer.buffer.value;
+    const char *reason = SingleLayerReason(layer);
+    LayerTestResult result;
+    if (reason) result.stage = reason;
+    else if (singleLayerCleanupError) result = {FAIL, singleLayerCleanupError, 0, "cleanup_latched"};
+    else {
+        result = TestSingleLayer(layer);
+        // 清理失败后停止分配测试资源，保留元数据诊断
+        if (result.cleanup) singleLayerCleanupError = result.cleanup;
+    }
+    Metric("LAYER_TEST count=1 id=%u stage=%s result=%d error=%d cleanup_error=%d latched_error=%d "
+        "transform=%d format=%d width=%d height=%d stride=%d size=%lld usage=%llu "
+        "reserve_fds=%u reserve_ints=%u region=%d,%d,%d,%d crop=%d,%d,%d,%d "
+        "visible=%zu global_alpha=%d pixel_alpha=%d alpha=%u premulti=%d blend=%d mask=%d "
+        "composition=%d acquire_fence=%d client_fb=%u mode_id=%u policy=%d prepared_layer=%u "
+        "direct_frames=%llu direct_failures=%llu applied_error=%d",
+        entry.first, result.stage, result.result, result.error, result.cleanup, singleLayerCleanupError,
+        int(layer.transform), b.format, b.width, b.height, b.stride, (long long)b.size,
+        (unsigned long long)b.usage, b.reserveFds, b.reserveInts,
+        layer.region.x, layer.region.y, layer.region.w, layer.region.h,
+        layer.crop.x, layer.crop.y, layer.crop.w, layer.crop.h, layer.visible.size(),
+        int(layer.alpha.enGlobalAlpha), int(layer.alpha.enPixelAlpha), unsigned(layer.alpha.gAlpha),
+        int(layer.premulti), int(layer.blend), int(layer.mask), int(layer.composition),
+        layer.buffer.fence >= 0, currentFb, selectedMode, scanoutPolicy, preparedDirectLayer,
+        (unsigned long long)directFrames, (unsigned long long)directFailures, int(directAppliedError));
+    errno = saved;
+}
+struct FenceObservation {
+    enum State { MISSING, READY, PENDING, ERROR, COUNT } state = MISSING;
+    uint64_t duration = 0;
+};
+// 零超时查询只观察 fence，不等待或转移所有权
+FenceObservation ObserveFence(int fd)
+{
+    if (fd < 0) return {};
+    int saved = errno;
+    uint64_t begin = MonotonicNs();
+    pollfd descriptor{fd, POLLIN, 0};
+    int result = poll(&descriptor, 1, 0);
+    uint64_t end = MonotonicNs();
+    errno = saved;
+    FenceObservation observation;
+    if (end >= begin) observation.duration = end - begin;
+    if (result < 0 || (descriptor.revents & (POLLERR | POLLHUP | POLLNVAL)))
+        observation.state = FenceObservation::ERROR;
+    else if (result > 0 && (descriptor.revents & POLLIN))
+        observation.state = FenceObservation::READY;
+    else if (!result)
+        observation.state = FenceObservation::PENDING;
+    else observation.state = FenceObservation::ERROR;
+    return observation;
+}
 // Aggregate only: avoid per-frame logging changing the pacing being measured.
 struct SubmitMetrics {
     uint64_t begin = 0, frames = 0, sum[5]{}, maximum = 0, slow = 0;
     uint64_t last = 0, gaps[8]{};
-    void Record(const uint64_t (&t)[6]) {
+    uint64_t lastEntry = 0, lastReturn = 0;
+    bool continuous = false, routeKnown = false, directRoute = false;
+    // 路径切换先记录未满统计桶，再断开跨路径间隔
+    void StartRoute(bool direct)
+    {
+        if (routeKnown && directRoute != direct) {
+            Metric("SUBMIT_ROUTE previous=%s next=%s partial_frames=%llu begin_ns=%llu last_ns=%llu atomic_total=%llu atomic_end_ns=%llu",
+                directRoute ? "DIRECT" : "CLIENT", direct ? "DIRECT" : "CLIENT",
+                (unsigned long long)frames, (unsigned long long)begin, (unsigned long long)last,
+                (unsigned long long)frameAtomicTotal, (unsigned long long)frameAtomicEnd);
+            *this = {};
+        }
+        routeKnown = true; directRoute = direct;
+    }
+    uint64_t pairs = 0, entrySum = 0, entryMin = 0, entryMax = 0;
+    uint64_t outsideSum = 0, outsideMax = 0, breaks = 0;
+    uint64_t serviceSum = 0, serviceMax = 0, clockErrors = 0;
+    uint64_t fenceStates[FenceObservation::COUNT]{}, probeSum = 0, probeMax = 0;
+    // 分别记录入口节奏、提交耗时与两次调用之间的空隙
+    void Record(const uint64_t (&t)[6], bool previous,
+        const FenceObservation &fence) {
+        if (previous && lastEntry && lastReturn >= lastEntry && t[0] >= lastReturn) {
+            uint64_t interval = t[0] - lastEntry, outside = t[0] - lastReturn;
+            uint64_t service = lastReturn - lastEntry;
+            ++pairs; entrySum += interval; outsideSum += outside;
+            serviceSum += service;
+            if (!entryMin || interval < entryMin) entryMin = interval;
+            if (interval > entryMax) entryMax = interval;
+            if (outside > outsideMax) outsideMax = outside;
+            if (service > serviceMax) serviceMax = service;
+        } else {
+            ++breaks;
+            if (previous) ++clockErrors;
+        }
+        lastEntry = t[0];
+        ++fenceStates[fence.state]; probeSum += fence.duration;
+        if (fence.duration > probeMax) probeMax = fence.duration;
         if (last) {
             uint64_t gap = t[5] - last;
             const uint64_t limits[] = {8000000,12000000,17000000,25000000,34000000,50000000,100000000};
@@ -358,9 +681,33 @@ struct SubmitMetrics {
         Metric("FRAME_GAPS bins_ms=le8,le12,le17,le25,le34,le50,le100,gt100 counts=%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu",
             (unsigned long long)gaps[0],(unsigned long long)gaps[1],(unsigned long long)gaps[2],(unsigned long long)gaps[3],
             (unsigned long long)gaps[4],(unsigned long long)gaps[5],(unsigned long long)gaps[6],(unsigned long long)gaps[7]);
-        uint64_t previous = last;
+        uint64_t probes = frames - fenceStates[FenceObservation::MISSING];
+        Metric("SUBMIT_PACING frames=%llu pairs=%llu entry_avg_us=%llu entry_min_us=%llu entry_max_us=%llu "
+            "previous_service_avg_us=%llu previous_service_max_us=%llu outside_avg_us=%llu outside_max_us=%llu "
+            "chain_breaks=%llu clock_errors=%llu fence_missing=%llu fence_ready=%llu fence_pending=%llu fence_error=%llu "
+            "probe_samples=%llu probe_avg_ns=%llu probe_max_ns=%llu route=%s atomic_total=%llu atomic_end_ns=%llu",
+            (unsigned long long)frames, (unsigned long long)pairs,
+            (unsigned long long)(pairs ? entrySum / pairs / 1000 : 0),
+            (unsigned long long)(entryMin / 1000), (unsigned long long)(entryMax / 1000),
+            (unsigned long long)(pairs ? serviceSum / pairs / 1000 : 0),
+            (unsigned long long)(serviceMax / 1000),
+            (unsigned long long)(pairs ? outsideSum / pairs / 1000 : 0),
+            (unsigned long long)(outsideMax / 1000),
+            (unsigned long long)breaks, (unsigned long long)clockErrors,
+            (unsigned long long)fenceStates[FenceObservation::MISSING],
+            (unsigned long long)fenceStates[FenceObservation::READY],
+            (unsigned long long)fenceStates[FenceObservation::PENDING],
+            (unsigned long long)fenceStates[FenceObservation::ERROR],
+            (unsigned long long)probes,
+            (unsigned long long)(probes ? probeSum / probes : 0), (unsigned long long)probeMax,
+            directRoute ? "DIRECT" : "CLIENT", (unsigned long long)frameAtomicTotal,
+            (unsigned long long)frameAtomicEnd);
+        RecordSingleLayerDiagnostic(t[5]);
+        uint64_t previousLast = last, previousEntry = lastEntry, previousReturn = lastReturn;
+        bool previousRoute = directRoute;
         *this = {};
-        last = previous;
+        last = previousLast; lastEntry = previousEntry; lastReturn = previousReturn;
+        routeKnown = true; directRoute = previousRoute;
     }
 } submitMetrics;
 int Submit(bool testOnly, int32_t *presentFence = nullptr)
@@ -371,8 +718,13 @@ int Submit(bool testOnly, int32_t *presentFence = nullptr)
             Ace5Log("POWER_OFF_LATCH suppressed late frame without DRM commit");
             loggedOffSubmission = true;
         }
+        submitMetrics.continuous = false;
         return OK;
     }
+    // 只统计实际提交路径，关屏空返回不建立新统计桶
+    if (!testOnly) submitMetrics.StartRoute(false);
+    bool previous = submitMetrics.continuous;
+    submitMetrics.continuous = false;
     uint64_t timing[6]{MonotonicNs()};
     const auto &b = client.value;
     if (!Linear(b)) return INVALID;
@@ -393,39 +745,13 @@ int Submit(bool testOnly, int32_t *presentFence = nullptr)
     auto *request = drmModeAtomicAlloc();
     if (!request) { drmModeRmFB(drm, fb); return FAIL; }
     timing[2] = MonotonicNs();
-    bool valid = true;
     uint64_t retireFence = UINT64_MAX;
-#define PROP(object, type, name, value) valid &= Property(request, object, type, name, value) >= 0
-    PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "CRTC_ID", crtc);
-    PROP(crtc, DRM_MODE_OBJECT_CRTC, "MODE_ID", modeBlob);
-    PROP(crtc, DRM_MODE_OBJECT_CRTC, "ACTIVE", 1);
-    // 由内核返回本次呈现 fence，测试提交不创建文件描述符
-    if (!testOnly) PROP(connector, DRM_MODE_OBJECT_CONNECTOR, "RETIRE_FENCE",
-        reinterpret_cast<uintptr_t>(&retireFence));
-    // Partition the source exactly; no gap or duplicated column at the seam.
-    const int leftSourceWidth = clientCrop.w / 2;
-    for (unsigned half = 0; half < 2; ++half) {
-        const uint32_t target = half ? secondPlane : plane;
-        const int sourceX = clientCrop.x + (half ? leftSourceWidth : 0);
-        const int sourceWidth = half ? clientCrop.w - leftSourceWidth : leftSourceWidth;
-        const uint32_t outputWidth = mode.hdisplay / 2;
-        PROP(target, DRM_MODE_OBJECT_PLANE, "FB_ID", fb);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_ID", crtc);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_X", uint64_t(sourceX) << 16);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_Y", uint64_t(clientCrop.y) << 16);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_W", uint64_t(sourceWidth) << 16);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "SRC_H", uint64_t(clientCrop.h) << 16);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_X", half * outputWidth);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_Y", 0);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_W", outputWidth);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "CRTC_H", mode.vdisplay);
-        PROP(target, DRM_MODE_OBJECT_PLANE, "color_fill", 0);
-    }
-#undef PROP
+    bool valid = ScanoutProperties(request, fb, clientCrop, testOnly ? nullptr : &retireFence);
     timing[3] = MonotonicNs();
     rc = valid ? drmModeAtomicCommit(drm, request,
         DRM_MODE_ATOMIC_ALLOW_MODESET | (testOnly ? DRM_MODE_ATOMIC_TEST_ONLY : 0), nullptr) : -1;
     timing[4] = MonotonicNs();
+    if (!rc && !testOnly) { ++frameAtomicTotal; frameAtomicEnd = timing[4]; }
     drmModeAtomicFree(request);
     // 失败提交也可能已创建 fence，未移交的描述符由作用域释放
     OwnedFence present(retireFence <= INT_MAX ? int(retireFence) : -1);
@@ -433,6 +759,8 @@ int Submit(bool testOnly, int32_t *presentFence = nullptr)
     if (rc || testOnly) drmModeRmFB(drm, fb);
     else { if (currentFb) drmModeRmFB(drm, currentFb); currentFb = fb; }
     timing[5] = MonotonicNs();
+    FenceObservation observation;
+    if (!rc && !testOnly) observation = ObserveFence(present.fd);
     if (!rc && !testOnly && presentFence) {
         *presentFence = present.Take();
         static bool reported = false;
@@ -441,9 +769,132 @@ int Submit(bool testOnly, int32_t *presentFence = nullptr)
             reported = true;
         }
     }
-    if (!rc && !testOnly) submitMetrics.Record(timing);
+    if (!rc && !testOnly) {
+        planeRulesApplied = false; directReleaseUnavailable = false;
+        submitMetrics.Record(timing, previous, observation);
+        // 返回时间在聚合日志之后采样，避免将日志开销计入外部空隙
+        int savedErrno = errno;
+        submitMetrics.lastReturn = MonotonicNs();
+        errno = savedErrno;
+        submitMetrics.continuous = true;
+    }
     if (rc) Log("atomic commit failed");
     return rc == 0 ? OK : FAIL;
+}
+// 直扫复用原层缓冲区，分别保留原生呈现与层释放 fence
+int SubmitDirect(uint32_t layerId, const Layer &layer, int32_t &presentFence)
+{
+    submitMetrics.StartRoute(true);
+    bool previous = submitMetrics.continuous;
+    submitMetrics.continuous = false;
+    presentFence = -1;
+    uint64_t timing[6]{MonotonicNs()};
+    const auto &b = layer.buffer.value;
+    if (layer.buffer.fence >= 0) {
+        pollfd p{layer.buffer.fence, POLLIN, 0}; int rc;
+        do { rc = poll(&p, 1, 1000); } while (rc < 0 && errno == EINTR);
+        if (rc <= 0 || !(p.revents & POLLIN) || (p.revents & (POLLERR | POLLHUP | POLLNVAL))) return FAIL;
+    }
+    timing[1] = MonotonicNs();
+    uint32_t handle = 0, fb = 0;
+    if (drmPrimeFDToHandle(drm, b.fd, &handle)) return FAIL;
+    uint32_t handles[4]{handle}, pitches[4]{uint32_t(b.stride)}, offsets[4]{};
+    int rc = drmModeAddFB2(drm, b.width, b.height, Format(b.format), handles, pitches, offsets, &fb, 0);
+    int error = errno;
+    drm_gem_close closeHandle{handle, 0};
+    int cleanup = ioctl(drm, DRM_IOCTL_GEM_CLOSE, &closeHandle) ? errno : 0;
+    if (rc || cleanup) {
+        if (!rc && drmModeRmFB(drm, fb) && !cleanup) cleanup = errno;
+        if (cleanup) singleLayerCleanupError = cleanup;
+        errno = rc ? error : cleanup; return FAIL;
+    }
+    auto *request = drmModeAtomicAlloc();
+    if (!request) {
+        error = errno;
+        if (drmModeRmFB(drm, fb)) singleLayerCleanupError = errno;
+        errno = error; return FAIL;
+    }
+    timing[2] = MonotonicNs();
+    uint64_t presentSlot = UINT64_MAX, releaseSlot = UINT64_MAX;
+    bool valid = ScanoutProperties(request, fb, layer.crop, &presentSlot, &releaseSlot, true);
+    timing[3] = MonotonicNs();
+    rc = valid ? drmModeAtomicCommit(drm, request, DRM_MODE_ATOMIC_ALLOW_MODESET, nullptr) : FAIL;
+    error = errno;
+    timing[4] = MonotonicNs();
+    if (!rc) { ++frameAtomicTotal; frameAtomicEnd = timing[4]; }
+    drmModeAtomicFree(request);
+    OwnedFence present(presentSlot <= INT_MAX ? int(presentSlot) : -1);
+    OwnedFence release(releaseSlot <= INT_MAX ? int(releaseSlot) : -1);
+    if (present.fd >= 0) fcntl(present.fd, F_SETFD, FD_CLOEXEC);
+    if (release.fd >= 0) fcntl(release.fd, F_SETFD, FD_CLOEXEC);
+    if (rc) {
+        if (drmModeRmFB(drm, fb)) singleLayerCleanupError = errno;
+        errno = error; return FAIL;
+    }
+    // 已应用的提交必须保留新 framebuffer，不能按提交失败回收
+    if (currentFb && drmModeRmFB(drm, currentFb)) singleLayerCleanupError = errno;
+    currentFb = fb; planeRulesApplied = true;
+    timing[5] = MonotonicNs();
+    if (release.fd < 0) {
+        directAppliedError = true; directReleaseUnavailable = true; directRelease.Reset();
+        Metric("DIRECT_APPLIED_ERROR layer=%u framebuffer=%u release_slot=%llu present_slot=%llu atomic_total=%llu atomic_end_ns=%llu",
+            layerId, fb, (unsigned long long)releaseSlot, (unsigned long long)presentSlot,
+            (unsigned long long)frameAtomicTotal, (unsigned long long)frameAtomicEnd);
+        return FAIL;
+    }
+    directRelease.Adopt(layerId, release.Take());
+    presentFence = present.Take();
+    ++directFrames;
+    FenceObservation observation = ObserveFence(presentFence);
+    submitMetrics.Record(timing, previous, observation);
+    int saved = errno;
+    submitMetrics.lastReturn = MonotonicNs();
+    errno = saved;
+    submitMetrics.continuous = true;
+    return OK;
+}
+// 在声明设备合成之前验证当前单层，不修改已提交结果
+void PrepareSingleLayer(bool &needFlushFb)
+{
+    RefreshScanoutPolicy(MonotonicNs());
+    preparedDirectLayer = 0; needFlushFb = true;
+    if (scanoutPolicy != 2 || requireClientFrame || directAppliedError ||
+        singleLayerCleanupError || layers.size() != 1) return;
+    const auto &entry = *layers.begin();
+    if (SingleLayerReason(entry.second)) return;
+    LayerTestResult test = TestSingleLayer(entry.second);
+    if (test.cleanup) singleLayerCleanupError = test.cleanup;
+    if (test.result) return;
+    preparedDirectLayer = entry.first; needFlushFb = false;
+}
+// 跳过重绘后的失败不使用旧客户端帧，保留旧扫描并重新协商
+int CommitFrame(int32_t &fence)
+{
+    RefreshScanoutPolicy(MonotonicNs());
+    if (!preparedDirectLayer) {
+        int result = Submit(false, &fence);
+        if (!result && requestedPowerOn) requireClientFrame = false;
+        return result;
+    }
+    uint32_t selected = preparedDirectLayer;
+    auto it = layers.find(selected);
+    bool eligible = scanoutPolicy == 2 && !singleLayerCleanupError && !directAppliedError &&
+        it != layers.end() && layers.size() == 1 && !SingleLayerReason(it->second);
+    int result = FAIL;
+    fence = -1;
+    if (!requestedPowerOn) {
+        preparedDirectLayer = 0; return OK;
+    }
+    if (eligible) {
+        LayerTestResult test = TestSingleLayer(it->second);
+        if (test.cleanup) singleLayerCleanupError = test.cleanup;
+        if (!test.result) result = SubmitDirect(selected, it->second, fence);
+    }
+    if (result) {
+        ++directFailures; preparedDirectLayer = 0; requireClientFrame = true;
+        submitMetrics.continuous = false;
+    }
+    return result;
 }
 int BlackPowerOn()
 {
@@ -591,6 +1042,7 @@ extern "C" int32_t SetDisplayPowerStatus(uint32_t id, V::DispPowerStatus status)
     if (active == wanted) {
         requestedPowerOn = wanted;
         loggedOffSubmission = false;
+        if (!wanted) { directRelease.Reset(); preparedDirectLayer = 0; directReleaseUnavailable = false; }
         return OK;
     }
     const bool previousRequest = requestedPowerOn;
@@ -619,6 +1071,7 @@ extern "C" int32_t SetDisplayPowerStatus(uint32_t id, V::DispPowerStatus status)
     if (!result) {
         requestedPowerOn = wanted;
         loggedOffSubmission = false;
+        if (!wanted) { directRelease.Reset(); preparedDirectLayer = 0; directReleaseUnavailable = false; }
     } else {
         requestedPowerOn = previousRequest;
     }
@@ -678,7 +1131,7 @@ extern "C" int32_t SetDisplayClientCrop(uint32_t id, const IRect &rect)
 extern "C" int32_t SetDisplayClientDamage(uint32_t id, std::vector<IRect> &rects)
 { DEVICE_LOCK(id); clientDamage = rects; return OK; }
 extern "C" int32_t Commit(uint32_t id, int32_t &fence)
-{ DEVICE_LOCK(id); return Submit(false, &fence); }
+{ DEVICE_LOCK(id); return CommitFrame(fence); }
 // Explicit test-only entry point for the independent recovery contract test.
 extern "C" int32_t Ace5TestClientBuffer(uint32_t id)
 { DEVICE_LOCK(id); return Submit(true); }
@@ -688,23 +1141,42 @@ extern "C" int32_t CreateLayer(uint32_t id, const LayerInfo &info, uint32_t &lay
     layerId = nextLayer++; layers[layerId].info = info; return OK;
 }
 extern "C" int32_t DestroyLayer(uint32_t id, uint32_t layerId)
-{ DEVICE_LOCK(id); return layers.erase(layerId) ? OK : INVALID; }
+{
+    DEVICE_LOCK(id);
+    if (!layers.erase(layerId)) return INVALID;
+    directRelease.ResetLayer(layerId);
+    return OK;
+}
 extern "C" int32_t PrepareDisplayLayers(uint32_t id, bool &needFlushFb)
-{ DEVICE_LOCK(id); needFlushFb = true; return OK; }
+{ DEVICE_LOCK(id); PrepareSingleLayer(needFlushFb); return OK; }
 extern "C" int32_t GetDisplayCompChange(uint32_t id, std::vector<uint32_t> &ids, std::vector<int32_t> &types)
 {
     DEVICE_LOCK(id); ids.clear(); types.clear();
-    for (const auto &entry : layers) if (entry.second.composition != V::COMPOSITION_CLIENT) {
-        ids.push_back(entry.first); types.push_back(V::COMPOSITION_CLIENT);
+    for (const auto &entry : layers) {
+        auto wanted = entry.first == preparedDirectLayer ? V::COMPOSITION_DEVICE : V::COMPOSITION_CLIENT;
+        if (entry.second.composition != wanted) {
+            ids.push_back(entry.first); types.push_back(wanted);
+        }
     }
     return OK;
 }
 extern "C" int32_t GetDisplayReleaseFence(uint32_t id, std::vector<uint32_t> &ids, std::vector<int32_t> &fences)
-{ DEVICE_LOCK(id); ids.clear(); fences.clear(); return OK; } // Only client-composed layers; no layer DMA consumption.
+{
+    DEVICE_LOCK(id); ids.clear(); fences.clear();
+    if (directReleaseUnavailable) return FAIL;
+    uint32_t layerId = 0;
+    int fd = directRelease.Borrow(layerId);
+    // 逐层返回释放项，避免直扫缓存使客户端合成层漏归还
+    for (const auto &entry : layers) {
+        ids.push_back(entry.first);
+        fences.push_back(fd >= 0 && entry.first == layerId ? fd : -1);
+    }
+    return OK;
+}
 extern "C" int32_t SetLayerBuffer(uint32_t id, uint32_t layerId, const BufferHandle &buffer, int32_t fence)
 { OwnedFence acquire(fence); LAYER_LOCK(id, layerId); return buffer.fd >= 0 ? layer.buffer.Set(buffer, acquire) : INVALID; }
 extern "C" int32_t ClearLayerBuffer(uint32_t id, uint32_t layerId)
-{ LAYER_LOCK(id, layerId); layer.buffer.Clear(); return OK; }
+{ LAYER_LOCK(id, layerId); layer.buffer.Clear(); directRelease.ResetLayer(layerId); return OK; }
 extern "C" int32_t ClearDisplayClientBuffer(uint32_t id)
 { DEVICE_LOCK(id); client.Clear(); return OK; }
 #define SETTER(name, type, member) extern "C" int32_t name(uint32_t id, uint32_t layerId, type value) { LAYER_LOCK(id, layerId); layer.member = value; return OK; }
@@ -768,6 +1240,59 @@ extern "C" void Ace5InitializeModesForTest()
     displayModes = {mode}; mode.vrefresh = 144; displayModes.push_back(mode);
     mode = displayModes[0]; selectedMode = 0;
     propertyIds[{crtc, "MODE_ID"}] = 101;
+}
+}
+#endif
+
+#ifdef ACE5_DIRECT_TEST
+namespace OHOS::HDI::Display::Composer {
+// 测试入口只重置模拟状态，不读取运行策略文件
+extern "C" void Ace5ResetDirectForTest(unsigned policy)
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    directRelease.Reset(); layers.clear();
+    preparedDirectLayer = 0; requireClientFrame = false;
+    directAppliedError = directReleaseUnavailable = planeRulesApplied = false;
+    singleLayerCleanupError = 0;
+    directFrames = directFailures = frameAtomicTotal = frameAtomicEnd = 0; submitMetrics = {};
+    scanoutPolicy = policy <= 2 ? int(policy) : 0;
+    scanoutPolicyOverride = scanoutPolicy; policyReadTime = 0;
+    propertyIds[{crtc, "output_fence"}] = 998;
+    for (unsigned half = 0; half < 2; ++half) {
+        uint32_t target = half ? secondPlane : plane;
+        planeBlend[half] = {target, true, true, 0, 255, 255};
+        propertyIds[{target, "blend_op"}] = 300 + half * 2;
+        propertyIds[{target, "alpha"}] = 301 + half * 2;
+    }
+}
+// 测试实际文件控制逻辑，不更改当前覆盖值
+extern "C" int Ace5ReadDisplayPolicyForTest()
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    int previous = scanoutPolicyOverride;
+    scanoutPolicyOverride = -1;
+    int result = ReadScanoutPolicy();
+    scanoutPolicyOverride = previous;
+    return result;
+}
+extern "C" void Ace5SetDirectPolicyForTest(unsigned policy)
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    scanoutPolicyOverride = policy <= 2 ? int(policy) : 0;
+    policyReadTime = 0;
+}
+extern "C" int Ace5BorrowDirectReleaseForTest(uint32_t &layerId)
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    return directRelease.Borrow(layerId);
+}
+extern "C" void Ace5DirectStateForTest(uint32_t &prepared, uint32_t &fb,
+    bool &rulesApplied, bool &clientRequired, int &cleanupError, bool &appliedError)
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    prepared = preparedDirectLayer; fb = currentFb;
+    rulesApplied = planeRulesApplied; clientRequired = requireClientFrame;
+    cleanupError = singleLayerCleanupError; appliedError = directAppliedError;
 }
 }
 #endif

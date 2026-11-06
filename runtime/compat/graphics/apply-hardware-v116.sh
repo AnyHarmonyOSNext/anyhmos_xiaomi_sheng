@@ -2,6 +2,38 @@
 set -eu
 B=/busybox
 R=/hmos-root
+# SHENG_DISPLAY_LOG_RETENTION_BEGIN
+PRESERVE_DISPLAY_LOGS=0
+hardware_log_boot_id=unknown
+hardware_log_uptime=unknown
+if [ "$PRESERVE_DISPLAY_LOGS" = 1 ]; then
+ hardware_log_boot_id=$($B cat /proc/sys/kernel/random/boot_id 2>/dev/null) || hardware_log_boot_id=unknown
+ hardware_log_uptime=$($B cut -d ' ' -f 1 /proc/uptime 2>/dev/null) || hardware_log_uptime=unknown
+fi
+# 追加启动边界，日志失败不阻断硬件准备
+stage_hardware_log() {
+ if [ "$PRESERVE_DISPLAY_LOGS" = 1 ]; then
+  if [ -L "$1" ] || { [ -e "$1" ] && [ ! -f "$1" ]; }; then
+   echo "SHENG_DISPLAY_LOG_INVALID_PATH=$1" >&2 || :
+   return 0
+  fi
+  if ! printf '\nSHENG_DISPLAY_LOG_STAGE boot_id=%s uptime=%s pid=%s\n' \
+   "${hardware_log_boot_id:-unknown}" "${hardware_log_uptime:-unknown}" "$$" >> "$1"; then
+   echo "SHENG_DISPLAY_LOG_APPEND_FAILED=$1" >&2 || :
+  fi
+  if ! $B chown "$2" "$1"; then
+   echo "SHENG_DISPLAY_LOG_CHOWN_FAILED=$1" >&2 || :
+  fi
+  if ! $B chmod "$3" "$1"; then
+   echo "SHENG_DISPLAY_LOG_CHMOD_FAILED=$1" >&2 || :
+  fi
+ else
+  : > "$1"
+  $B chown "$2" "$1"
+  $B chmod "$3" "$1"
+ fi
+}
+# SHENG_DISPLAY_LOG_RETENTION_END
 $B mkdir -p $R/compat/etc $R/compat/bin
 for name in init-hardware-v116.cfg powermgr.json; do
  $B cp /graphics/$name $R/compat/etc/$name
@@ -18,27 +50,19 @@ $B mkdir -p $R/data/service/el0/stats $R/data/service/el0/thermal/config
 $B chown -R 5528:5528 $R/data/service/el0/stats $R/data/service/el0/thermal
 echo SHENG_V102_DISPLAY_AND_HARDWARE_SERVICES_STAGED_VENDOR_UNTOUCHED
 
-: > $R/data/local/tmp/sheng-brightness-stderr.txt
-$B chown 5528:5528 $R/data/local/tmp/sheng-brightness-stderr.txt
-$B chmod 0600 $R/data/local/tmp/sheng-brightness-stderr.txt
+stage_hardware_log "$R/data/local/tmp/sheng-brightness-stderr.txt" 5528:5528 0600
 
-: > $R/data/local/tmp/sheng-composer-metrics.txt
-$B chown 3036:3036 $R/data/local/tmp/sheng-composer-metrics.txt
-$B chmod 0640 $R/data/local/tmp/sheng-composer-metrics.txt
+stage_hardware_log "$R/data/local/tmp/sheng-composer-metrics.txt" 3036:3036 0640
 
 $B touch $R/data/local/tmp/sheng-gpu-policy-disabled
 
-: > $R/data/local/tmp/sheng-battery-hdi.txt
-$B chown 3025:3025 $R/data/local/tmp/sheng-battery-hdi.txt
-$B chmod 0600 $R/data/local/tmp/sheng-battery-hdi.txt
+stage_hardware_log "$R/data/local/tmp/sheng-battery-hdi.txt" 3025:3025 0600
 
 # Only wifi_host receives this adapter; original vendor libraries remain intact.
 $B mkdir -p $R/compat/lib64
 $B cp /graphics/libsheng_wifi_category_v134.so $R/compat/lib64/libsheng_wifi_category_v134.so
 $B chmod 0644 $R/compat/lib64/libsheng_wifi_category_v134.so
-: > $R/data/local/tmp/sheng-wifi-category-v134.txt
-$B chown 3026:3026 $R/data/local/tmp/sheng-wifi-category-v134.txt
-$B chmod 0600 $R/data/local/tmp/sheng-wifi-category-v134.txt
+stage_hardware_log "$R/data/local/tmp/sheng-wifi-category-v134.txt" 3026:3026 0600
 
 # Keep Boot Control isolated from the original vendor and the HMOS linker.
 $B mkdir -p /compat/bootcontrol-v135
@@ -58,13 +82,9 @@ $B chmod 0755 $R/compat/bin/native_bt_hdi_publisher_v136
 for file in init-bluetooth-v136.cfg bluetooth_service_v136.json; do
  $B cp /compat/bluetooth-v136/$file $R/compat/etc/$file
 done
-: > $R/data/local/tmp/sheng-bluetooth-hdi.txt
-$B chown 3021:3021 $R/data/local/tmp/sheng-bluetooth-hdi.txt
-$B chmod 0600 $R/data/local/tmp/sheng-bluetooth-hdi.txt
+stage_hardware_log "$R/data/local/tmp/sheng-bluetooth-hdi.txt" 3021:3021 0600
 
-: > $R/data/local/tmp/sheng-bluetooth-check.txt
-$B chown 2000:2000 $R/data/local/tmp/sheng-bluetooth-check.txt
-$B chmod 0600 $R/data/local/tmp/sheng-bluetooth-check.txt
+stage_hardware_log "$R/data/local/tmp/sheng-bluetooth-check.txt" 2000:2000 0600
 
 # Original SoftBus profile in the RAM system overlay.
 $B cp /compat/bluetooth-v136/softbus_server.json $R/system/profile/softbus_server.json
@@ -81,3 +101,7 @@ case "$capability_sha" in
  *) echo SHENG_V141_CAPABILITY_HASH_MISMATCH >&2; exit 1 ;;
 esac
 echo SHENG_V141_NEARLINK_UNSUPPORTED_RAM_CAPABILITY
+
+# 暂存用户域默认值，交给原设置服务初始化
+$B cp /graphics/promax/default_settings-pcmode.json "$R/sys_prod/etc/settings_data/default_settings.json"
+$B chmod 0644 "$R/sys_prod/etc/settings_data/default_settings.json"

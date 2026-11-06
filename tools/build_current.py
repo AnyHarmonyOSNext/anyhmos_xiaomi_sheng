@@ -23,7 +23,11 @@ def includes(paths):
     return ['-I'+str(p) for p in paths]
 
 
-def commands(out):
+def commands(out, default_display_route=0):
+    if default_display_route not in (0, 2):
+        raise ValueError('Default display route must be 0 or 2')
+    # 仅为显示实现及其契约测试传入显式启动默认
+    route_flags = ['-DSHENG_DEFAULT_DISPLAY_ROUTE=2'] if default_display_route == 2 else []
     # 按宿主系统选择 SDK 工具名，保留目标平台参数
     suffix = '.exe' if os.name == 'nt' else ''
     clang = str(SDK/('llvm/bin/clang'+suffix))
@@ -66,14 +70,14 @@ def commands(out):
         STAGE/'include',STAGE/'include/libdrm']
     add('composer','libdisplay_composer_vdi_impl.z.so',
         ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp'],
-        ['-g','-shared','-fPIC','-Wl,-z,defs','-Wl,-soname,libdisplay_composer_vdi_impl.z.so'],
+        ['-g','-shared','-fPIC','-Wl,-z,defs','-Wl,-soname,libdisplay_composer_vdi_impl.z.so']+route_flags,
         [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
     # 使用模拟 DRM 提交验证模式切换，不访问物理显示设备
     add('mode-contract','mode_switch_contract',
         ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp',
          'tests/display/mode_switch_contract.cpp'],
         ['-DACE5_MODE_TEST','-Wl,--wrap=drmModeCreatePropertyBlob',
-         '-Wl,--wrap=drmModeDestroyPropertyBlob','-Wl,--wrap=drmModeAtomicCommit'],
+         '-Wl,--wrap=drmModeDestroyPropertyBlob','-Wl,--wrap=drmModeAtomicCommit']+route_flags,
         [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
     add('vblank-probe','vblank_probe',['tests/display/vblank_probe.c'],
         [],[str(STAGE/'lib/libdrm.a')],display_inc)
@@ -83,15 +87,43 @@ def commands(out):
         ['-DACE5_MODE_TEST','-DACE5_SUBMIT_TEST',
          '-Wl,--wrap=drmModeAtomicAlloc','-Wl,--wrap=drmModeAtomicAddProperty',
          '-Wl,--wrap=drmModeAtomicCommit','-Wl,--wrap=drmPrimeFDToHandle',
-         '-Wl,--wrap=drmModeAddFB2','-Wl,--wrap=drmModeRmFB'],
+         '-Wl,--wrap=drmModeAddFB2','-Wl,--wrap=drmModeRmFB']+route_flags,
+        [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
+    # 使用模拟 DRM 验证直扫提交、释放同步和失败回退
+    add('direct-contract','direct_scanout_contract',
+        ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp',
+         'tests/display/direct_scanout_contract.cpp'],
+        ['-DACE5_MODE_TEST','-DACE5_SUBMIT_TEST','-DACE5_DIRECT_TEST',
+         '-Wl,--wrap=drmModeAtomicAlloc','-Wl,--wrap=drmModeAtomicAddProperty',
+         '-Wl,--wrap=drmModeAtomicCommit','-Wl,--wrap=drmPrimeFDToHandle',
+         '-Wl,--wrap=drmModeAddFB2','-Wl,--wrap=drmModeRmFB',
+         '-Wl,--wrap=fopen','-Wl,--wrap=ioctl',
+         '-Wl,--wrap=drmModeObjectGetProperties','-Wl,--wrap=drmModeGetProperty',
+         '-Wl,--wrap=drmModeDestroyPropertyBlob']+route_flags,
+        [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
+    # 模拟控制文件及读取错误，验证启动默认与显式覆盖
+    add('route-policy-contract','display_route_policy_contract',
+        ['compat/display/composer_vdi.cpp','compat/display/composer_unsupported.cpp',
+         'tests/display/display_route_policy_contract.cpp'],
+        ['-DACE5_DIRECT_TEST','-Wl,--wrap=open',
+         '-Wl,--wrap=read','-Wl,--wrap=close']+route_flags,
         [str(STAGE/'lib/libdrm.a'),*cpp_runtime],display_inc,True)
     add('allocator','libdisplay_buffer_vdi_impl.z.so',['compat/display/buffer_vdi.cpp'],
         ['-g','-DACE5_LINEAR_STRIDE_ALIGNMENT=128','-shared','-fPIC','-Wl,-z,defs',
          '-Wl,-soname,libdisplay_buffer_vdi_impl.z.so'],cpp_runtime,display_inc,True)
     add('allocator-contract','alpha_metadata_probe',['tests/display/alpha_metadata_probe.cpp'],
         [],cpp_runtime,display_inc,True)
-    add('display-wake','native_display_wake',['compat/display/native_display_wake.cpp'],
-        ['-Os','-std=c++17'],cpp_runtime,[],True)
+    # 使用非正方形图案验证公开平面步长和无效布局
+    add('plane-contract','plane_layout_contract',
+        ['compat/display/buffer_vdi.cpp','tests/display/plane_layout_contract.cpp'],
+        ['-DACE5_LINEAR_STRIDE_ALIGNMENT=128'],cpp_runtime,display_inc,True)
+    # 沿用已验证的原电源工具唤醒实现及构建参数
+    result['display-wake'] = [clangpp,'--target=aarch64-linux-ohos',
+        '--sysroot='+str(SDK/'sysroot'),'-O2','-Wall','-Wextra','-Werror',
+        '-std=c++17','-nostdlib++',str(ROOT/'compat/display/native_display_wake.cpp'),
+        '-Wl,-z,defs','-Wl,-z,relro','-Wl,-z,now','-Wl,-z,noexecstack',
+        '-Wl,--dynamic-linker=/lib/ld-musl-aarch64.so.1','-ldl',
+        '-o',str(out/'native_display_wake')]
     add('display-mode','native_refresh_rate',['compat/display/native_refresh_rate.cpp'],
         ['-Os'],cpp_runtime,[],True)
     add('touch','sheng_thp_bridge',
@@ -119,7 +151,14 @@ def commands(out):
         '-isystem',str(SDK/'sysroot/usr/include/aarch64-linux-ohos'),
         '-fuse-ld=lld','-fPIC','-shared','-nostdlib','-D_GNU_SOURCE','-mno-outline-atomics',
         '-O2','-Wall','-Wextra','-Werror','-Wl,-z,defs','-L'+str(bionic)]
-    result['pal-server']=[clang,*bflags,'-I'+str(palinc),'-Wl,-soname,libsheng_pal_server.so',
+    # 为原厂充电进程构建独立属性与日志适配库
+    result['batterysecret-process']=[clang,*bflags,'-fno-builtin',
+        '-Wl,-soname,libsheng_batterysecret_process.so',
+        str(ROOT/'compat/power/batterysecret_process_compat.c'),'-lc','-ldl',
+        '-o',str(out/'libsheng_batterysecret_process.so')]
+    # 采集后端与鸿蒙输入接口配套构建
+    result['pal-server']=[clang,*bflags,'-DSHENG_CAPTURE_EXPERIMENTAL=1',
+        '-I'+str(palinc),'-Wl,-soname,libsheng_pal_server.so',
         str(audio/'pal_server.c'),'-lc','-ldl','-o',str(out/'libsheng_pal_server.so')]
     # The lifecycle shim is Bionic and must not silently pick the OHOS libc.
     result['pal-lifecycle']=[clang,*bflags,'-Wl,-soname,libsheng_pal_lifecycle.so',str(audio/'pal_lifecycle.c'),'-lc','-ldl',
@@ -159,7 +198,10 @@ def commands(out):
         if group=='bluetooth':
             btlibs=Path(os.environ.get('SHENG_BT_VENDOR_LINK',str(ROOT/'work/donor-bluetooth-v136/vendor/lib64')))
             libs+=[str(btlibs/'libbluetooth_hci_stub_1.0.z.so')]
-        add(key,output,[source],[],libs+['-ldl','-Wl,--allow-shlib-undefined'],inc+shared_inc,True)
+        sources=[source]
+        if group=='battery':
+            sources.append('compat/battery/battery_charge_adapter.cpp')
+        add(key,output,sources,[],libs+['-ldl','-Wl,--allow-shlib-undefined'],inc+shared_inc,True)
     result['bluetooth-vendor']=[clangpp,*cflags,
         '-I'+str(UPSTREAM/'drivers_peripheral/bluetooth/hci/hdi_service/implement'),
         '-shared','-fPIC',str(ROOT/'compat/bluetooth/bluetooth_vendor_v136.cpp'),
@@ -192,11 +234,12 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('targets',nargs='*')
     parser.add_argument('--list',action='store_true')
+    parser.add_argument('--default-display-route',type=int,choices=(0,2),default=0)
     parser.add_argument('--dry-run',action='store_true')
     parser.add_argument('--out',type=Path,default=ROOT/'work/current-build')
     args=parser.parse_args()
     out=args.out.resolve()
-    plan=commands(out)
+    plan=commands(out,args.default_display_route)
     if args.list:
         print('\n'.join(plan));return
     if not args.targets:parser.error('Select targets explicitly, or use --list.')

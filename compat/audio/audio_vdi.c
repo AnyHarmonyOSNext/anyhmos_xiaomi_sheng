@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT
  * Donor6.1 VDI playback endpoint. Real PCM/volume operations use the isolated
- * stock303 PAL process. Unsupported capture/offload/mmap are reported honestly.
+ * stock303 PAL process. Input is advertised only after the backend capability gate.
  */
 #include "iaudio_manager_vdi.h"
 #include "pal_client.h"
@@ -29,6 +29,7 @@ struct render {
 struct adapter {
     struct IAudioAdapterVdi api;
     unsigned renders;
+    unsigned captures;
 };
 
 static int unsupported(void *self,...){(void)self; return -ENOTSUP;}
@@ -286,25 +287,37 @@ static int get_extra(struct IAudioAdapterVdi *self,enum AudioExtParamKeyVdi key,
     if (value && len) value[0]=0;
     return -ENOTSUP;
 }
+#include "audio_capture_vdi.inc"
 static int load_adapter(struct IAudioManagerVdi *self,const struct AudioAdapterDescriptorVdi *desc,
     struct IAudioAdapterVdi **out)
 {
     (void)self;
     if (!desc || !desc->adapterName || !out || strcmp(desc->adapterName,"primary")) return -EINVAL;
-    *out=0; int rc=backend_ready(); if (rc) return rc;
+    *out=0; int rc=backend_ready();
+    fprintf(stderr,"SHENG_MIC_LOAD backend_status=%d\n",rc);
+    if (rc) return rc;
     struct adapter *a=calloc(1,sizeof(*a)); if (!a) return -ENOMEM;
 #define OPTIONAL(field) a->api.field=(__typeof__(a->api.field))unsupported
-    OPTIONAL(CreateCapture); OPTIONAL(DestroyCapture); OPTIONAL(SetPassthroughMode); OPTIONAL(GetPassthroughMode);
-    OPTIONAL(GetDeviceStatus); OPTIONAL(UpdateAudioRoute); OPTIONAL(ReleaseAudioRoute); OPTIONAL(SetMicMute);
-    OPTIONAL(GetMicMute); OPTIONAL(SetVoiceVolume); OPTIONAL(SetExtraParams);
+    OPTIONAL(SetPassthroughMode); OPTIONAL(GetPassthroughMode);
+    OPTIONAL(GetDeviceStatus); OPTIONAL(UpdateAudioRoute); OPTIONAL(ReleaseAudioRoute);
+    OPTIONAL(SetVoiceVolume); OPTIONAL(SetExtraParams);
 #undef OPTIONAL
     for (unsigned i=0;i<sizeof(a->api.donorExtensions)/sizeof(a->api.donorExtensions[0]);i++) a->api.donorExtensions[i]=unsupported;
     a->api.InitAllPorts=init_ports; a->api.CreateRender=create_render; a->api.DestroyRender=destroy_render;
-    a->api.GetPortCapability=capability; a->api.GetExtraParams=get_extra;
+    a->api.GetPortCapability=capture_capability; a->api.GetExtraParams=get_extra;
+    a->api.CreateCapture=create_capture; a->api.DestroyCapture=destroy_capture;
+    a->api.SetMicMute=adapter_mic_mute; a->api.GetMicMute=adapter_mic_get_mute;
     *out=&a->api; return 0;
 }
 static int unload_adapter(struct IAudioManagerVdi *self,struct IAudioAdapterVdi *adapter)
-{ (void)self; if (!adapter) return -EINVAL; if (((struct adapter *)adapter)->renders) return -EBUSY; free(adapter); return 0; }
+{
+    (void)self;
+    if (!adapter) return -EINVAL;
+    if (((struct adapter *)adapter)->renders ||
+        __atomic_load_n(&((struct adapter *)adapter)->captures,__ATOMIC_ACQUIRE)) return -EBUSY;
+    free(adapter);
+    return 0;
+}
 static int get_adapters(struct IAudioManagerVdi *self,struct AudioAdapterDescriptorVdi *out,uint32_t *count)
 {
     (void)self;
@@ -314,7 +327,20 @@ static int get_adapters(struct IAudioManagerVdi *self,struct AudioAdapterDescrip
     struct AudioPortVdi *ports=calloc(1,sizeof(*ports));
     if (!name || !port_name || !ports) { free(name); free(port_name); free(ports); return -ENOMEM; }
     *ports=(struct AudioPortVdi){PORT_VDI_OUT,0,port_name};
-    *out=(struct AudioAdapterDescriptorVdi){name,ports,1}; *count=1; return 0;
+    unsigned port_count=1;
+    int capture_rc=capture_available();
+    fprintf(stderr,"SHENG_MIC_ENUM capture_status=%d\n",capture_rc);
+    if (!capture_rc) {
+        struct AudioPortVdi *both=realloc(ports,2*sizeof(*ports));
+        char *mic=strdup("microphone");
+        if (!both || !mic) {
+            free(mic); free(name); free(port_name); free(both?both:ports); return -ENOMEM;
+        }
+        ports=both; ports[1]=(struct AudioPortVdi){PORT_VDI_IN,1,mic}; port_count=2;
+    }
+    *out=(struct AudioAdapterDescriptorVdi){name,ports,port_count}; *count=1;
+    fprintf(stderr,"SHENG_MIC_ENUM adapters=1 ports=%u\n",port_count);
+    return 0;
 }
 static int release_manager(struct IAudioManagerVdi *self){(void)self; return 0;}
 struct IAudioManagerVdi *AudioManagerCreateIfInstance(void)

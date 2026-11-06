@@ -2,6 +2,7 @@
  * Registry fields follow the local UHDF2 DevSvcMgrStubGetPara definition.
  */
 #include "battery/v2_0/ibattery_interface.h"
+#include "battery_charge_adapter.h"
 #include "object_collector.h"
 #include "iservmgr_hdi.h"
 #include "hdf_remote_service.h"
@@ -42,6 +43,8 @@ int main(int argc,char **argv)
     if(!create) return 3;
     OHOS::sptr<B::IBatteryInterface> implementation=create();
     if(!implementation) return 4;
+    // 适配充电类型和功率查询，沿用原厂电池回调
+    implementation=Sheng::Charging::MakeBatteryChargeAdapter(implementation);
     auto stub=OHOS::HDI::ObjectCollector::GetInstance().GetOrNewObject(implementation,B::IBatteryInterface::GetDescriptor());
     if(!stub) { puts("BATTERY_HDI_ORIGINAL_STUB_NULL"); return 5; }
     HdfRemoteService *(*getRemote)(int32_t);

@@ -2,7 +2,8 @@
  * Isolated original303 Bionic/PAL PCM service. No vendor files are changed.
  * The diagnostic entry runs after Bionic constructors, outside loader locks.
  */
-#include <PalDefs.h>
+#include <sys/types.h>
+#include <PalApi.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <poll.h>
@@ -15,6 +16,10 @@
 #include <dlfcn.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <stdbool.h>
+#include <pthread.h>
+#include <time.h>
+#include <sched.h>
 #include "protocol.h"
 
 #define MAX_CLIENTS 8
@@ -29,6 +34,13 @@ static int (*stream_resume)(pal_stream_handle_t *);
 static int (*stream_write)(pal_stream_handle_t *, struct pal_buffer *);
 static int (*stream_volume)(pal_stream_handle_t *, struct pal_volume_data *);
 static int (*stream_buffer)(pal_stream_handle_t *, pal_buffer_config_t *, pal_buffer_config_t *);
+static ssize_t (*stream_read)(pal_stream_handle_t *, struct pal_buffer *);
+static int (*stream_set_mute)(pal_stream_handle_t *, bool);
+static int (*stream_get_mute)(pal_stream_handle_t *, bool *);
+static int (*mic_set_mute)(bool);
+static int (*mic_get_mute)(bool *);
+static int (*get_param)(uint32_t,void **,size_t *,void *);
+static int (*register_global)(pal_global_callback,uint64_t);
 static volatile sig_atomic_t stopping;
 
 int __android_log_print(int priority, const char *tag, const char *fmt, ...)
@@ -56,8 +68,10 @@ struct client {
     uint64_t frames;
     uint64_t nonzero_samples;
     unsigned peak;
+    int capture;
+    uint64_t capture_epoch;
 };
-static void end_signal(int sig) { (void)sig; stopping=1; }
+static void end_signal(int sig) { (void)sig; __atomic_store_n(&stopping,1,__ATOMIC_RELEASE); }
 
 static int close_stream(struct client *c)
 {
@@ -100,6 +114,9 @@ static int open_stream(struct client *c, unsigned rate, unsigned channels)
     if (rc) (void)close_stream(c);
     return rc;
 }
+
+#include "pal_capture_backend.inc"
+#include "pal_capture_worker.inc"
 
 static int dispatch(struct client *c, const struct sheng_pal_request *h,
                     unsigned char *data, uint32_t *written)
@@ -180,7 +197,10 @@ static int serve(void)
     struct { struct sheng_pal_request h; unsigned char data[SHENG_PAL_MAX_DATA]; } packet;
     printf("PAL_SERVER_READY=1 pid=%d socket=@%s\n",getpid(),SHENG_PAL_SOCKET);
     fflush(stdout);
-    while (!stopping) {
+    while (!__atomic_load_n(&stopping,__ATOMIC_ACQUIRE)) {
+        if (capture_watchdog_expired()) {
+            _exit(88);
+        }
         struct pollfd fds[MAX_CLIENTS+1]={{fd,POLLIN,0}};
         for (int i=0;i<MAX_CLIENTS;i++) fds[i+1]=(struct pollfd){cs[i].fd,POLLIN,0};
         if (poll(fds,MAX_CLIENTS+1,200)<0) continue;
@@ -207,24 +227,36 @@ static int serve(void)
             struct client *c=&cs[i];
             if (c->fd<0 || !fds[i+1].revents) continue;
             ssize_t n=recv(c->fd,&packet,sizeof(packet),MSG_DONTWAIT|MSG_TRUNC);
-            if (n<=0) { (void)close_stream(c); close(c->fd); c->fd=-1; continue; }
+            if (n<=0) { (void)close_client_stream(c); close(c->fd); c->fd=-1; continue; }
             if ((size_t)n<sizeof(packet.h) || packet.h.magic!=SHENG_PAL_MAGIC ||
                 packet.h.bytes>SHENG_PAL_MAX_DATA || (size_t)n!=sizeof(packet.h)+packet.h.bytes ||
                 (packet.h.op!=SHENG_PAL_WRITE && packet.h.bytes)) {
-                (void)close_stream(c); close(c->fd); c->fd=-1; continue;
+                (void)close_client_stream(c); close(c->fd); c->fd=-1; continue;
             }
             struct sheng_pal_reply reply={.magic=SHENG_PAL_MAGIC,.sequence=packet.h.sequence};
-            reply.rc=dispatch(c,&packet.h,packet.data,&reply.bytes);
-            reply.written_frames=c->frames;
-            if (send(c->fd,&reply,sizeof(reply),MSG_NOSIGNAL)!=(ssize_t)sizeof(reply)) {
-                (void)close_stream(c); close(c->fd); c->fd=-1;
+            if (packet.h.op>=SHENG_PAL_CAPTURE_OPEN) {
+                reply.rc=route_capture_request(c,&packet.h);
+                if (!reply.rc) { c->fd=-1; continue; }
+            } else {
+                reply.rc=c->capture?-95:dispatch(c,&packet.h,packet.data,&reply.bytes);
+                reply.written_frames=c->frames;
+            }
+            struct iovec response[2]={{&reply,sizeof(reply)},{packet.data,reply.bytes}};
+            int capture_data=packet.h.op==SHENG_PAL_CAPTURE_READ && !reply.rc && reply.bytes;
+            struct msghdr message={.msg_iov=response,.msg_iovlen=capture_data?2:1};
+            size_t response_size=sizeof(reply)+(capture_data?reply.bytes:0);
+            if (sendmsg(c->fd,&message,MSG_NOSIGNAL)!=(ssize_t)response_size) {
+                (void)close_client_stream(c); close(c->fd); c->fd=-1;
             }
             if (packet.h.op!=SHENG_PAL_WRITE || reply.rc)
                 printf("PAL_SERVER_REQUEST op=%u rc=%d bytes=%u frames=%llu\n",packet.h.op,
                     reply.rc,reply.bytes,(unsigned long long)reply.written_frames);
         }
     }
-    for (int i=0;i<MAX_CLIENTS;i++) if (cs[i].fd>=0) { (void)close_stream(&cs[i]); close(cs[i].fd); }
+    for (int i=0;i<MAX_CLIENTS;i++) if (cs[i].fd>=0) { (void)close_client_stream(&cs[i]); close(cs[i].fd); }
+    if (finish_capture_workers()) {
+        _exit(88);
+    }
     close(fd);
     return 0;
 }
@@ -246,11 +278,19 @@ static int server_main(int argc, char **argv, char **envp)
     LOAD(stream_write,"pal_stream_write"); LOAD(stream_volume,"pal_stream_set_volume");
     LOAD(stream_buffer,"pal_stream_set_buffer_size");
 #undef LOAD
+    /* 输入扩展缺少时保留原播放服务，查询明确返回不支持 */
+    stream_read=dlsym(pal,"pal_stream_read");
+    stream_set_mute=dlsym(pal,"pal_stream_set_mute");
+    stream_get_mute=dlsym(pal,"pal_stream_get_mute");
+    mic_set_mute=dlsym(pal,"pal_set_mic_mute");
+    mic_get_mute=dlsym(pal,"pal_get_mic_mute");
+    get_param=dlsym(pal,"pal_get_param");
+    register_global=dlsym(pal,"pal_register_global_callback");
     if (!agm_init_fn || !agm_deinit_fn || !pal_init_fn || !pal_deinit_fn) return 82;
     int rc=agm_init_fn(); printf("PAL_SERVER_AGM_INIT_RC=%d\n",rc);
     if (rc) return 83;
     rc=pal_init_fn(); printf("PAL_SERVER_PAL_INIT_RC=%d\n",rc);
-    if (!rc) { rc=serve(); pal_deinit_fn(); }
+    if (!rc) { capture_monitor_init(); rc=serve(); pal_deinit_fn(); }
     printf("PAL_SERVER_AGM_DEINIT_RC=%d\n",agm_deinit_fn());
     printf("PAL_SERVER_EXIT=%d\n",rc);
     return rc ? 84 : 0;

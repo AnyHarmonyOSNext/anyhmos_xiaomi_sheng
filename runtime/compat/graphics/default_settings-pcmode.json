@@ -1,0 +1,46 @@
+{
+  "settings": [
+    {
+      "name": "settings.display.screen_off_timeout",
+      "value": "120000"
+    },
+    {
+      "name": "settings.display.auto_screen_brightness",
+      "value": "1"
+    },
+    {
+      "name": "settings.power.enable_power_and_sleep",
+      "value": "0"
+    },
+    {
+      "name": "settings.power.enable_nothing",
+      "value": "0"
+    },
+    {
+      "name": "settings.power.enable_hibernate",
+      "value": "0"
+    },
+    {
+      "name": "settings.power.enable_wake_on_lid_open",
+      "value": "0"
+    },
+    {
+      "name": "settings.power.hibernate_flag",
+      "value": "0"
+    },
+    {
+      "name": "settings.audio.sound_effect_model",
+      "value": "2"
+    }
+  ],
+  "user": [
+    {
+      "name": "app_individual_volume_enable",
+      "value": "1"
+    },
+    {
+      "name": "settings.sceneboard.ispcmode",
+      "value": "false"
+    }
+  ]
+}
