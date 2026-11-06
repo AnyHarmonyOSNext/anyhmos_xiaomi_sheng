@@ -64,8 +64,8 @@ static void serial_tick(void) {
         } else serial_command_overflow=1;
     }
     if(serial_pos<used&&(state.revents&POLLOUT)) {
-        size_t z=used-serial_pos;if(z>4096)z=4096;
-        n=write(serialfd,history+serial_pos,z);
+        const char *data;size_t z=history_span(serial_pos,&data);if(z>4096)z=4096;
+        n=write(serialfd,data,z);
         if(n>0){serial_pos+=(size_t)n;serial_tx_bytes+=(unsigned long long)n;}
         else if(n<0&&errno!=EAGAIN&&errno!=EWOULDBLOCK&&errno!=EINTR)
             serial_reset("write",errno);

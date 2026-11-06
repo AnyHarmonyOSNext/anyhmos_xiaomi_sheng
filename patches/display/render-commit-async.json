@@ -1,0 +1,18 @@
+{
+  "path": "/system/lib64/librender_service_base.z.so",
+  "input_sha256": "18c5c79f335ec45e6fda4c5c8eb2e5175f1cfcb634c3f948fd6ed676db08ce22",
+  "output_sha256": "429cf0c7eeb06ffb9e1b55a6a69cebe5356d42786fa337f0f33a8d8e2ed7ace9",
+  "bytes": 10266192,
+  "changes": [
+    {
+      "offset": 9245920,
+      "before": "01008052",
+      "after": "21008052"
+    }
+  ],
+  "guard": {
+    "offset": 9245916,
+    "before": "e063009101008052c3320194",
+    "after": "e063009121008052c3320194"
+  }
+}

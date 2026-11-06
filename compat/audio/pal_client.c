@@ -42,3 +42,29 @@ int sheng_pal_request(int fd, uint32_t op, uint32_t arg0, uint32_t arg1,
         reply->bytes>bytes) return -EPROTO;
     return reply->rc;
 }
+
+/* 采集只接收后端返回的真实 PCM，不合成静音或补齐短读 */
+int sheng_pal_capture_read(int fd, void *pcm, uint32_t capacity,
+    struct sheng_pal_reply *reply)
+{
+    static uint32_t sequence;
+    if (!pcm || !reply || !capacity || capacity>SHENG_PAL_CAPTURE_CHUNK ||
+        (capacity&3)) return -EINVAL;
+    memset(reply,0,sizeof(*reply));
+    uint32_t seq=__atomic_add_fetch(&sequence,1,__ATOMIC_RELAXED);
+    struct sheng_pal_request request={SHENG_PAL_MAGIC,SHENG_PAL_CAPTURE_READ,0,seq,capacity,0};
+    ssize_t n=send(fd,&request,sizeof(request),MSG_NOSIGNAL);
+    if (n<0) return -errno;
+    if ((size_t)n!=sizeof(request)) return -EIO;
+    struct { struct sheng_pal_reply reply; unsigned char pcm[SHENG_PAL_CAPTURE_CHUNK]; } packet;
+    n=recv(fd,&packet,sizeof(packet),MSG_TRUNC);
+    if (n<0) return -errno;
+    if ((size_t)n<sizeof(packet.reply) || packet.reply.magic!=SHENG_PAL_MAGIC ||
+        packet.reply.sequence!=seq || packet.reply.bytes>capacity || (packet.reply.bytes&3) ||
+        (size_t)n!=sizeof(packet.reply)+packet.reply.bytes ||
+        (packet.reply.rc && packet.reply.bytes) ||
+        (!packet.reply.rc && !packet.reply.bytes)) return -EPROTO;
+    *reply=packet.reply;
+    if (reply->bytes) memcpy(pcm,packet.pcm,reply->bytes);
+    return reply->rc;
+}

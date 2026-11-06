@@ -39,10 +39,19 @@
 #include <linux/watchdog.h>
 #include <linux/reboot.h>
 
+#ifndef SHENG_IPC_ONEWAY_PID
+#define SHENG_IPC_ONEWAY_PID 0
+#endif
+_Static_assert(SHENG_IPC_ONEWAY_PID==0||SHENG_IPC_ONEWAY_PID==1,
+               "SHENG_IPC_ONEWAY_PID must be 0 or 1");
+#if SHENG_IPC_ONEWAY_PID
+static int ipc_pair_loaded;
+#endif
+
 #define CAP (2*1024*1024)
 #define DISK_CAP (16*1024*1024)
 static char history[CAP];
-static size_t used, serial_pos, disk_bytes;
+static size_t used, serial_pos, disk_bytes, history_head;
 static int logfd=-1,kmsg=-1,serialfd=-1,watchfd=-1,consolefd=-1;
 static char logpath[256], suffix[3]="_a";
 static int slot_known,trace_requested,ipc_requested,ipc_stage=-1,ipc_resultfd=-1;
@@ -64,10 +73,33 @@ static void allwrite(int fd,const void *buf,size_t n) {
     const char *p=buf;
     while(n) { ssize_t z=write(fd,p,n); if(z<0&&errno==EINTR)continue; if(z<=0)break; p+=z;n-=z; }
 }
+// 按逻辑偏移读取环形历史，保留回放与部分写入顺序
+static size_t history_span(size_t offset,const char **data) {
+    if(offset>=used){*data=NULL;return 0;}
+    size_t start=(history_head+offset)%CAP,n=used-offset;
+    if(n>CAP-start)n=CAP-start;
+    *data=history+start;return n;
+}
+static void history_write(int fd) {
+    size_t offset=0;
+    while(offset<used){
+        const char *data;size_t n=history_span(offset,&data);
+        ssize_t z=write(fd,data,n);
+        if(z<0&&errno==EINTR)continue;
+        if(z<=0)return;
+        offset+=(size_t)z;
+    }
+}
 static void emit(const char *b,size_t n) {
     if(n>CAP)n=CAP;
-    if(used+n>CAP) { size_t drop=used+n-CAP;memmove(history,history+drop,used-drop);used-=drop;serial_pos=serial_pos>drop?serial_pos-drop:0; }
-    memcpy(history+used,b,n);used+=n;
+    // 满缓冲只推进起点，避免每条日志搬移整段历史
+    if(used+n>CAP) {
+        size_t drop=used+n-CAP;history_head=(history_head+drop)%CAP;
+        used-=drop;serial_pos=serial_pos>drop?serial_pos-drop:0;
+    }
+    size_t tail=(history_head+used)%CAP,first=n;
+    if(first>CAP-tail)first=CAP-tail;
+    memcpy(history+tail,b,first);memcpy(history,b+first,n-first);used+=n;
     if(consolefd>=0)allwrite(consolefd,b,n);
     if(logfd>=0&&disk_bytes<DISK_CAP) {size_t z=n;if(z>DISK_CAP-disk_bytes)z=DISK_CAP-disk_bytes;allwrite(logfd,b,z);disk_bytes+=z;}
 }
@@ -147,7 +179,7 @@ static void persistent(void) {
     snprintf(logpath,sizeof(logpath),"/metadata/hmos-debug/probe-%s.log",id);
     logfd=open(logpath,O_CREAT|O_EXCL|O_WRONLY|O_CLOEXEC|O_DSYNC|O_NOFOLLOW,0600);
     if(logfd<0)return;
-    allwrite(logfd,history,used);disk_bytes=used;note("PERSISTENT_LOG=%s",logpath);fsync(logfd);
+    history_write(logfd);disk_bytes=used;note("PERSISTENT_LOG=%s",logpath);fsync(logfd);
 }
 static int userdata_is_mounted(const char *device,const char *target) {
     /* Accept any normally formatted ext4 userdata, including a fresh UUID.
@@ -166,7 +198,7 @@ static void runtime_persistent(void) {
     snprintf(logpath,sizeof(logpath),"/hmos-root/data/local/tmp/probe-%s.log",id);
     logfd=open(logpath,O_CREAT|O_EXCL|O_WRONLY|O_CLOEXEC|O_NOFOLLOW,0600);
     if(logfd<0)return;
-    allwrite(logfd,history,used);disk_bytes=used;
+    history_write(logfd);disk_bytes=used;
     note("PERSISTENT_RUNTIME_LOG=%s",logpath);fsync(logfd);
 }
 static void watchdog(void) {
@@ -397,16 +429,142 @@ static int ipc_nodes(const char *directory) {
         }line=strtok_r(NULL,"\n",&save);
     }return count;
 }
+#if SHENG_IPC_ONEWAY_PID
+/* 封印候选副本并核对完整内容 */
+static int ipc_verified_fd(int source) {
+    static const uint8_t expected[32]={
+        0x34,0x72,0x6f,0x52,0x44,0x52,0xad,0x12,
+        0x51,0xe9,0x93,0x86,0xd1,0x93,0x15,0xb8,
+        0x47,0x59,0x4b,0xcd,0x54,0x7f,0x2d,0x43,
+        0xc5,0x23,0x29,0xde,0x97,0xbd,0xdf,0x67
+    };
+    const size_t size=554256;
+    struct stat st;
+    if(fstat(source,&st)<0)return -1;
+    if(!S_ISREG(st.st_mode)||st.st_size!=(off_t)size){errno=EINVAL;return -1;}
+    uint8_t *data=malloc(size),actual[32];
+    if(!data)return -1;
+    int sealed=-1;
+    for(size_t used=0;used<size;){
+        ssize_t n=pread(source,data+used,size-used,(off_t)used);
+        if(n<0&&errno==EINTR)continue;
+        if(n<=0){if(!n)errno=EIO;goto failed;}
+        used+=(size_t)n;
+    }
+    sealed=memfd_create("sheng-ipc-verified",MFD_CLOEXEC|MFD_ALLOW_SEALING);
+    if(sealed<0)goto failed;
+    for(size_t used=0;used<size;){
+        ssize_t n=write(sealed,data+used,size-used);
+        if(n<0&&errno==EINTR)continue;
+        if(n<=0){if(!n)errno=EIO;goto failed;}
+        used+=(size_t)n;
+    }
+    if(fcntl(sealed,F_ADD_SEALS,F_SEAL_WRITE|F_SEAL_GROW|F_SEAL_SHRINK|F_SEAL_SEAL)<0||
+       lseek(sealed,0,SEEK_SET)!=0)goto failed;
+    if(fstat(sealed,&st)<0)goto failed;
+    if(st.st_size!=(off_t)size){errno=EINVAL;goto failed;}
+    /* 在最终封印的同一描述符上核对完整内容 */
+    for(size_t used=0;used<size;){
+        ssize_t n=pread(sealed,data+used,size-used,(off_t)used);
+        if(n<0&&errno==EINTR)continue;
+        if(n<=0){if(!n)errno=EIO;goto failed;}
+        used+=(size_t)n;
+    }
+    sha256(data,size,actual);
+    if(memcmp(actual,expected,sizeof(expected))){errno=EBADMSG;goto failed;}
+    free(data);return sealed;
+failed:
+    {int saved=errno;if(sealed>=0)close(sealed);free(data);errno=saved;return -1;}
+}
+static int ipc_pair_params(char *buffer,size_t size,int stage) {
+    int n=snprintf(buffer,size,"diagnostic_stage=%d oneway_sender_pid=1 "
+                   "devices=hmos_binder,hmos_hwbinder,hmos_vndbinder,hmos_pidtest,hmos_pidtest_ns",stage);
+    if(n<0||(size_t)n>=size){errno=EOVERFLOW;return -1;}
+    return 0;
+}
+/* 仅验证内存文件与参数，不调用模块加载 */
+static int ipc_pair_selftest(void) {
+    alarm(10);
+    int fd=memfd_create("sheng-ipc-selftest",MFD_CLOEXEC|MFD_ALLOW_SEALING);
+    if(fd<0){perror("selftest memfd");return 1;}
+    int sealed=-1,failed=1;
+    sealed=ipc_verified_fd(fd);
+    if(sealed>=0||errno!=EINVAL)goto done;
+    if(ftruncate(fd,554256)<0)goto done;
+    sealed=ipc_verified_fd(fd);
+    if(sealed>=0||errno!=EBADMSG)goto done;
+    if(ftruncate(fd,3)<0||pwrite(fd,"abc",3,0)!=3)goto done;
+    int seals=F_SEAL_WRITE|F_SEAL_GROW|F_SEAL_SHRINK|F_SEAL_SEAL;
+    if(fcntl(fd,F_ADD_SEALS,seals)<0||fcntl(fd,F_GET_SEALS)!=seals)goto done;
+    if(pwrite(fd,"x",1,0)!=-1||errno!=EPERM)goto done;
+    if(ftruncate(fd,4)!=-1||errno!=EPERM)goto done;
+    char data[3];
+    if(pread(fd,data,sizeof(data),0)!=3||memcmp(data,"abc",3))goto done;
+    for(int stage=-1;stage<=3;stage++){
+        char params[256],expected[256];
+        snprintf(expected,sizeof(expected),"diagnostic_stage=%d oneway_sender_pid=1 "
+                 "devices=hmos_binder,hmos_hwbinder,hmos_vndbinder,hmos_pidtest,hmos_pidtest_ns",stage);
+        if(ipc_pair_params(params,sizeof(params),stage)<0||strcmp(params,expected))goto done;
+        if(ipc_pair_params(params,8,stage)!=-1||errno!=EOVERFLOW)goto done;
+    }
+    failed=0;
+done:
+    if(sealed>=0)close(sealed);
+    close(fd);alarm(0);
+    puts(failed?"FAIL IPC pair memfd/hash/options selftest":"PASS IPC pair memfd/hash/options; module loading was not called");
+    return failed;
+}
+/* 仅创建合约专用节点，不占用系统上下文 */
+static int ipc_pid_nodes(void) {
+    char misc[8192];int count=0;
+    if(readfile("/proc/misc",misc,sizeof(misc))<0)return -1;
+    char *save,*line=strtok_r(misc,"\n",&save);
+    while(line){
+        unsigned minor;char name[128];
+        if(sscanf(line,"%u %127s",&minor,name)==2&&
+           (!strcmp(name,"hmos_pidtest")||!strcmp(name,"hmos_pidtest_ns"))){
+            char path[256];struct stat st;
+            snprintf(path,sizeof(path),"/dev/%s",name);
+            if(mknod(path,S_IFCHR|0600,makedev(10,minor))<0&&errno!=EEXIST)return -1;
+            if(lstat(path,&st)<0)return -1;
+            if(!S_ISCHR(st.st_mode)||st.st_rdev!=makedev(10,minor)){errno=EEXIST;return -1;}
+            if(chmod(path,0600)<0)return -1;
+            count++;
+        }
+        line=strtok_r(NULL,"\n",&save);
+    }
+    return count;
+}
+#endif
 static void ipc_test(int which) {
     if(ipc_test_pid>0||ipc_pid>0){note("IPC test rejected: another IPC operation is running");return;}
     if(access("/sys/module/sheng_hmos_ipc",F_OK)<0||ipc_nodes("/dev")!=4){note("IPC test requires a loaded driver and all four verified misc nodes");return;}
     const char *program=which==1?"/token_contract":"/binder_nested";
-    note("IPC CONTRACT begin %s; 35-second process-group timeout",program);
+    int timeout=35;
+#if SHENG_IPC_ONEWAY_PID
+    /* 仅在独立节点验证保留发送方标识 */
+    if(which==3){
+        char mode[16];
+        if(!ipc_pair_loaded||
+           readfile("/sys/module/sheng_hmos_ipc/parameters/oneway_sender_pid",mode,sizeof(mode))<0||
+           (strcmp(mode,"Y\n")&&strcmp(mode,"1\n"))||ipc_pid_nodes()!=2){
+            note("IPC PID contract requires the verified pair, retained mode and both private nodes");return;
+        }
+        program="/binder_oneway_pid";timeout=60;
+    }
+#endif
+    note("IPC CONTRACT begin %s; %d-second process-group timeout",program,timeout);
     pid_t child=fork();
     if(child==0){if(setsid()<0)_exit(126);int out=open("/dev/kmsg",O_WRONLY|O_CLOEXEC);if(out<0)_exit(126);dup2(out,1);dup2(out,2);close(out);
+#if SHENG_IPC_ONEWAY_PID
+        if(which==3){
+            char *args[]={(char*)program,"/dev/hmos_pidtest","/dev/hmos_pidtest_ns","1",NULL};
+            execv(program,args);dprintf(2,"IPC PID contract exec failed: %s\n",strerror(errno));_exit(126);
+        }
+#endif
         char *args[]={(char*)program,"/dev/access_token_id","/dev/binder",NULL};execv(program,args);dprintf(2,"IPC contract exec failed: %s\n",strerror(errno));_exit(126);}
     if(child<0){note("IPC test fork failed: %s",strerror(errno));return;}
-    struct timespec ts;clock_gettime(CLOCK_MONOTONIC,&ts);ipc_test_pid=child;ipc_test_deadline=ts.tv_sec+35;
+    struct timespec ts;clock_gettime(CLOCK_MONOTONIC,&ts);ipc_test_pid=child;ipc_test_deadline=ts.tv_sec+timeout;
 }
 static void ipc_test_tick(void) {
     if(ipc_test_pid<=0)return;
@@ -416,13 +574,31 @@ static void ipc_test_tick(void) {
 static void ipc_load(void) {
     if(ipc_pid>0){note("IPC LOAD already running pid=%ld",(long)ipc_pid);return;}
     if(access("/sys/module/sheng_hmos_ipc",F_OK)==0){note("IPC module already loaded; reboot before another load");return;}
-    int fd=open("/hmos-ipc.ko",O_RDONLY|O_CLOEXEC);if(fd<0){note("IPC candidate missing: %s",strerror(errno));return;}
+    int fd=open("/hmos-ipc.ko",O_RDONLY|O_CLOEXEC
+#if SHENG_IPC_ONEWAY_PID
+                |O_NOFOLLOW
+#endif
+    );if(fd<0){note("IPC candidate missing: %s",strerror(errno));return;}
+#if SHENG_IPC_ONEWAY_PID
+    /* 校验失败时保留串口与恢复入口 */
+    int verified=ipc_verified_fd(fd),saved=errno;close(fd);fd=verified;
+    if(fd<0){note("IPC pair verification failed: %s; HOLD",strerror(saved));return;}
+    note("IPC verified pair sha256=34726f524452ad1251e99386d19315b847594bcd547f2d43c52329de97bddf67 retained=1");
+#endif
     int result[2];if(pipe2(result,O_CLOEXEC|O_NONBLOCK)<0){close(fd);note("IPC pipe failed: %s",strerror(errno));return;}
     note("IPC LOAD begin: stage=%d, separate child, PID1 continues logging",ipc_stage);
     if(logfd>=0)fsync(logfd);
     pid_t child=fork();
     if(child==0){
-        close(result[0]);char params[64];snprintf(params,sizeof(params),"diagnostic_stage=%d",ipc_stage);
+        close(result[0]);
+#if SHENG_IPC_ONEWAY_PID
+        char params[256];
+        if(ipc_pair_params(params,sizeof(params),ipc_stage)<0){
+            int values[2]={-1,errno};allwrite(result[1],values,sizeof(values));_exit(125);
+        }
+#else
+        char params[64];snprintf(params,sizeof(params),"diagnostic_stage=%d",ipc_stage);
+#endif
         int out=open("/dev/kmsg",O_WRONLY|O_CLOEXEC);
         if(out>=0)dprintf(out,"<6>SHENG_IPC user-loader pid=%ld params=%s\n",(long)getpid(),params);
         int values[2];values[0]=(int)syscall(SYS_finit_module,fd,params,0);values[1]=values[0]<0?errno:0;
@@ -441,6 +617,10 @@ static void reap_children(void) {
             int values[2];ssize_t n=read(ipc_resultfd,values,sizeof(values));
             if(n==(ssize_t)sizeof(values))note("IPC LOAD result=%d errno=%d %s",values[0],values[1],values[1]?strerror(values[1]):"success");
             else note("IPC child ended without syscall result; status=%d signal=%d",status,WIFSIGNALED(status)?WTERMSIG(status):0);
+#if SHENG_IPC_ONEWAY_PID
+            ipc_pair_loaded=n==(ssize_t)sizeof(values)&&values[0]==0&&values[1]==0&&
+                            WIFEXITED(status)&&WEXITSTATUS(status)==0;
+#endif
             close(ipc_resultfd);ipc_resultfd=-1;ipc_pid=0;dump("/proc/misc");dump("/proc/modules");
             if(logfd>=0)fsync(logfd);
         }else if(done==ipc_test_pid){note("IPC CONTRACT ended pid=%ld status=%d exit=%d signal=%d",(long)done,status,WIFEXITED(status)?WEXITSTATUS(status):-1,WIFSIGNALED(status)?WTERMSIG(status):0);kill(-ipc_test_pid,SIGKILL);ipc_test_pid=0;}
@@ -454,7 +634,19 @@ static void serial_command(char *cmd) {
         serial_pos=used;command_start(cmd+4);return;
     }
     char *ipc=strstr(cmd,"ipc");if(ipc){ipc_stage=ipc[3]>='0'&&ipc[3]<='3'?ipc[3]-'0':-1;ipc_requested=1;}if(strstr(cmd,"test-token"))ipc_test_requested=1;if(strstr(cmd,"test-binder"))ipc_test_requested=2;if(strstr(cmd,"replay"))serial_pos=0;if(strstr(cmd,"status"))note("status: pid=%ld traced=%ld held=%d syscalls=%d ipc_child=%ld test_child=%ld; %zu bytes history; persistent=%s",(long)getpid(),(long)traced_pid,trace_held,trace_syscalls,(long)ipc_pid,(long)ipc_test_pid,used,logfd>=0?logpath:"unavailable");if(strstr(cmd,"diag"))process_diag();if(strstr(cmd,"sync")&&logfd>=0)fsync(logfd);if(strstr(cmd,"trace"))trace_requested=1;if(strstr(cmd,"hmos-list"))trace_requested=2;else if(strstr(cmd,"hmos"))trace_requested=3;
+#if SHENG_IPC_ONEWAY_PID
+    if(strstr(cmd,"test-oneway"))ipc_test_requested=3;
+#endif
     if(strstr(cmd,"reboot-recovery")){note("USB requested reboot to recovery");if(logfd>=0)fsync(logfd);sync();syscall(SYS_reboot,LINUX_REBOOT_MAGIC1,LINUX_REBOOT_MAGIC2,LINUX_REBOOT_CMD_RESTART2,"recovery");note("reboot syscall returned: %s",strerror(errno));}
+    /* 同步日志后返回引导加载器 */
+    if(strstr(cmd,"reboot-bootloader")){
+        note("USB requested reboot to bootloader");
+        if(logfd>=0)fsync(logfd);
+        sync();
+        syscall(SYS_reboot,LINUX_REBOOT_MAGIC1,LINUX_REBOOT_MAGIC2,
+                LINUX_REBOOT_CMD_RESTART2,"bootloader");
+        note("reboot syscall returned: %s",strerror(errno));
+    }
 }
 #include "probe_serial_v121.inc"
 static void slot_detect(void) {
@@ -628,16 +820,18 @@ static void trace_process(int status) {
     if(ptrace(trace_syscalls?PTRACE_SYSCALL:PTRACE_CONT,traced_pid,0,0)<0)note("ptrace resume failed: %s",strerror(errno));
 }
 static void trace_poll(void) {
-    if(traced_pid<=0||trace_held)return;
-    int status;pid_t r=waitpid(-1,&status,__WALL|WNOHANG);if(r<=0)return;
-    if(command_finish(r,status))return;
-    if(r==traced_pid){trace_process(status);return;}
-    struct trace_follower *f=NULL;
-    for(struct trace_follower *it=trace_followers;it;it=it->next)if(it->key==r){f=it;break;}
-    if(!f&&WIFSTOPPED(status)){f=trace_follower_get(r);note("PTRACED early child stop pid=%ld tracked=%d; dispatching immediately",(long)r,f!=NULL);}
-    if(f){struct trace_context root;trace_save(&root);trace_restore(&f->state);trace_process(status);trace_save(&f->state);trace_restore(&root);trace_followers_collect();return;}
-    if(WIFSTOPPED(status)){if(ptrace(PTRACE_DETACH,r,0,0)<0)note("ptrace detach untracked child: %s",strerror(errno));}
-    else note("Non-traced child reaped pid=%ld status=%d",(long)r,status);
+    // 有界处理已就绪状态，保留主进程 HOLD 与逐子进程上下文
+    for(unsigned count=0;count<32&&traced_pid>0&&!trace_held;count++) {
+        int status;pid_t r=waitpid(-1,&status,__WALL|WNOHANG);if(r<=0)return;
+        if(command_finish(r,status))continue;
+        if(r==traced_pid){trace_process(status);trace_followers_collect();continue;}
+        struct trace_follower *f=NULL;
+        for(struct trace_follower *it=trace_followers;it;it=it->next)if(it->key==r){f=it;break;}
+        if(!f&&WIFSTOPPED(status)){f=trace_follower_get(r);note("PTRACED early child stop pid=%ld tracked=%d; dispatching immediately",(long)r,f!=NULL);}
+        if(f){struct trace_context root;trace_save(&root);trace_restore(&f->state);trace_process(status);trace_save(&f->state);trace_restore(&root);trace_followers_collect();continue;}
+        if(WIFSTOPPED(status)){if(ptrace(PTRACE_DETACH,r,0,0)<0)note("ptrace detach untracked child: %s",strerror(errno));}
+        else note("Non-traced child reaped pid=%ld status=%d",(long)r,status);
+    }
 }
 static int framebuffer_probe(int draw) {
     if(geteuid()!=0)return 2;
@@ -673,11 +867,14 @@ static int trace_selftest(int seize,int stress) {
     if(!seize&&ptrace(PTRACE_SETOPTIONS,child,0,(void*)options)<0)return 3;
     if(seize){allwrite(ready[1],"R",1);}close(ready[1]);
     traced_pid=child;trace_allow_exit=1;trace_enter=1;ptrace(PTRACE_SYSCALL,child,0,0);
-    while(traced_pid>0){trace_poll();usleep(1000);}allwrite(1,history,used);return trace_result!=0;
+    while(traced_pid>0){trace_poll();usleep(1000);}history_write(1);return trace_result!=0;
 }
 static void trace_handoff(int kind) {
     if(getpid()!=1)return;
     if(kind!=0&&access("/sys/module/sheng_hmos_ipc",F_OK)<0){note("HMOS handoff rejected: load the verified IPC module first with ipc");return;}
+#if SHENG_IPC_ONEWAY_PID
+    if(kind!=0&&!ipc_pair_loaded){note("HMOS handoff rejected: verified retained-mode IPC pair is required; HOLD");return;}
+#endif
     if(logfd<0&&serialfd<0){note("TRACE ABORT: neither metadata nor USB log available; HOLD");return;}
     note("TRACE preparing collector handshake before original Android init");
     if(logfd>=0)fsync(logfd);
@@ -734,13 +931,16 @@ static void trace_handoff(int kind) {
     }
 }
 int main(int argc,char **argv) {
+#if SHENG_IPC_ONEWAY_PID
+    if(argc==2&&!strcmp(argv[1],"--ipc-pair-selftest"))return ipc_pair_selftest();
+#endif
     if(argc==2&&!strcmp(argv[1],"--fb-info"))return framebuffer_probe(0);
     if(argc==2&&!strcmp(argv[1],"--fb-pattern"))return framebuffer_probe(1);
     if(argc==3&&!strcmp(argv[1],"--load-module")){
         const char *name=argv[2];if(geteuid()!=0||strlen(name)>127||strspn(name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-")!=strlen(name))return 2;
-        module_index();loadmod(name,0);allwrite(1,history,used);for(int i=0;i<nmods;i++)if(same_module(mods[i].name,name))return mods[i].state==2?0:1;return 1;
+        module_index();loadmod(name,0);history_write(1);for(int i=0;i<nmods;i++)if(same_module(mods[i].name,name))return mods[i].state==2?0:1;return 1;
     }
-    if(argc==3&&!strcmp(argv[1],"--inspect-super")) {slot_known=1;if(getenv("HMOS_SLOT")&&!strcmp(getenv("HMOS_SLOT"),"b"))suffix[1]='b';partitions(argv[2],1);allwrite(1,history,used);return 0;}
+    if(argc==3&&!strcmp(argv[1],"--inspect-super")) {slot_known=1;if(getenv("HMOS_SLOT")&&!strcmp(getenv("HMOS_SLOT"),"b"))suffix[1]='b';partitions(argv[2],1);history_write(1);return 0;}
     if(argc==2&&!strcmp(argv[1],"--sha-selftest")){uint8_t sum[32];sha256("abc",3,sum);for(int i=0;i<32;i++)printf("%02x",sum[i]);puts("");return 0;}
     if(argc==2&&!strcmp(argv[1],"--fork-selftest")){pid_t p=fork();if(p<0){perror("fork");return 1;}if(p==0){allwrite(1,"child ready\n",12);_exit(0);}int status;if(waitpid(p,&status,0)<0){perror("waitpid");return 1;}printf("parent received child status=%d\n",status);return status!=0;}
     if(argc==2&&!strcmp(argv[1],"--ptrace-selftest"))return trace_selftest(0,0);
